@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "lexer.h"
 
 using namespace std;
 
@@ -15,11 +16,11 @@ char streamer(string data) {
 	}
 }
 
-int main()
+void runLexer()
 {
 	string line;
 	string data;
-	ifstream myfile ("file.txt");
+	ifstream myfile ("code.mo");
 	if (myfile.is_open()) 
 	{
 		while(getline(myfile, line)) 
@@ -32,8 +33,5 @@ int main()
 		cout << chr << endl;
 		chr = streamer(data);
 	}
-
-
-	return 0;
 }
 
