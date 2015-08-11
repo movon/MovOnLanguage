@@ -7,9 +7,10 @@
 #ifndef MOVONLANGUAGE_LEXER_H
 #define MOVONLANGUAGE_LEXER_H
 
+
 void runLexer();
 
-void initKeywordSet();
+void initSets();
 
 char streamer(std::string data);
 
