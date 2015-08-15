@@ -6,17 +6,31 @@
 #include <functional>
 #include <cctype>
 #include <locale>
+#include <vector>
+#include <sstream>
 #include "Tok.h"
 #include "lexer.h"
 
 using namespace std;
 
 std::set<std::string> keywords;
+std::set<std::string> operators;
+std::vector<Tok> tokens;
 int i = 0;
 
 
 void initSets() {
     keywords.insert("print");
+    keywords.insert("int");
+
+    operators.insert("=");
+    operators.insert("<");
+    operators.insert("<=");
+    operators.insert(">");
+    operators.insert(">=");
+    operators.insert("!=");
+    operators.insert("==");
+    operators.insert("===");
 }
 
 char streamer(string data) {
@@ -28,15 +42,71 @@ char streamer(string data) {
     }
 }
 
-int findClosingQuotes(string data) {
+int findClosingQuotes(std::string data) {
     int openingQuotes = data.find("\"", i) + 1;
     int closingQuotes = data.find('"', openingQuotes);
     return closingQuotes - openingQuotes;
 }
 
-bool isKeyword(string tok) {
-    return keywords.find(tok) != keywords.end();
+bool isKeyword(string content) {
+    return keywords.find(content) != keywords.end();
 }
+
+bool isOrContainsAnOperator(string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
+    for (char& c : content) {
+        std::string s(1, c);
+        if (operators.find(s) != operators.end()) {
+            std::cout <<std::endl << "Contains Operator: " << content << std::endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+struct Operation
+{
+    std::set<string> before;
+    std::string op;
+    std::set<string> after;
+};
+
+Operation seperateOperatorsFromBothSides(std::string content) {
+    std::string s;
+    std::string op = "";
+    std::set<string> before;
+    std::set<string> after;
+    bool found_first_operator = false;
+    for (char& c : content) {
+        std::string a(1, c);
+        s += a;
+        if (operators.find(s) != operators.end()) {
+            op += s;
+            s = "";
+            //cout <<"Found an operator" << std::endl;
+        } 
+        else {
+            if (op != "") {
+                if (!found_first_operator) {
+                    found_first_operator = true;
+                }
+                else {
+                    throw ("Two or more operators were found in this simple instruction");
+                }    
+            }
+            if (!found_first_operator){
+                before.insert(s);    
+            }
+            else {
+                after.insert(s);
+            }            
+            s = "";
+        }
+    }
+    Operation result = {before, op, after};
+    return result;
+}
+
+
 
 
 // trim from start
@@ -56,24 +126,92 @@ static inline std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
 
-void sendToParser(Tok *tok) {
-    if (!trim(tok->content).empty()) {
-        cout << tok->content << endl;
+void addToParserTokens(Tok tok) {
+    if (!trim(tok.content).empty()) {
+        tokens.push_back(tok);
+        std::stringstream ss;
+        for(size_t i = 0; i < tokens.size(); ++i)
+        {
+          //if(i != 0)
+            //cout << ",";
+          //cout << '"' << tokens[i].type << '"';
+        }
+        //cout << endl;
+        for(size_t i = 0; i < tokens.size(); ++i)
+        {
+          if(i != 0)
+            cout << ",";
+          cout << '"' << tokens[i].content << '"';
+        }
+        cout << endl;
     }
 }
 
+bool is_number(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
+struct Primitive
+{
+  bool isPrimitive;
+  tokType type;
+};
+
+Primitive checkIfPrimitive(std::string s) {
+    Primitive result;
+    if (is_number(s)) {
+        Primitive result = {true, INT};
+    }//TODO: Add else if's for every other primitive type
+    else {
+        Primitive not_primitive = {false, NONE};
+        return not_primitive;
+    }
+    
+    return result;
+}
+
+void process(std::set<std::string> v) {
+    std::set<std::string>::iterator it;
+    for (it = v.begin(); it != v.end(); ++it)
+    {
+        std::string s = *it;
+        //std::cout << s << std::endl;
+        if (isKeyword(s)) {
+            addToParserTokens(Tok(s, KEYWORD));
+            return;
+        }
+        Primitive primitive = checkIfPrimitive(s);
+        if (primitive.isPrimitive) {
+            addToParserTokens(Tok(s, primitive.type));
+            return;
+        }
+        /*else if (isDelimiter(s)) {
+
+        }*/
+        //TODO: Add else if's for every type of token there is like EXPR
+    }
+}
+
+string getNextToken() {
+
+}
 
 void runLexer() {
     initSets();
     string line;
     string data;
-    ifstream myfile("code.mo");
+    std::ifstream myfile("src/code.mo");
     if (myfile.is_open()) {
         while (getline(myfile, line)) {
             data += line;
         }
+    } else {
+        cout << "The file is not at this location or does not exist" << endl;
     }
-    Tok* tok = new Tok("", NONE);
+    Tok tok = Tok("", NONE);
     bool isInString = false;
     char chr = streamer(data);
     while (chr != 0) {
@@ -82,13 +220,13 @@ void runLexer() {
             {
                 if (chr == '"') {
                     //if string quotes ended - send it to parser
-                    tok->type = STRING;
-                    sendToParser(tok);
+                    tok.type = STRING;
+                    addToParserTokens(tok);
                     isInString = false;
-                    tok->content = "";
+                    tok.content = "";
                 } else {
                     //else, add the character to the string
-                    tok->content += chr;
+                    tok.content += chr;
                 }
             }
             else
@@ -98,26 +236,49 @@ void runLexer() {
                     isInString = true;
                 }
                 //If I found a keyword - send it to parser.
-                else if (isKeyword(tok->content))
+                else if (isKeyword(tok.content))
                 {
-                    tok->type = KEYWORD;
-                    sendToParser(tok);
-                    tok->content = "";
+                    tok.type = KEYWORD;
+                    addToParserTokens(tok);
+                    tok.content = "";
+                }
+                else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
+                    Primitive primitive = checkIfPrimitive(tok.content);
+                    addToParserTokens(Tok(tok.content, primitive.type));
+                    tok.content = "";
+                }
+                else if (isOrContainsAnOperator(tok.content)) {
+                    try {
+                        Operation op = seperateOperatorsFromBothSides(tok.content);
+                        process(op.before);
+                        addToParserTokens(Tok(op.op, OPERATOR));
+                        process(op.after);
+                        tok.content = "";
+                    }
+                    catch (std::string e) {
+                        cout << e << std::endl;
+                        exit(1);
+                    }
+                    
                 }
                 //It is another delimiter, send token to parser
                 //TODO: check what token
                 else
                 {
-                    sendToParser(tok);
-                    tok->content = chr;
-                    sendToParser(tok);
-                    tok->content = "";
+                    tok.content = trim(tok.content);
+                    if (tok.content.empty()) {
+                    tok.type = DELIMITER;
+                    addToParserTokens(tok);
+                    tok.content = chr;
+                    addToParserTokens(tok);
+                    tok.content = "";
+                }
                 }
             }
         }
         //It is a normal chr, add to tok
         else {
-            tok->content += chr;
+            tok.content += chr;
         }
         chr = streamer(data);
     }

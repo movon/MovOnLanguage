@@ -14,6 +14,8 @@ void initSets();
 
 char streamer(std::string data);
 
+std::string getNextToken();
+
 bool isKeyword(std::string tok);
 
 #endif //MOVONLANGUAGE_LEXER_H
