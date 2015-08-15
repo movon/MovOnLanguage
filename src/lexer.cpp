@@ -10,6 +10,7 @@
 #include <sstream>
 #include "Tok.h"
 #include "lexer.h"
+#include "streamer.cpp"
 
 using namespace std;
 
@@ -33,26 +34,27 @@ void initSets() {
     operators.insert("===");
 }
 
-char streamer(string data) {
+/*char streamer(string data) {
     if (i < data.length()) {
         return data.at(i++);
     }
     else {
         return 0;
     }
-}
+}*/
 
-int findClosingQuotes(std::string data) {
+/*int findClosingQuotes(std::string data) { I don't think we need this, is that true?
     int openingQuotes = data.find("\"", i) + 1;
     int closingQuotes = data.find('"', openingQuotes);
     return closingQuotes - openingQuotes;
-}
+}*/
 
 bool isKeyword(string content) {
     return keywords.find(content) != keywords.end();
 }
 
 bool isOrContainsAnOperator(string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
+    cout <<content << endl;
     for (char& c : content) {
         std::string s(1, c);
         if (operators.find(s) != operators.end()) {
@@ -210,12 +212,15 @@ void runLexer() {
         }
     } else {
         cout << "The file is not at this location or does not exist" << endl;
+        exit(1);
     }
+    Streamer* streamer = new Streamer(data, 0);
     Tok tok = Tok("", NONE);
     bool isInString = false;
-    char chr = streamer(data);
+    char chr = streamer->getNextChar();
     while (chr != 0) {
         if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')') {
+            cout << "CHR:'" << chr << "'" << endl;
             if (isInString)
             {
                 if (chr == '"') {
@@ -241,11 +246,13 @@ void runLexer() {
                     tok.type = KEYWORD;
                     addToParserTokens(tok);
                     tok.content = "";
+                    addToParserTokens(Tok(string(1, chr), DELIMITER));
                 }
                 else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
                     Primitive primitive = checkIfPrimitive(tok.content);
                     addToParserTokens(Tok(tok.content, primitive.type));
                     tok.content = "";
+                    addToParserTokens(Tok(string(1, chr), DELIMITER));
                 }
                 else if (isOrContainsAnOperator(tok.content)) {
                     try {
@@ -254,6 +261,7 @@ void runLexer() {
                         addToParserTokens(Tok(op.op, OPERATOR));
                         process(op.after);
                         tok.content = "";
+                        addToParserTokens(Tok(string(1, chr), DELIMITER));
                     }
                     catch (std::string e) {
                         cout << e << std::endl;
@@ -267,12 +275,13 @@ void runLexer() {
                 {
                     tok.content = trim(tok.content);
                     if (tok.content.empty()) {
-                    tok.type = DELIMITER;
-                    addToParserTokens(tok);
-                    tok.content = chr;
-                    addToParserTokens(tok);
-                    tok.content = "";
-                }
+                        tok.type = DELIMITER;
+                        addToParserTokens(tok);
+                        tok.content = chr;
+                        cout << "SENDING:" << tok.content << endl;
+                        addToParserTokens(tok);
+                        tok.content = "";
+                    }
                 }
             }
         }
@@ -280,7 +289,7 @@ void runLexer() {
         else {
             tok.content += chr;
         }
-        chr = streamer(data);
+        chr = streamer->getNextChar();
     }
 }
 
