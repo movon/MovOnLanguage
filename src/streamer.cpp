@@ -29,3 +29,7 @@ char Streamer::getNextChar() {
 	}
 
 }
+
+void Streamer::advancePosition() {
+	this->i++;
+}

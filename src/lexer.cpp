@@ -54,15 +54,17 @@ bool isKeyword(string content) {
 }
 
 bool isOrContainsAnOperator(string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
-    cout <<content << endl;
     for (char& c : content) {
         std::string s(1, c);
         if (operators.find(s) != operators.end()) {
-            std::cout <<std::endl << "Contains Operator: " << content << std::endl;
             return true;
         }
     }
     return false;
+}
+
+bool isOperator(string s) {
+    return (operators.find(s) != operators.end());
 }
 
 struct Operation
@@ -84,16 +86,16 @@ Operation seperateOperatorsFromBothSides(std::string content) {
         if (operators.find(s) != operators.end()) {
             op += s;
             s = "";
-            //cout <<"Found an operator" << std::endl;
-        } 
+        }
         else {
             if (op != "") {
                 if (!found_first_operator) {
                     found_first_operator = true;
                 }
                 else {
+    
                     throw ("Two or more operators were found in this simple instruction");
-                }    
+                } 
             }
             if (!found_first_operator){
                 before.insert(s);    
@@ -219,8 +221,7 @@ void runLexer() {
     bool isInString = false;
     char chr = streamer->getNextChar();
     while (chr != 0) {
-        if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')') {
-            cout << "CHR:'" << chr << "'" << endl;
+        if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || isOperator(string(1, chr))) {
             if (isInString)
             {
                 if (chr == '"') {
@@ -246,42 +247,32 @@ void runLexer() {
                     tok.type = KEYWORD;
                     addToParserTokens(tok);
                     tok.content = "";
-                    addToParserTokens(Tok(string(1, chr), DELIMITER));
                 }
                 else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
                     Primitive primitive = checkIfPrimitive(tok.content);
                     addToParserTokens(Tok(tok.content, primitive.type));
                     tok.content = "";
-                    addToParserTokens(Tok(string(1, chr), DELIMITER));
-                }
-                else if (isOrContainsAnOperator(tok.content)) {
-                    try {
-                        Operation op = seperateOperatorsFromBothSides(tok.content);
-                        process(op.before);
-                        addToParserTokens(Tok(op.op, OPERATOR));
-                        process(op.after);
-                        tok.content = "";
-                        addToParserTokens(Tok(string(1, chr), DELIMITER));
-                    }
-                    catch (std::string e) {
-                        cout << e << std::endl;
-                        exit(1);
-                    }
-                    
                 }
                 //It is another delimiter, send token to parser
                 //TODO: check what token
                 else
                 {
-                    tok.content = trim(tok.content);
-                    if (tok.content.empty()) {
-                        tok.type = DELIMITER;
-                        addToParserTokens(tok);
-                        tok.content = chr;
-                        cout << "SENDING:" << tok.content << endl;
-                        addToParserTokens(tok);
-                        tok.content = "";
+                    tok.type = IDENTIFIER;
+                    addToParserTokens(tok);
+                    tok.content = "";
+                    
+                }
+
+                //CHECK WHAT DELIMITER:
+                if (isOperator(string(1, chr))) {
+                    char nextChr = streamer->peekNextChar();
+                    if (isOperator(string(1, nextChr))) {
+                        streamer->advancePosition();
+                        addToParserTokens(Tok(string(1, chr)+string(1, nextChr), OPERATOR));
                     }
+                }
+                else if (chr ==';') {
+                    addToParserTokens(Tok(string(1, chr), DELIMITER));
                 }
             }
         }
