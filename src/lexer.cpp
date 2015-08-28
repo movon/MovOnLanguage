@@ -136,11 +136,11 @@ void addToParserTokens(Tok tok) {
         std::stringstream ss;
         for(size_t i = 0; i < tokens.size(); ++i)
         {
-          //if(i != 0)
-            //cout << ",";
-          //cout << '"' << tokens[i].type << '"';
+          if(i != 0)
+            cout << ",";
+          cout << '"' << tokens[i].type << '"';
         }
-        //cout << endl;
+        cout << endl;
         for(size_t i = 0; i < tokens.size(); ++i)
         {
           if(i != 0)
@@ -221,7 +221,7 @@ void runLexer() {
     bool isInString = false;
     char chr = streamer->getNextChar();
     while (chr != 0) {
-        if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || isOperator(string(1, chr))) {
+        if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || chr == ',' || chr =='\n' || isOperator(string(1, chr))) {
             if (isInString)
             {
                 if (chr == '"') {
@@ -273,7 +273,7 @@ void runLexer() {
                     addToParserTokens(Tok(string(1, chr), OPERATOR));
 
                 }
-                else if (chr ==';') {
+                else if (chr == ';') {
                     addToParserTokens(Tok(string(1, chr), DELIMITER));
                 }
             }
