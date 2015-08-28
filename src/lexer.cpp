@@ -130,6 +130,29 @@ static inline std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
 
+static string tokTypeToString(int tokType) {
+    switch(tokType) {
+        case 0:
+            return "NONE";
+        case 1:
+            return "IDENTIFIER";
+        case 2:
+            return "KEYWORD";
+        case 3:
+            return "FUNCTION";
+        case 4:
+            return "PARAM";
+        case 5:
+            return "STRING";
+        case 6:
+            return "DELIMITER";
+        case 7:
+            return "OPERATOR";
+        case 8:
+            return "INT";
+    }
+}
+
 void addToParserTokens(Tok tok) {
     if (!trim(tok.content).empty()) {
         tokens.push_back(tok);
@@ -138,16 +161,16 @@ void addToParserTokens(Tok tok) {
         {
           //if(i != 0)
             //cout << ",";
-          //cout << '"' << tokens[i].type << '"';
+          cout << tokens[i].content << ": " << tokTypeToString(tokens[i].type) << std::endl;
         }
         //cout << endl;
         for(size_t i = 0; i < tokens.size(); ++i)
         {
-          if(i != 0)
-            cout << ",";
-          cout << '"' << tokens[i].content << '"';
+          // if(i != 0)
+            // cout << ",";
+          // cout << '"' << tokens[i].content << '"';
         }
-        cout << endl;
+        // cout << endl;
     }
 }
 
@@ -270,8 +293,6 @@ void runLexer() {
                         streamer->advancePosition();
                         addToParserTokens(Tok(string(1, chr)+string(1, nextChr), OPERATOR));
                     }
-                    addToParserTokens(Tok(string(1, chr), OPERATOR));
-
                 }
                 else if (chr ==';') {
                     addToParserTokens(Tok(string(1, chr), DELIMITER));
