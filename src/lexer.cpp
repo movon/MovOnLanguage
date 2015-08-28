@@ -270,6 +270,8 @@ void runLexer() {
                         streamer->advancePosition();
                         addToParserTokens(Tok(string(1, chr)+string(1, nextChr), OPERATOR));
                     }
+                    addToParserTokens(Tok(string(1, chr), OPERATOR));
+
                 }
                 else if (chr ==';') {
                     addToParserTokens(Tok(string(1, chr), DELIMITER));
