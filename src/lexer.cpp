@@ -156,6 +156,7 @@ static string tokTypeToString(int tokType) {
 void addToParserTokens(Tok tok) {
     if (!trim(tok.content).empty()) {
         tokens.push_back(tok);
+    }
 }
 
 void printTokens() {
