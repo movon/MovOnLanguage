@@ -156,22 +156,22 @@ static string tokTypeToString(int tokType) {
 void addToParserTokens(Tok tok) {
     if (!trim(tok.content).empty()) {
         tokens.push_back(tok);
-        std::stringstream ss;
-        for(size_t i = 0; i < tokens.size(); ++i)
-        {
-          //if(i != 0)
-            //cout << ",";
-          cout << tokens[i].content << ": " << tokTypeToString(tokens[i].type) << std::endl;
-        }
-        //cout << endl;
-        for(size_t i = 0; i < tokens.size(); ++i)
-        {
-          // if(i != 0)
-            // cout << ",";
-          // cout << '"' << tokens[i].content << '"';
-        }
-        // cout << endl;
     }
+}
+
+void printTokens() {
+    for(size_t i = 0; i < tokens.size(); ++i)
+    {
+      cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
+    }
+    //cout << endl;
+    for(size_t i = 0; i < tokens.size(); ++i)
+    {
+      if(i != 0)
+        cout << ",";
+      cout << '"' << tokens[i].content << '"';
+    }
+    cout << endl;
 }
 
 bool is_number(const std::string& s)
@@ -305,6 +305,7 @@ void runLexer() {
         }
         chr = streamer->getNextChar();
     }
+    printTokens();
 }
 
 
