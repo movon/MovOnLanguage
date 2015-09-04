@@ -1,0 +1,1 @@
+When creating a class, create a class and not a txt file. Also include it in CMakeLists.txt where all the classes go add -> src/class.cpp src/class.h
