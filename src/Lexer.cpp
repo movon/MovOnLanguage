@@ -107,6 +107,10 @@ string Lexer::tokTypeToString(tokType& tt) {
             return "OPENPARAN";
         case tokType::CLOSINGPARAN:
             return "CLOSINGPARAN";
+        case tokType::OPENCURLY:
+            return "OPENCURLY";
+        case tokType::CLOSINGCURLY:
+            return "CLOSINGCURLY";
         }
 }
  
@@ -209,7 +213,7 @@ void Lexer::runLexer() {
         bool isInString = false;
         char chr = streamer->getNextChar();
         while (chr != 0) {
-                if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || chr == ',' || chr == '\n' || isOperator(string(1, chr))) {
+                if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || chr == '{' || chr == '}' || chr == ',' || chr == '\n' || isOperator(string(1, chr))) {
                         if (isInString)
                         {
                                 if (chr == '"') {
@@ -285,6 +289,12 @@ void Lexer::runLexer() {
                                 }
                                 else if (chr == ')') {
                                     addToParserTokens(Tok(string(1, chr), tokType::CLOSINGPARAN));
+                                }
+                                else if (chr == '{') {
+                                    addToParserTokens(Tok(string(1, chr), tokType::OPENCURLY));
+                                }
+                                else if (chr =='}') {
+                                    addToParserTokens(Tok(string(1, chr), tokType::CLOSINGCURLY));   
                                 }
 
                         }
