@@ -13,6 +13,7 @@
 #include <sstream>
 #include "Tok.h"
 #include "Streamer.h"
+#include <sstream>
 
 #ifndef MOVONLANGUAGE_LEXER_H
 #define MOVONLANGUAGE_LEXER_H
@@ -43,18 +44,19 @@ class Lexer {
 
 		static bool isOperator(std::string s);
 
-		static std::string tokTypeToString(int tokType);
+		static std::string tokTypeToString(tokType& tokType);
 
 		static void addToParserTokens(Tok tok);
 
 		static void printTokens();
 
-		static bool is_number(const std::string& s);
+		static bool isInt(const std::string& s);
 
 		static Primitive checkIfPrimitive(std::string s);
 
 		static void process(std::set<std::string> v);
 
+		static bool isFloat(const std::string& s);
 		
 
 		static void runLexer();

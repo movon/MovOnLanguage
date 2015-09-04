@@ -4,8 +4,7 @@
 #ifndef MOVONLANGUAGE_TOK_H
 #define MOVONLANGUAGE_TOK_H
 
-
-enum tokType { NONE = 0, IDENTIFIER = 1, KEYWORD = 2, FUNCTION = 3, PARAM = 4, STRING = 5, DELIMITER = 6, OPERATOR = 7, INT = 8};
+enum class tokType { NONE = 0, IDENTIFIER = 1, KEYWORD = 2, FUNCTION = 3, PARAM = 4, STRING = 5, DELIMITER = 6, OPERATOR = 7, INT = 8, FLOAT = 9};
 
 class Tok {
 

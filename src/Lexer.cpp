@@ -9,7 +9,7 @@ std::vector<Tok> tokens;
 void Lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
-
+    keywords.insert("float");
     operators.insert("=");
     operators.insert("<");
     operators.insert("<=");
@@ -70,26 +70,28 @@ bool Lexer::isOrContainsAnOperator(string content) { //I needed to add this logi
         return (operators.find(s) != operators.end());
 }
  
-string Lexer::tokTypeToString(int tokType) {
-        switch (tokType) {
-        case 0:
+string Lexer::tokTypeToString(tokType& tt) {
+        switch (tt) {
+        case tokType::NONE:
                 return "NONE";
-        case 1:
+        case tokType::IDENTIFIER:
                 return "IDENTIFIER";
-        case 2:
+        case tokType::KEYWORD:
                 return "KEYWORD";
-        case 3:
+        case tokType::FUNCTION:
                 return "FUNCTION";
-        case 4:
+        case tokType::PARAM:
                 return "PARAM";
-        case 5:
+        case tokType::STRING:
                 return "STRING";
-        case 6:
+        case tokType::DELIMITER:
                 return "DELIMITER";
-        case 7:
+        case tokType::OPERATOR:
                 return "OPERATOR";
-        case 8:
+        case tokType::INT:
                 return "INT";
+        case tokType::FLOAT:
+            return "FLOAT";
         }
 }
  
@@ -114,21 +116,30 @@ void Lexer::printTokens() {
         cout << endl;
 }
  
-bool Lexer::is_number(const std::string& s) {
-        std::string::const_iterator it = s.begin();
-        while (it != s.end() && std::isdigit(*it)) ++it;
-        return !s.empty() && it == s.end();
+bool Lexer::isInt(const std::string& s) {
+    auto it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
 }
  
- 
+bool Lexer::isFloat(const std::string& s) {
+    std::istringstream iss(s);
+    float f;
+    iss >> noskipws >> f; // noskipws considers leading whitespace invalid
+    // Check the entire string was consumed and if either failbit or badbit is set
+    return iss.eof() && !iss.fail();
+}
  
 Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
         Lexer::Primitive result;
-        if (is_number(s)) {
-                 result = { true, INT };
+        if (isInt(s)) {
+            result = {true, tokType::INT };
         }//TODO: Add else if's for every other primitive type
+        else if (isFloat(s)){
+            result = {true, tokType::FLOAT};
+        }
         else {
-                Lexer::Primitive not_primitive = { false, NONE };
+                Lexer::Primitive not_primitive = {false, tokType::NONE};
                 return not_primitive;
         }
  
@@ -142,7 +153,7 @@ void Lexer::process(std::set<std::string> v) {
                 std::string s = *it;
                 //std::cout << s << std::endl;
                 if (isKeyword(s)) {
-                        addToParserTokens(Tok(s, KEYWORD));
+                        addToParserTokens(Tok(s, tokType::KEYWORD));
                         return;
                 }
                 Primitive primitive = checkIfPrimitive(s);
@@ -176,7 +187,7 @@ void Lexer::runLexer() {
                 exit(1);
         }
         Streamer* streamer = new Streamer(data, 0);
-        Tok tok = Tok("", NONE);
+        Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
         char chr = streamer->getNextChar();
         while (chr != 0) {
@@ -185,7 +196,7 @@ void Lexer::runLexer() {
                         {
                                 if (chr == '"') {
                                         //if string quotes ended - send it to parser
-                                        tok.type = STRING;
+                                        tok.type = tokType::STRING;
                                         addToParserTokens(tok);
                                         isInString = false;
                                         tok.content = "";
@@ -204,7 +215,7 @@ void Lexer::runLexer() {
                                 //If I found a keyword - send it to parser.
                                 else if (isKeyword(tok.content))
                                 {
-                                        tok.type = KEYWORD;
+                                        tok.type = tokType::KEYWORD;
                                         addToParserTokens(tok);
                                         tok.content = "";
                                 }
@@ -213,11 +224,16 @@ void Lexer::runLexer() {
                                         addToParserTokens(Tok(tok.content, primitive.type));
                                         tok.content = "";
                                 }
+                                else if (chr == '(') {
+                                    tok.type = tokType::FUNCTION;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
+                                }
                                 //It is another delimiter, send token to parser
                                 //TODO: check what token
                                 else
                                 {
-                                        tok.type = IDENTIFIER;
+                                        tok.type = tokType::IDENTIFIER;
                                         addToParserTokens(tok);
                                         tok.content = "";
  
@@ -228,12 +244,14 @@ void Lexer::runLexer() {
                                         char nextChr = streamer->peekNextChar();
                                         if (isOperator(string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                addToParserTokens(Tok(string(1, chr) + string(1, nextChr), OPERATOR));
+                                                addToParserTokens(Tok(string(1, chr) + string(1, nextChr), tokType::OPERATOR));
                                         }
+                                        addToParserTokens(Tok(string(1, chr), tokType::OPERATOR));
                                 }
                                 else if (chr == ';') {
-                                        addToParserTokens(Tok(string(1, chr), DELIMITER));
+                                        addToParserTokens(Tok(string(1, chr), tokType::DELIMITER));
                                 }
+
                         }
                 }
                 //It is a normal chr, add to tok
