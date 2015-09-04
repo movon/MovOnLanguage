@@ -17,10 +17,9 @@ using namespace std;
 std::set<std::string> keywords;
 std::set<std::string> operators;
 std::vector<Tok> tokens;
-int i = 0;
 
 
-void initSets() {
+static void lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
 
@@ -49,11 +48,11 @@ void initSets() {
     return closingQuotes - openingQuotes;
 }*/
 
-bool isKeyword(string content) {
+bool lexer::isKeyword(string content) {
     return keywords.find(content) != keywords.end();
 }
 
-bool isOrContainsAnOperator(string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
+bool lexer::isOrContainsAnOperator(string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
     for (char& c : content) {
         std::string s(1, c);
         if (operators.find(s) != operators.end()) {
@@ -63,7 +62,7 @@ bool isOrContainsAnOperator(string content) { //I needed to add this logic of go
     return false;
 }
 
-bool isOperator(string s) {
+static bool lexer::isOperator(string s) {
     return (operators.find(s) != operators.end());
 }
 
@@ -74,7 +73,7 @@ struct Operation
     std::set<string> after;
 };
 
-Operation seperateOperatorsFromBothSides(std::string content) {
+Operation lexer::seperateOperatorsFromBothSides(std::string content) {
     std::string s;
     std::string op = "";
     std::set<string> before;
@@ -130,7 +129,7 @@ static inline std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
 
-static string tokTypeToString(int tokType) {
+string lexer::tokTypeToString(int tokType) {
     switch(tokType) {
         case 0:
             return "NONE";
@@ -153,13 +152,13 @@ static string tokTypeToString(int tokType) {
     }
 }
 
-void addToParserTokens(Tok tok) {
+void lexer::addToParserTokens(Tok tok) {
     if (!trim(tok.content).empty()) {
         tokens.push_back(tok);
     }
 }
 
-void printTokens() {
+void lexer::printTokens() {
     for(size_t i = 0; i < tokens.size(); ++i)
     {
       cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
@@ -174,8 +173,7 @@ void printTokens() {
     cout << endl;
 }
 
-bool is_number(const std::string& s)
-{
+bool lexer::is_number(const std::string& s) {
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
     return !s.empty() && it == s.end();
@@ -187,7 +185,7 @@ struct Primitive
   tokType type;
 };
 
-Primitive checkIfPrimitive(std::string s) {
+Primitive lexer::checkIfPrimitive(std::string s) {
     Primitive result;
     if (is_number(s)) {
         Primitive result = {true, INT};
@@ -200,7 +198,7 @@ Primitive checkIfPrimitive(std::string s) {
     return result;
 }
 
-void process(std::set<std::string> v) {
+void lexer::process(std::set<std::string> v) {
     std::set<std::string>::iterator it;
     for (it = v.begin(); it != v.end(); ++it)
     {
@@ -222,11 +220,11 @@ void process(std::set<std::string> v) {
     }
 }
 
-string getNextToken() {
+string lexer::getNextToken() {
 
 }
 
-void runLexer() {
+void lexer::runLexer() {
     initSets();
     string line;
     string data;
