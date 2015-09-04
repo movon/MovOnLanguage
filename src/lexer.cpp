@@ -19,7 +19,7 @@ std::set<std::string> operators;
 std::vector<Tok> tokens;
 
 
-static void lexer::initSets() {
+void lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
 
@@ -62,7 +62,7 @@ bool lexer::isOrContainsAnOperator(string content) { //I needed to add this logi
     return false;
 }
 
-static bool lexer::isOperator(string s) {
+bool lexer::isOperator(string s) {
     return (operators.find(s) != operators.end());
 }
 
