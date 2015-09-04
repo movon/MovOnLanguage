@@ -272,10 +272,8 @@ void Lexer::runLexer() {
                                 //CHECK WHAT DELIMITER:
                                 if (isOperator(string(1, chr))) {
                                         char nextChr = streamer->peekNextChar();
-                                        std::cout << "SECOND MAYBE OPERATOR " << "'" << string(1, nextChr) << "'" << std::endl;
                                         if (isOperator(string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                std::cout << "TWO OPEATORS " << string(1, chr) + string(1, nextChr) << std::endl;
                                                 addToParserTokens(Tok(string(1, chr) + string(1, nextChr), tokType::OPERATOR));
                                         }
                                         else {

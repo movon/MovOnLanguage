@@ -6,10 +6,11 @@ enum charType {LOGICAL_OPERATOR = 0, MATH_OPERATOR = 1, CHR_DELIMITER = 2};
 Streamer::Streamer(string d, int pos) {
 	data = d;
 	i = pos;
+	len = (signed) d.length();
 }
 
 char Streamer::peekNextChar() {
-	if (i < data.length()) {
+	if (i < len) {
 		return data.at(i+1);
 	}
 	else
@@ -20,9 +21,8 @@ char Streamer::peekNextChar() {
 }
 
 char Streamer::getNextChar() {
-	i = i + 1;
-	if (i < data.length()) {
-		return data.at(i);
+	if (i < len - 1) {
+		return data.at(++i);
 	}
 	else
 	{
