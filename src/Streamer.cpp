@@ -4,13 +4,13 @@
 using namespace std;
 enum charType {LOGICAL_OPERATOR = 0, MATH_OPERATOR = 1, CHR_DELIMITER = 2};
 Streamer::Streamer(string d, int pos) {
-	this->data = d;
-	this->i = pos;
+	data = d;
+	i = pos;
 }
 
 char Streamer::peekNextChar() {
-	if (this->i < this->data.length()) {
-		return this->data.at(this->i+1);
+	if (i < data.length()) {
+		return data.at(i+1);
 	}
 	else
 	{
@@ -20,8 +20,9 @@ char Streamer::peekNextChar() {
 }
 
 char Streamer::getNextChar() {
-	if (this->i < this->data.length()) {
-		return this->data.at(this->i++);	
+	i = i + 1;
+	if (i < data.length()) {
+		return data.at(i);
 	}
 	else
 	{
@@ -31,5 +32,5 @@ char Streamer::getNextChar() {
 }
 
 void Streamer::advancePosition() {
-	this->i++;
+	i++;
 }

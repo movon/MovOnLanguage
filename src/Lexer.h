@@ -58,6 +58,7 @@ class Lexer {
 
 		static bool isFloat(const std::string& s);
 		
+		static bool isFlowOperator(std::string& content);
 
 		static void runLexer();
 };
