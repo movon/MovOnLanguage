@@ -1,7 +1,8 @@
+#include "Lexer.h"
 #include <iostream>
-#include "lexer.h"
 int main() {
 	std::cout << "------------------ Program Started ------------------" << std::endl;
-    lexer::runLexer();
+    Lexer::runLexer();
+
     return 0;
 }
