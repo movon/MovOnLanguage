@@ -1,9 +1,7 @@
-#include "streamer.h"
+#include "Streamer.h"
 #include <string>
 
-using namespace std;
-enum charType {LOGICAL_OPERATOR = 0, MATH_OPERATOR = 1, CHR_DELIMITER = 2};
-Streamer::Streamer(string d, int pos) {
+Streamer::Streamer(std::string d, int pos) {
 	this->data = d;
 	this->i = pos;
 }
@@ -28,4 +26,8 @@ char Streamer::getNextChar() {
 		return 0;
 	}
 
+}
+
+void Streamer::advancePosition() {
+	this->i++;
 }

@@ -1,6 +1,7 @@
-#include <string>
+#ifndef STREAMER_H
+#define STREAMER_H
 
-using namespace std;
+#include <string>
 
 class Streamer {
 private:
@@ -10,4 +11,7 @@ public:
 	Streamer(string data, int i);
 	char peekNextChar();
 	char getNextChar();
+	void advancePosition();
 };
+
+#endif
