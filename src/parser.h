@@ -11,7 +11,6 @@ public:
     void run();
 
     void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
-    void createParentNode(std::string Name, NodeType nodeType, std::vector<Tok> tokens);
 private:
     ParentNode* prevParent = nullptr;
     Node* prevNode = nullptr;
