@@ -50,7 +50,7 @@ class Lexer {
 
 		static Primitive checkIfPrimitive(std::string s);
 
-		//static void process(std::set<std::string> v);
+		static void process(std::set<std::string> v);
 
 		static bool isFloat(const std::string& s);
 		
@@ -58,12 +58,12 @@ class Lexer {
 
 		static void runLexer();
         
-        static std::vector<Tok> getTokens() { return tokens; }
+        static std::vector<Tok> getTokens();
         
-        std::set<std::string> keywords;
-        std::set<std::string> flowOperators;
-        std::set<std::string> operators;
-        std::vector<Tok> tokens;
+        static std::set<std::string> keywords;
+        static std::set<std::string> flowOperators;
+        static std::set<std::string> operators;
+        static std::vector<Tok> tokens;
 };
 
 
