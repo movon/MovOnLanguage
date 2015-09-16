@@ -5,6 +5,11 @@
 #include <algorithm>
 #include <functional>
 
+static std::set<std::string> keywords;
+static std::set<std::string> flowOperators;
+static std::set<std::string> operators;
+static std::vector<Tok> tokens;
+
 void Lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
@@ -89,7 +94,7 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         case tokType::PARAM:
                 return "PARAM";
         case tokType::STRING:
-                return "std::string";
+                return "STRING";
         case tokType::DELIMITER:
                 return "DELIMITER";
         case tokType::OPERATOR:
@@ -167,7 +172,6 @@ void Lexer::process(std::set<std::string> v) {
         for (it = v.begin(); it != v.end(); ++it)
         {
                 std::string s = *it;
-                //std::cout << s << std::endl;
                 if (isKeyword(s)) {
                         addToParserTokens(Tok(s, tokType::KEYWORD));
                         return;
@@ -201,8 +205,7 @@ void Lexer::runLexer() {
         }
         while (getline(myfile, line)) {
                         data += line;
-        }
-                
+        }    
         Streamer* streamer = new Streamer(data, -1);
         Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
@@ -226,7 +229,7 @@ void Lexer::runLexer() {
                         else
                         {
                                 if (chr == '"') {
-                                        //started std::string quotes
+                                        //started string quotes
                                         isInString = true;
                                 }
                                 //If I found a keyword - send it to parser.
@@ -295,7 +298,7 @@ void Lexer::runLexer() {
                 }
                 //It is a normal chr, add to tok
                 else {
-                        tok.content += chr;
+                    tok.content += chr;
                 }
                 chr = streamer->getNextChar();
         }

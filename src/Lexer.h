@@ -59,11 +59,6 @@ class Lexer {
 		static void runLexer();
         
         static std::vector<Tok> getTokens();
-        
-        static std::set<std::string> keywords;
-        static std::set<std::string> flowOperators;
-        static std::set<std::string> operators;
-        static std::vector<Tok> tokens;
 };
 
 

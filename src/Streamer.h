@@ -1,17 +1,15 @@
-#ifndef STREAMER_H
-#define STREAMER_H
-
 #include <string>
+
+using namespace std;
 
 class Streamer {
 private:
 	int i;
-	std::string data;
+	string data;
+	int len;
 public:
-	Streamer(std::string data, int i);
+	Streamer(string data, int i);
 	char peekNextChar();
 	char getNextChar();
 	void advancePosition();
 };
-
-#endif
