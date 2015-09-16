@@ -1,12 +1,8 @@
 //
 // Created by talbor49 on 8/11/15.
 //
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <set>
-#include <algorithm>
-#include <functional>
 #include <cctype>
 #include <locale>
 #include <vector>
@@ -18,14 +14,13 @@
 #ifndef MOVONLANGUAGE_LEXER_H
 #define MOVONLANGUAGE_LEXER_H
 
-
 class Lexer {
 	public:
 		struct Operation
 		{
-	        std::set<string> before;
+	        std::set<std::string> before;
 	        std::string op;
-	        std::set<string> after;
+	        std::set<std::string> after;
 		};
 		 
 		 
@@ -34,6 +29,7 @@ class Lexer {
 	        bool isPrimitive;
 	        tokType type;
 		};
+        
 		static void initSets();
 
 		static std::string getNextToken();
@@ -61,6 +57,8 @@ class Lexer {
 		static bool isFlowOperator(std::string& content);
 
 		static void runLexer();
+        
+        static std::vector<Tok> getTokens();
 };
 
 

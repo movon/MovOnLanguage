@@ -1,12 +1,15 @@
 #include "Lexer.h"
- 
-using namespace std;
- 
-std::set<std::string> keywords;
-std::set<std::string> flowOperators;
-std::set<std::string> operators;
-std::vector<Tok> tokens;
- 
+
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <functional>
+
+static std::set<std::string> keywords;
+static std::set<std::string> flowOperators;
+static std::set<std::string> operators;
+static std::vector<Tok> tokens;
+
 void Lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
@@ -26,27 +29,26 @@ void Lexer::initSets() {
 
     flowOperators.insert("if");
     flowOperators.insert("else");
-    flowOperators.insert("elif");
+    flowOperators.insert("elsif");
 }
 
-
 // trim from start
-static inline std::string &ltrim(std::string &s) {
+static std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
 }
 
 // trim from end
-static inline std::string &rtrim(std::string &s) {
+static std::string &rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
 
 // trim from both ends
-static inline std::string &trim(std::string &s) {
+static std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
-/*char streamer(string data) {
+/*char streamer(std::string data) {
 if (i < data.length()) {
 return data.at(i++);
 }
@@ -61,11 +63,11 @@ int closingQuotes = data.find('"', openingQuotes);
 return closingQuotes - openingQuotes;
 }*/
  
-bool Lexer::isKeyword(string content) {
+bool Lexer::isKeyword(std::string content) {
         return keywords.find(content) != keywords.end();
 }
  
-bool Lexer::isOrContainsAnOperator(string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
+/*bool Lexer::isOrContainsAnOperator(std::string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
         for (char& c : content) {
                 std::string s(1, c);
                 if (operators.find(s) != operators.end()) {
@@ -73,13 +75,13 @@ bool Lexer::isOrContainsAnOperator(string content) { //I needed to add this logi
                 }
         }
         return false;
-}
+}*/
  
- bool Lexer::isOperator(string s) {
+bool Lexer::isOperator(std::string s) {
         return (operators.find(s) != operators.end());
 }
  
-string Lexer::tokTypeToString(tokType& tt) {
+std::string Lexer::tokTypeToString(tokType& tt) {
         switch (tt) {
         case tokType::NONE:
                 return "NONE";
@@ -123,16 +125,16 @@ void Lexer::addToParserTokens(Tok tok) {
 void Lexer::printTokens() {
         for (size_t i = 0; i < tokens.size(); ++i)
         {
-                cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
+                std::cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
         }
-        //cout << endl;
+        //std::cout << std::endl;
         for (size_t i = 0; i < tokens.size(); ++i)
         {
                 if (i != 0)
-                        cout << ",";
-                cout << '"' << tokens[i].content << '"';
+                        std::cout << ",";
+                std::cout << '"' << tokens[i].content << '"';
         }
-        cout << endl;
+        std::cout << std::endl;
 }
  
 bool Lexer::isInt(const std::string& s) {
@@ -144,8 +146,8 @@ bool Lexer::isInt(const std::string& s) {
 bool Lexer::isFloat(const std::string& s) {
     std::istringstream iss(s);
     float f;
-    iss >> noskipws >> f; // noskipws considers leading whitespace invalid
-    // Check the entire string was consumed and if either failbit or badbit is set
+    iss >> std::noskipws >> f; // noskipws considers leading whitespace invalid
+    // Check the entire std::string was consumed and if either failbit or badbit is set
     return iss.eof() && !iss.fail();
 }
  
@@ -170,7 +172,6 @@ void Lexer::process(std::set<std::string> v) {
         for (it = v.begin(); it != v.end(); ++it)
         {
                 std::string s = *it;
-                //std::cout << s << std::endl;
                 if (isKeyword(s)) {
                         addToParserTokens(Tok(s, tokType::KEYWORD));
                         return;
@@ -186,45 +187,42 @@ void Lexer::process(std::set<std::string> v) {
                 //TODO: Add else if's for every type of token there is like EXPR
         }
 }
- 
-std::string Lexer::getNextToken() {
-    cout << "HELLO";
-}
 
 bool Lexer::isFlowOperator(std::string& content) {
     return flowOperators.find(content) != flowOperators.end();
 }
+
+std::vector<Tok> Lexer::getTokens(){ return tokens; }
+
 void Lexer::runLexer() {
         initSets();
-        string line;
-        string data;
+        std::string line;
+        std::string data;
         std::ifstream myfile("src/code.mo");
-        if (myfile.is_open()) {
-                while (getline(myfile, line)) {
-                        data += line;
-                }
-        }
-        else {
-                cout << "The file is not at this location or does not exist" << endl;
+        if(myfile.fail()){
+            std::cout << "The file is not at this location or does not exist" << std::endl;
                 exit(1);
         }
+        while (getline(myfile, line)) {
+                        data += line;
+        }    
         Streamer* streamer = new Streamer(data, -1);
         Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
         char chr = streamer->getNextChar();
         while (chr != 0) {
-                if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || chr == '{' || chr == '}' || chr == ',' || chr == '\n' || isOperator(string(1, chr))) {
+                if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || chr == '{' || chr == '}' || chr == ',' || chr == '\n' || isOperator(std::string(1, chr))) {
                         if (isInString)
                         {
                                 if (chr == '"') {
-                                        //if string quotes ended - send it to parser
+                                        //if std::string quotes ended - send it to parser
                                         tok.type = tokType::STRING;
                                         addToParserTokens(tok);
                                         isInString = false;
                                         tok.content = "";
                                 }
                                 else {
-                                        //else, add the character to the string
+                                        //else, add the character to the std::string
                                         tok.content += chr;
                                 }
                         }
@@ -246,8 +244,7 @@ void Lexer::runLexer() {
                                         addToParserTokens(Tok(tok.content, primitive.type));
                                         tok.content = "";
                                 }
-                                else if (chr == '(') {
-                                    
+                                else if (chr == '(') {        
                                     if (isFlowOperator(tok.content)) {
                                         tok.type = tokType::FLOWOPERATOR;
                                     }
@@ -274,34 +271,34 @@ void Lexer::runLexer() {
                                 }
  
                                 //CHECK WHAT DELIMITER:
-                                if (isOperator(string(1, chr))) {
+                                if (isOperator(std::string(1, chr))) {
                                         char nextChr = streamer->peekNextChar();
-                                        if (isOperator(string(1, nextChr))) {
+                                        if (isOperator(std::string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                addToParserTokens(Tok(string(1, chr) + string(1, nextChr), tokType::OPERATOR));
+                                                addToParserTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
                                         }
                                         else {
-                                            addToParserTokens(Tok(string(1, chr), tokType::OPERATOR));    
+                                            addToParserTokens(Tok(std::string(1, chr), tokType::OPERATOR));    
                                         }
                                 }
                                 else if (chr == ';') {
-                                        addToParserTokens(Tok(string(1, chr), tokType::DELIMITER));
+                                        addToParserTokens(Tok(std::string(1, chr), tokType::DELIMITER));
                                 }
                                 else if (chr == ')') {
-                                    addToParserTokens(Tok(string(1, chr), tokType::CLOSINGPARAN));
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGPARAN));
                                 }
                                 else if (chr == '{') {
-                                    addToParserTokens(Tok(string(1, chr), tokType::OPENCURLY));
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::OPENCURLY));
                                 }
                                 else if (chr =='}') {
-                                    addToParserTokens(Tok(string(1, chr), tokType::CLOSINGCURLY));   
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));   
                                 }
 
                         }
                 }
                 //It is a normal chr, add to tok
                 else {
-                        tok.content += chr;
+                    tok.content += chr;
                 }
                 chr = streamer->getNextChar();
         }
