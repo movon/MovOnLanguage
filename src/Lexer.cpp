@@ -14,6 +14,7 @@ void Lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
     keywords.insert("float");
+ 
     operators.insert("=");
     operators.insert("<");
     operators.insert("<=");
@@ -48,34 +49,11 @@ static std::string &rtrim(std::string &s) {
 static std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
-/*char streamer(std::string data) {
-if (i < data.length()) {
-return data.at(i++);
-}
-else {
-return 0;
-}
-}*/
- 
-/*int findClosingQuotes(std::string data) { I don't think we need this, is that true?
-int openingQuotes = data.find("\"", i) + 1;
-int closingQuotes = data.find('"', openingQuotes);
-return closingQuotes - openingQuotes;
-}*/
  
 bool Lexer::isKeyword(std::string content) {
         return keywords.find(content) != keywords.end();
 }
  
-/*bool Lexer::isOrContainsAnOperator(std::string content) { //I needed to add this logic of going over each one because we can't be sure that it wasn't " int i=5 ;" no space in the i=5
-        for (char& c : content) {
-                std::string s(1, c);
-                if (operators.find(s) != operators.end()) {
-                        return true;
-                }
-        }
-        return false;
-}*/
  
 bool Lexer::isOperator(std::string s) {
         return (operators.find(s) != operators.end());
