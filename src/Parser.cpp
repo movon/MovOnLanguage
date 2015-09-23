@@ -1,6 +1,6 @@
 #include "Parser.h"
 
-void error(std::string errormsg, tokType& t) {
+void Parser::error(std::string errormsg, Tok t) {
     //needs implementing
     //in the error class most likely
 }
@@ -13,7 +13,7 @@ bool Parser::expect(Tok& tok, tokType& t) {
     if (accept(tok, t)) {
         return true;
     }
-    error("Unexpected symbol", t);
+    error("Unexpected symbol", tok);
     return false;
 }
 
