@@ -3,10 +3,9 @@
 
 #include <string>
 #include "Node.h"
-class ParentNode {
+class ParentNode : public Node{
 public:
     std::string name;
-    std::vector<Node*> children;
     ParentNode();
 };
 
