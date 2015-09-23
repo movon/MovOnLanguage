@@ -50,8 +50,6 @@ class Lexer {
 
 		static Primitive checkIfPrimitive(std::string s);
 
-		static void process(std::set<std::string> v);
-
 		static bool isFloat(const std::string& s);
 		
 		static bool isFlowOperator(std::string& content);

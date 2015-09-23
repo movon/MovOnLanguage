@@ -5,7 +5,7 @@ void Parser::run(){// need to edit this
     
     for(int i = 0;i < toks.size();i++ ){
         auto currentTokenType = toks[i].type;
-        if(currentTokenType == tokType::FUNCTION){// The function token type only appears in function callings we didn't make function defenitions yet
+        if(currentTokenType == tokType::FUNCTIONDEF){// The function token type only appears in function callings we didn't make function defenitions yet
             if(prevParent != nullptr){
                 createNode(prevParent, NodeType::FUNCTION, currentStatement); // need to add checking for this. eg instead of Function() we have () without a string before
             }
