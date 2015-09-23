@@ -6,7 +6,7 @@
 #include "Node.h"
 #include "Tok.h"
 
-class parser{
+class Parser{
 public:
     void run();
 

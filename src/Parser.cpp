@@ -1,7 +1,7 @@
-#include "parser.h"
-
+#include "Parser.h"
+//I don't think that defining the vars in the header works because it didn't work for the lexer
 void Parser::run(){// need to edit this 
-    auto toks = Lexer::getTokens();
+    toks = Lexer::getTokens();
     
     for(int i = 0;i < toks.size();i++ ){
         auto currentTokenType = toks[i].type;
@@ -23,7 +23,7 @@ void Parser::run(){// need to edit this
     }    
     }
 
-Node* Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
+void Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
     Node* node = new Node(parent, nodeType, tokens);
     parent->children.push_back(node);
     
