@@ -2,11 +2,11 @@
 #define PARENTNODE_H
 
 #include <string>
-
-class ParentNode : public Node{
+#include "Node.h"
+class ParentNode {
 public:
     std::string name;
-    
+    std::vector<Node*> children;
     ParentNode();
 };
 

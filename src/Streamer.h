@@ -1,11 +1,9 @@
 #include <string>
 
-using namespace std;
-
 class Streamer {
 private:
 	int i;
-	string data;
+	std::string data;
 	int len;
 public:
 	Streamer(string data, int i);

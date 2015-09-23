@@ -1,11 +1,29 @@
 #include "Parser.h"
+
+void error(std::string errormsg, tokType& t) {
+    //needs implementing
+    //in the error class most likely
+}
+
+bool Parser::accept(Tok& tok, tokType& t) {
+    return tok.type == t;
+}
+
+bool Parser::expect(Tok& tok, tokType& t) {
+    if (accept(tok, t)) {
+        return true;
+    }
+    error("Unexpected symbol", t);
+    return false;
+}
+
 //I don't think that defining the vars in the header works because it didn't work for the lexer
 void Parser::run(){// need to edit this 
     toks = Lexer::getTokens();
     
     for(int i = 0;i < toks.size();i++ ){
-        auto currentTokenType = toks[i].type;
-        if(currentTokenType == tokType::FUNCTIONDEF){// The function token type only appears in function callings we didn't make function defenitions yet
+        tokType currentTokenType = toks[i].type;
+        if(currentTokenType == tokType::FUNCTIONDEF){
             if(prevParent != nullptr){
                 createNode(prevParent, NodeType::FUNCTION, currentStatement); // need to add checking for this. eg instead of Function() we have () without a string before
             }
