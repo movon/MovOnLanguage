@@ -18,7 +18,7 @@ protected:
     ~Node();
     
     std::string toString();
-}
+};
 
 
 #endif

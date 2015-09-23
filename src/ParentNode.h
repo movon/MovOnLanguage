@@ -8,7 +8,7 @@ public:
     std::string name;
     
     ParentNode();
-}
+};
 
 
 #endif

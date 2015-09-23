@@ -1,7 +1,7 @@
 #include "parser.h"
 
 void Parser::run(){// need to edit this 
-    toks = Lexer::getTokens();
+    auto toks = Lexer::getTokens();
     
     for(int i = 0;i < toks.size();i++ ){
         auto currentTokenType = toks[i].type;
