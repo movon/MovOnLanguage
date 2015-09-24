@@ -1,21 +1,21 @@
 #include "Lexer.h"
-
+ 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <functional>
-
+ 
 static std::set<std::string> keywords;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
 static std::vector<Tok> tokens;
-
+ 
 void Lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
     keywords.insert("float");
     keywords.insert("function");
-
+ 
     operators.insert("=");
     operators.insert("<");
     operators.insert("<=");
@@ -23,28 +23,29 @@ void Lexer::initSets() {
     operators.insert(">=");
     operators.insert("!=");
     operators.insert("==");
+    operators.insert("===");
     operators.insert("-");
     operators.insert("+");
     operators.insert("*");
     operators.insert("/");
-
+ 
     flowOperators.insert("if");
     flowOperators.insert("else");
     flowOperators.insert("elsif");
 }
-
+ 
 // trim from start
 static std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
 }
-
+ 
 // trim from end
 static std::string &rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
-
+ 
 // trim from both ends
 static std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
@@ -100,26 +101,14 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         }
 }
  
-void Lexer::addToParserTokens(Tok tok) {
+void Lexer::addToStreamerTokens(Tok tok) {
         if (!trim(tok.content).empty()) {
-                tokens.push_back(tok);
+                if(streamer != nullptr){
+                                        streamer->addToken(tok);
+                                }
         }
 }
  
-void Lexer::printTokens() {
-        for (size_t i = 0; i < tokens.size(); ++i)
-        {
-                std::cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
-        }
-        //std::cout << std::endl;
-        for (size_t i = 0; i < tokens.size(); ++i)
-        {
-                if (i != 0)
-                        std::cout << ",";
-                std::cout << '"' << tokens[i].content << '"';
-        }
-        std::cout << std::endl;
-}
  
 bool Lexer::isInt(const std::string& s) {
     auto it = s.begin();
@@ -150,13 +139,13 @@ Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
  
         return result;
 }
-
+ 
 bool Lexer::isFlowOperator(std::string& content) {
     return flowOperators.find(content) != flowOperators.end();
 }
-
+ 
 std::vector<Tok> Lexer::getTokens(){ return tokens; }
-
+ 
 void Lexer::runLexer() {
         initSets();
         std::string line;
@@ -169,7 +158,7 @@ void Lexer::runLexer() {
         while (getline(myfile, line)) {
                         data += line;
         }    
-        Streamer* streamer = new Streamer(data, -1);
+        streamer = new Streamer(data, -1);
         Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
         char chr = streamer->getNextChar();
@@ -180,7 +169,7 @@ void Lexer::runLexer() {
                                 if (chr == '"') {
                                         //if std::string quotes ended - send it to parser
                                         tok.type = tokType::STRING;
-                                        addToParserTokens(tok);
+                                        addToStreamerTokens(tok);
                                         isInString = false;
                                         tok.content = "";
                                 }
@@ -200,18 +189,18 @@ void Lexer::runLexer() {
                                 {
                                         if (tok.content == "function") {
                                             tok.type = tokType::FUNCTIONDEF;
-                                            addToParserTokens(tok);
+                                            addToStreamerTokens(tok);
                                             tok.content = "";
                                         }
                                         else {
                                             tok.type = tokType::KEYWORD;
-                                            addToParserTokens(tok);
+                                            addToStreamerTokens(tok);
                                             tok.content = "";
                                         }
                                 }
                                 else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
                                         Primitive primitive = checkIfPrimitive(tok.content);
-                                        addToParserTokens(Tok(tok.content, primitive.type));
+                                        addToStreamerTokens(Tok(tok.content, primitive.type));
                                         tok.content = "";
                                 }
                                 else if (chr == '(') {        
@@ -221,13 +210,13 @@ void Lexer::runLexer() {
                                     else {
                                         tok.type = tokType::FUNCTIONNAME;
                                     }
-                                        addToParserTokens(tok);
+                                        addToStreamerTokens(tok);
                                         tok.content = "";
-                                        addToParserTokens(Tok("(", tokType::OPENPARAN));
+                                        addToStreamerTokens(Tok("(", tokType::OPENPARAN));
                                 }
                                 else if (isFlowOperator(tok.content)) {
                                     tok.type = tokType::FLOWOPERATOR;
-                                    addToParserTokens(tok);
+                                    addToStreamerTokens(tok);
                                     tok.content = "";
                                 }
                                 //It is another delimiter, send token to parser
@@ -235,7 +224,7 @@ void Lexer::runLexer() {
                                 else
                                 {
                                         tok.type = tokType::IDENTIFIER;
-                                        addToParserTokens(tok);
+                                        addToStreamerTokens(tok);
                                         tok.content = "";
  
                                 }
@@ -245,33 +234,33 @@ void Lexer::runLexer() {
                                         char nextChr = streamer->peekNextChar();
                                         if (isOperator(std::string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                addToParserTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
+                                                addToStreamerTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
                                         }
                                         else {
                                             if (chr == '=') {
-                                                addToParserTokens(Tok(std::string(1, chr), tokType::ASSIGNMENT));
+                                                addToStreamerTokens(Tok(std::string(1, chr), tokType::ASSIGNMENT));
                                             }
                                             else {
-                                                addToParserTokens(Tok(std::string(1, chr), tokType::OPERATOR));
+                                                addToStreamerTokens(Tok(std::string(1, chr), tokType::OPERATOR));
                                             }
                                         }
                                 }
                                 else if (chr == ';') {
-                                        addToParserTokens(Tok(std::string(1, chr), tokType::DELIMITER));
+                                        addToStreamerTokens(Tok(std::string(1, chr), tokType::DELIMITER));
                                 }
                                 else if (chr == ')') {
-                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGPARAN));
+                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::CLOSINGPARAN));
                                 }
                                 else if (chr == '{') {
-                                    addToParserTokens(Tok(std::string(1, chr), tokType::OPENCURLY));
+                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::OPENCURLY));
                                 }
                                 else if (chr =='}') {
-                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));   
+                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));  
                                 }
                                 else if (chr == ',') {
-                                    addToParserTokens(Tok(std::string(1, chr), tokType::COMMA));
+                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::COMMA));
                                 }
-
+ 
                         }
                 }
                 //It is a normal chr, add to tok
@@ -280,5 +269,7 @@ void Lexer::runLexer() {
                 }
                 chr = streamer->getNextChar();
         }
-        printTokens();
+ 
+        streamer->printTokens();
+                delete streamer;
 }
