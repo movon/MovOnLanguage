@@ -23,7 +23,6 @@ void Lexer::initSets() {
     operators.insert(">=");
     operators.insert("!=");
     operators.insert("==");
-    operators.insert("===");
     operators.insert("-");
     operators.insert("+");
     operators.insert("*");
