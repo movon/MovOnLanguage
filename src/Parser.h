@@ -14,10 +14,6 @@ public:
 
     static void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
 private:
-    ParentNode* prevParent = nullptr;
-    Node* prevNode = nullptr;
-    std::vector<Tok> currentStatement;
-    std::vector<Tok> prevStatement;
 
     static bool expect(Tok& tok, tokType t);
 

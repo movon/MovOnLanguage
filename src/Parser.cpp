@@ -1,5 +1,11 @@
 #include "Parser.h"
- 
+
+ParentNode* currParent = nullptr;
+Node* prevNode = nullptr;
+std::vector<Tok> currentStatement;
+std::vector<Tok> prevStatement;
+
+
 void error(std::string errormsg, Tok& t) {
     //needs implementing
     //in the error class most likely
@@ -20,27 +26,30 @@ bool Parser::expect(Tok& tok, tokType t) {
 //I don't think that defining the vars in the header works because it didn't work for the lexer
 void Parser::run(std::vector<Tok> toks) {// need to edit this
         TokStreamer* streamer = new TokStreamer(toks, -1);
-        prevParent = new ParentNode("Program");
+        currParent = new ParentNode("Program");
+        Node* tempCurrParent;
         Tok currentTok = streamer->getNextToken();
         while (currentTok.type != tokType::ENDOFINPUT) {
+            tempPrevParent = currParent;
             switch(currentTok.type) {
                 case tokType::KEYWORD:
                     handleKeywords(currentTok, streamer);
                 case tokType::TYPE:
                     handleTypes(currentTok, streamer);
             }
+            currParent = tempCurrParent;
             currentTok = streamer->getNextToken();
         }
  
 }
  
 void Parser::handleKeywords(Tok currentTok, TokStreamer* streamer) {
-        
         std::string con = currentTok.content;
-
         if (con == "print") {
             Print(streamer);
         }
+        //else if ...
+
 }
 
 void Parser::Print(TokStreamer* streamer) {
