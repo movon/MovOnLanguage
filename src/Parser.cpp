@@ -46,16 +46,22 @@ void Parser::run(std::vector<Tok> toks) {// need to edit this
 void Parser::handleKeywords(Tok currentTok, TokStreamer* streamer) {
         std::string con = currentTok.content;
         if (con == "print") {
-            Print(streamer);
+            Print(currentTok, streamer);
         }
         //else if ...
 
 }
 
-void Parser::Print(TokStreamer* streamer) {
+void Parser::Print(Tok currentTok, TokStreamer* streamer) {
     Tok next = streamer->peekNextTok();
+    std::vector<Tok> currNodeToks;
+    currNodeToks.push_back(currentTok);//for debugging
+    currParent = createNode(currParent, NodeType::FUNCTIONCALL, currNodeToks);
+    currNodeToks.clear();
     if (accept(next, tokType::STRING)) {
-        //createNode()
+        currNodeToks.push_back(next);
+        createNode(currParent, NodeType::STRING, currNodeToks);
+        currNodeToks.clear();
         streamer->advancePosition();
     }
     else if (accept(next, tokType::IDENTIFIER)) {
@@ -79,7 +85,7 @@ void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
 
 }
 
-void Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
+Node* Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
     Node* node = new Node(parent, nodeType, tokens);
     parent->addChild(node);
    

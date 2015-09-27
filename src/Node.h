@@ -5,7 +5,7 @@
 #include "Tok.h"
 #include <vector>
 
-enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTION };
+enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT};
 
 class Node{
 protected:
