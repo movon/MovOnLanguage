@@ -26,27 +26,33 @@ void Parser::run(std::vector<Tok> toks) {// need to edit this
         while (currentTok.type != tokType::ENDOFINPUT) {
             switch(currentTok.type) {
                 case tokType::KEYWORD:
-                    handleKeywords(currentTok);
+                    handleKeywords(currentTok, streamer);
                 case tokType::TYPE:
-                    handleTypes(currentTok);
+                    handleTypes(currentTok, streamer);
             }
             currentTok = streamer->getNextToken();
         }
  
 }
  
-void handleKeywords(Tok currentTok) {
+void handleKeywords(Tok currentTok, TokStreamer* streamer) {
         switch(currentTok.content){
-                case INT:
-                        handle INT;
-                case print:
-               
+            case print:
+                Print(streamer);
         }
        
 }
- 
+
+void Print(TokStreamer* streamer) {
+
+}
+
+void handleTypes(TokStreamer* streamer) {
+    
+}
+
 void Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
     Node* node = new Node(parent, nodeType, tokens);
-    parent->children.push_back(node);
+    parent->addChild(node);
    
 }

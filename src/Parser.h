@@ -6,6 +6,7 @@
 #include "Node.h"
 #include "Tok.h"
 #include "ParentNode.h"
+#include "TokStreamer.h"
 
 class Parser{
 public:
@@ -21,6 +22,12 @@ private:
     bool expect(Tok &tok, tokType &t);
 
     bool accept(Tok &tok, tokType &t);
+
+    void handleKeywords(Tok currentTok, TokStreamer* streamer);
+
+    void Print(TokStreamer* streamer);
+
+    void handleTypes(TokStreamer* streamer);
 };
 
 

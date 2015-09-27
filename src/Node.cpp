@@ -7,4 +7,6 @@ Node::Node(Node* Parent, NodeType Nodetype, std::vector<Tok> Tokens){
     tokens = Tokens;
 }
 
-    
+void Node::addChild(Node* node) {
+	 children.push_back(node);
+}
