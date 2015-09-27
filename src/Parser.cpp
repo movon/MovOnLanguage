@@ -39,8 +39,7 @@ void handleKeywords(Tok currentTok, TokStreamer* streamer) {
         switch(currentTok.content){
             case print:
                 Print(streamer);
-        }
-       
+        }      
 }
 
 void Print(TokStreamer* streamer) {
@@ -48,7 +47,7 @@ void Print(TokStreamer* streamer) {
 }
 
 void handleTypes(TokStreamer* streamer) {
-    
+
 }
 
 void Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){

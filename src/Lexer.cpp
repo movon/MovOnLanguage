@@ -27,10 +27,9 @@ void Lexer::printTokens() {
  
 void Lexer::initSets() {
     keywords.insert("print");
-    keywords.insert("int");
     
+    types.insert("int");
     types.insert("float");
-    types.insert("function");
  
     operators.insert("=");
     operators.insert("<");
@@ -205,16 +204,14 @@ void Lexer::runLexer() {
                                 //If I found a keyword - send it to parser.
                                 else if (isKeyword(tok.content))
                                 {
-                                        if (tok.content == "function") {
-                                            tok.type = tokType::FUNCTIONDEF;
-                                            addToParserTokens(tok);
-                                            tok.content = "";
-                                        }
-                                        else {
-                                            tok.type = tokType::KEYWORD;
-                                            addToParserTokens(tok);
-                                            tok.content = "";
-                                        }
+                                    tok.type = tokType::KEYWORD;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
+                                }
+                                else if (tok.content == "function") {
+                                    tok.type = tokType::FUNCTIONDEF;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
                                 }
                                 else if (isType(tok.content)) {
                                     tok.type = tokType::TYPE;
