@@ -12,22 +12,22 @@ class Parser{
 public:
     static void run(std::vector<Tok> toks);
 
-    void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
+    static void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
 private:
     ParentNode* prevParent = nullptr;
     Node* prevNode = nullptr;
     std::vector<Tok> currentStatement;
     std::vector<Tok> prevStatement;
 
-    bool expect(Tok &tok, tokType &t);
+    static bool expect(Tok& tok, tokType t);
 
-    bool accept(Tok &tok, tokType &t);
+    static bool accept(Tok& tok, tokType t);
 
-    void handleKeywords(Tok currentTok, TokStreamer* streamer);
+    static void handleKeywords(Tok currentTok, TokStreamer* streamer);
 
-    void Print(TokStreamer* streamer);
+    static void Print(TokStreamer* streamer);
 
-    void handleTypes(Tok& currentTok, TokStreamer* streamer);
+    static void handleTypes(Tok& currentTok, TokStreamer* streamer);
 };
 
 
