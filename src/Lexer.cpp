@@ -115,11 +115,9 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         }
 }
  
-void Lexer::addToStreamerTokens(Tok tok) {
+void Lexer::addToParserTokens(Tok tok) {
         if (!trim(tok.content).empty()) {
-                if(streamer != nullptr){
-                                        streamer->addToken(tok);
-                                }
+            tokens.push_back(tok);
         }
 }
  

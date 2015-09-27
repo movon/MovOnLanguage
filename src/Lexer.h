@@ -56,10 +56,7 @@ class Lexer {
  
                 static void runLexer();
        
-        static std::vector<Tok> getTokens();
-               
-        private:
-                Streamer* streamer;
+                static std::vector<Tok> getTokens();
 };
  
  
