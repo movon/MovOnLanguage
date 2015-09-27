@@ -110,7 +110,12 @@ void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
         streamer->advancePosition();
         next = streamer->peekNextTok();
         if (Lexer::tokTypeToString(next.type) == currentTok.content) {
-            currParent = createNode(currParent, )    
+            currParent = createNode(currParent, NodeType::CREATION, currNodeToks);
+            currNodeToks.clear();
+            createNode(currParent, )    
+        }
+        else {
+            //error() or something along those lines
         }
         
     }
