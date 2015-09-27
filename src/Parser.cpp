@@ -95,9 +95,25 @@ void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
     //Lexer::tokTypeToString
     std::vector<Tok> currNodeToks;
     currNodeToks.push_back(currentTok);
-    currNodeToks.push_back(next);
     Tok next = streamer->peekNextTok();
     expect(next, tokType::IDENTIFIER);
+    streamer->advancePosition();
+    currNodeToks.push_back(next);
+    next = streamer->peekNextTok();
+    if (accept(next, tokType::DELIMITER)) {
+        createNode(currParent, NodeType::CREATION, currNodeToks);
+        currNodeToks.clear();
+    }
+    else {
+        expect(next, tokType::ASSIGNMENT);
+        //need to add expr support in the next part
+        streamer->advancePosition();
+        next = streamer->peekNextTok();
+        if (Lexer::tokTypeToString(next.type) == currentTok.content) {
+            currParent = createNode(currParent, )    
+        }
+        
+    }
 }
 
 Node* Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
