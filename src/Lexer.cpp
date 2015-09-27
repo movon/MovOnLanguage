@@ -117,6 +117,8 @@ std::string Lexer::tokTypeToString(tokType& tt) {
             return "COMMA";
         case tokType::ASSIGNMENT:
             return "ASSIGNMENT";
+        case tokType::TYPE:
+            return "TYPE";  
         }
 }
  
