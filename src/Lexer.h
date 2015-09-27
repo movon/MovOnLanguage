@@ -32,17 +32,11 @@ class Lexer {
        
                 static void initSets();
  
-                static std::string getNextToken();
- 
                 static bool isKeyword(std::string tok);
- 
-                static bool isOrContainsAnOperator(std::string content);
  
                 static bool isOperator(std::string s);
  
                 static std::string tokTypeToString(tokType& tokType);
- 
-                static void addToParserTokens(Tok tok);
  
                 static void printTokens();
  
@@ -57,9 +51,8 @@ class Lexer {
                 static void runLexer();
        
         static std::vector<Tok> getTokens();
-               
-        private:
-                Streamer* streamer;
+
+    void addToStreamerTokens(Tok tok);
 };
  
  

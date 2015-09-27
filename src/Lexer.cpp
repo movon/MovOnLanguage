@@ -1,14 +1,13 @@
 #include "Lexer.h"
  
-#include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <functional>
- 
+
 static std::set<std::string> keywords;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
 static std::vector<Tok> tokens;
+static Streamer* streamer;
 
 void Lexer::printTokens() {
         for (int i = 0; i < tokens.size(); ++i)
@@ -117,9 +116,9 @@ std::string Lexer::tokTypeToString(tokType& tt) {
  
 void Lexer::addToStreamerTokens(Tok tok) {
         if (!trim(tok.content).empty()) {
-                if(streamer != nullptr){
-                                        streamer->addToken(tok);
-                                }
+                if(streamer != nullptr) {
+                    streamer->addToken(tok);
+            }
         }
 }
  
