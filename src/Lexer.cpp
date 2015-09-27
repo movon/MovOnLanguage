@@ -118,7 +118,7 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         case tokType::ASSIGNMENT:
             return "ASSIGNMENT";
         case tokType::TYPE:
-            return "TYPE";  
+            return "TYPE"; 
         }
 }
  
