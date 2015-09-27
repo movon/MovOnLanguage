@@ -43,7 +43,24 @@ void handleKeywords(Tok currentTok, TokStreamer* streamer) {
 }
 
 void Print(TokStreamer* streamer) {
+    if (accept(streamer->peekNextTok(), tokType::STRING)) {
 
+        streamer->advancePosition();
+    }
+    else if (accpet(streamer->peekNextTok(), tokType::IDENTIFIER)) {
+        
+        streamer->advancePosition();
+    }
+    else if (accept(streamer->peekNextTok(), tokType::INT)) {
+
+        streamer->advancePosition();
+    }
+    else if (accept(streamer->peekNextTok(), tokType::FLOAT)) {
+
+        streamer->advancePosition();
+    }
+
+    expect(streamer->peekNextTok(), tokType::DELIMITER)
 }
 
 void handleTypes(TokStreamer* streamer) {
