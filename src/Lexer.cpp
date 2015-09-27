@@ -9,6 +9,21 @@ static std::set<std::string> keywords;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
 static std::vector<Tok> tokens;
+
+void Lexer::printTokens() {
+        for (int i = 0; i < tokens.size(); ++i)
+        {
+                std::cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
+        }
+        //std::cout << std::endl;
+        for (int i = 0; i < tokens.size(); ++i)
+        {
+                if (i != 0)
+                        std::cout << ",";
+                std::cout << '"' << tokens[i].content << '"';
+        }
+        std::cout << std::endl;
+}
  
 void Lexer::initSets() {
     keywords.insert("print");
@@ -23,7 +38,6 @@ void Lexer::initSets() {
     operators.insert(">=");
     operators.insert("!=");
     operators.insert("==");
-    operators.insert("===");
     operators.insert("-");
     operators.insert("+");
     operators.insert("*");
@@ -270,6 +284,6 @@ void Lexer::runLexer() {
                 chr = streamer->getNextChar();
         }
  
-        streamer->printTokens();
-                delete streamer;
+        printTokens();
+        delete streamer;
 }
