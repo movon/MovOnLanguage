@@ -20,14 +20,13 @@ bool Parser::expect(Tok& tok, tokType& t) {
 }
  
 //I don't think that defining the vars in the header works because it didn't work for the lexer
-void Parser::run(std::std::vector<Tok> toks) {// need to edit this
-        TokStreamer* streamer = new TokStreamer(toks, -1)
+void Parser::run(std::vector<Tok> toks) {// need to edit this
+        TokStreamer* streamer = new TokStreamer(toks, -1);
         Tok currentTok = streamer->getNextToken();
         while (currentTok.type != tokType::ENDOFINPUT) {
-            switch(currentTok.type){
-            case keyword:
-                handleKeywords(currentTok);
-               
+            switch(currentTok.type) {
+                case tokType::KEYWORD:
+                    handleKeywords(currentTok);
             }
         currentTok = streamer->getNextToken();
         }

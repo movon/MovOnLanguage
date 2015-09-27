@@ -5,14 +5,14 @@
  
 #include "Tok.h"
  
-class Streamer {
+class TokStreamer {
 private:
         int i;
         int len;
         std::vector<Tok> toks;
        
 public:
-        Streamer(std::vector<Tok> toks, int i);
+        TokStreamer(std::vector<Tok> toks, int i);
         void advancePosition();
 
         Tok getNextToken();
