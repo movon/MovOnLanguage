@@ -15,7 +15,7 @@ private:
         int currentToken;
        
 public:
-        Streamer(string data, int i);
+        Streamer(std::string data, int i);
         char peekNextChar();
         char getNextChar();
         void advancePosition();
