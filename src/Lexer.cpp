@@ -5,6 +5,7 @@
 #include <algorithm>
 
 static std::set<std::string> keywords;
+static std::set<std::string> types;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
 static std::vector<Tok> tokens;
@@ -27,8 +28,9 @@ void Lexer::printTokens() {
 void Lexer::initSets() {
     keywords.insert("print");
     keywords.insert("int");
-    keywords.insert("float");
-    keywords.insert("function");
+    
+    types.insert("float");
+    types.insert("function");
  
     operators.insert("=");
     operators.insert("<");
@@ -65,7 +67,11 @@ static std::string &trim(std::string &s) {
 }
  
 bool Lexer::isKeyword(std::string content) {
-        return keywords.find(content) != keywords.end();
+    return keywords.find(content) != keywords.end();
+}
+
+bool Lexer::isType(std::string content) {
+    return types.find(content) != types.end();
 }
  
  
@@ -207,6 +213,11 @@ void Lexer::runLexer() {
                                             addToParserTokens(tok);
                                             tok.content = "";
                                         }
+                                }
+                                else if (isType(tok.content)) {
+                                    tok.type = tokType::TYPE;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
                                 }
                                 else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
                                         Primitive primitive = checkIfPrimitive(tok.content);

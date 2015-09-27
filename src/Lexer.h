@@ -32,7 +32,9 @@ class Lexer {
        
                 static void initSets();
  
-                static bool isKeyword(std::string tok);
+                static bool isKeyword(std::string content);
+
+                static bool isType(std::string content);
  
                 static bool isOperator(std::string s);
  

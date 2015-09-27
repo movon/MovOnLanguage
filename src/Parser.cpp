@@ -27,8 +27,10 @@ void Parser::run(std::vector<Tok> toks) {// need to edit this
             switch(currentTok.type) {
                 case tokType::KEYWORD:
                     handleKeywords(currentTok);
+                case tokType::TYPE:
+                    handleTypes(currentTok);
             }
-        currentTok = streamer->getNextToken();
+            currentTok = streamer->getNextToken();
         }
  
 }
