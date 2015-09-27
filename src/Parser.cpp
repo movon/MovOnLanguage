@@ -58,6 +58,7 @@ void Parser::Print(Tok currentTok, TokStreamer* streamer) {
     currNodeToks.push_back(currentTok);//for debugging
     currParent = createNode(currParent, NodeType::FUNCTIONCALL, currNodeToks);
     currNodeToks.clear();
+
     if (accept(next, tokType::STRING)) {
         currNodeToks.push_back(next);
         createNode(currParent, NodeType::STRING, currNodeToks);
@@ -91,7 +92,12 @@ void Parser::Print(Tok currentTok, TokStreamer* streamer) {
 }
 
 void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
-
+    //Lexer::tokTypeToString
+    std::vector<Tok> currNodeToks;
+    currNodeToks.push_back(currentTok);
+    currNodeToks.push_back(next);
+    Tok next = streamer->peekNextTok();
+    expect(next, tokType::IDENTIFIER);
 }
 
 Node* Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){

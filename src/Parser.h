@@ -7,6 +7,7 @@
 #include "Tok.h"
 #include "ParentNode.h"
 #include "TokStreamer.h"
+#include "Lexer.h"
 
 class Parser{
 public:
