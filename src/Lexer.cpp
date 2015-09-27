@@ -293,5 +293,4 @@ void Lexer::runLexer() {
  
         printTokens();
         delete streamer;
-        Parser::run(toks);
 }

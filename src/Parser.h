@@ -9,7 +9,7 @@
 
 class Parser{
 public:
-    void run(std::vector<Tok> toks);
+    static void run(std::vector<Tok> toks);
 
     void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
 private:
