@@ -1,5 +1,5 @@
 #include "TokStreamer.h"
- 
+
 Streamer::Streamer(std::vector<Tok> t, int pos) {
         toks = t;
         i = pos;
@@ -11,9 +11,19 @@ void Streamer::advancePosition() {
 }
  
 Tok Streamer::getNextToken(){
+    if (i < len - 1) {
         return toks[++i];
+    }
+    else {
+    	return Tok("", tokType::ENDOFINPUT);
+    }
 }
  
 Tok Streamer::peekNextTok(){
-        return toks[i + 1];
+    if (i < len - 1) {
+		return toks[i + 1];
+    }
+    else {
+    	return Tok("", tokType::ENDOFINPUT);
+    }
 }

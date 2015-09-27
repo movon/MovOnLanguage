@@ -10,7 +10,7 @@ Streamer::Streamer(std::string d, int pos) {
 }
  
 char Streamer::peekNextChar() {
-        if (i < len) {
+        if (i < len - 1) {
                 return data.at(i+1);
         }
         else

@@ -9,13 +9,12 @@
 
 class Parser{
 public:
-    void run();
+    void run(std::vector<Tok> toks);
 
     void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
 private:
     ParentNode* prevParent = nullptr;
     Node* prevNode = nullptr;
-    std::vector<Tok> toks;
     std::vector<Tok> currentStatement;
     std::vector<Tok> prevStatement;
 

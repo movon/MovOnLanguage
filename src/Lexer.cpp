@@ -1,5 +1,6 @@
 #include "Lexer.h"
- 
+#include "Parser.h" 
+
 #include <fstream>
 #include <algorithm>
 
@@ -281,4 +282,5 @@ void Lexer::runLexer() {
  
         printTokens();
         delete streamer;
+        Parser::run(toks);
 }
