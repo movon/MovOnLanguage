@@ -1,5 +1,5 @@
 #include "ParentNode.h"
 
-ParentNode::ParentNode(Node *parent, NodeType nodeType, std::vector<Tok> tokens, std::string Name) : Node(parent,nodeType,tokens) {
+ParentNode::ParentNode(std::string Name) : Node::Node(){
 	name = Name;
 }

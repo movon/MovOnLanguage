@@ -15,6 +15,7 @@ protected:
     Node* parent;
 public:
     Node(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
+    Node();
     void addChild(Node* node);
 };
 

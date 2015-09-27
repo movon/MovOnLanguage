@@ -1,6 +1,4 @@
 #include "Parser.h"
-#include "TokStreamer.h"
-#include "Tok.h"
  
 void error(std::string errormsg, Tok& t) {
     //needs implementing
@@ -22,6 +20,7 @@ bool Parser::expect(Tok& tok, tokType& t) {
 //I don't think that defining the vars in the header works because it didn't work for the lexer
 void Parser::run(std::vector<Tok> toks) {// need to edit this
         TokStreamer* streamer = new TokStreamer(toks, -1);
+        prevParent = new ParentNode("Program");
         Tok currentTok = streamer->getNextToken();
         while (currentTok.type != tokType::ENDOFINPUT) {
             switch(currentTok.type) {
@@ -35,35 +34,37 @@ void Parser::run(std::vector<Tok> toks) {// need to edit this
  
 }
  
-void handleKeywords(Tok currentTok, TokStreamer* streamer) {
+void Parser::handleKeywords(Tok currentTok, TokStreamer* streamer) {
         switch(currentTok.content){
             case print:
                 Print(streamer);
-        }      
+        }
 }
 
-void Print(TokStreamer* streamer) {
-    if (accept(streamer->peekNextTok(), tokType::STRING)) {
-
+void Parser::Print(TokStreamer* streamer) {
+    Tok next = streamer->peekNextTok();
+    if (accept(next, tokType::STRING)) {
+        createNode()
         streamer->advancePosition();
     }
-    else if (accpet(streamer->peekNextTok(), tokType::IDENTIFIER)) {
+    else if (accpet(next, tokType::IDENTIFIER)) {
         
         streamer->advancePosition();
     }
-    else if (accept(streamer->peekNextTok(), tokType::INT)) {
+    else if (accept(next, tokType::INT)) {
 
         streamer->advancePosition();
     }
-    else if (accept(streamer->peekNextTok(), tokType::FLOAT)) {
+    else if (accept(next, tokType::FLOAT)) {
 
         streamer->advancePosition();
     }
+    //else if expr
 
-    expect(streamer->peekNextTok(), tokType::DELIMITER)
+    expect(next, tokType::DELIMITER)
 }
 
-void handleTypes(TokStreamer* streamer) {
+void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
 
 }
 

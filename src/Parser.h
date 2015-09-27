@@ -27,7 +27,7 @@ private:
 
     void Print(TokStreamer* streamer);
 
-    void handleTypes(TokStreamer* streamer);
+    void handleTypes(Tok& currentTok, TokStreamer* streamer);
 };
 
 
