@@ -3,10 +3,10 @@
 
 #include <string>
 #include "Node.h"
-class ParentNode : public Node{
+class ParentNode : public Node {
 public:
     std::string name;
-    ParentNode();
+    ParentNode(Node *parent, NodeType nodeType, std::vector<Tok> tokens, std::string name);
 };
 
 

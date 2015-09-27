@@ -1,3 +1,4 @@
+#include <sys/socket.h>
 #include "Parser.h"
  
 void error(std::string errormsg, tokType& t) {
@@ -18,16 +19,16 @@ bool Parser::expect(Tok& tok, tokType& t) {
 }
  
 //I don't think that defining the vars in the header works because it didn't work for the lexer
-void Parser::run(){// need to edit this
+void Parser::run() {// need to edit this
         switch(currentTok.type){
-                case keyword:
-                        handleKeywords(currentTok);
+            case keyword:
+                handleKeywords(currentTok);
                
         }
  
 }
  
-handleKeywords(Tok currentTok){
+void handleKeywords(Tok currentTok) {
         switch(currentTok.content){
                 case INT:
                         handle INT;

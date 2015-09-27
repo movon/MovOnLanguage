@@ -40,7 +40,7 @@ class Lexer {
  
                 static void printTokens();
  
-                static bool isInt(const std::string& s);
+                static bool isInt(std::string& s);
  
                 static Primitive checkIfPrimitive(std::string s);
  
@@ -50,9 +50,9 @@ class Lexer {
  
                 static void runLexer();
        
-        static std::vector<Tok> getTokens();
+                static std::vector<Tok> getTokens();
 
-    void addToStreamerTokens(Tok tok);
+                static void addToParserTokens(Tok tok);
 };
  
  

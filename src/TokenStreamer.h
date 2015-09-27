@@ -3,7 +3,7 @@
  
 class TokenStreamer{
  
-}
+};
  
  
 #endif

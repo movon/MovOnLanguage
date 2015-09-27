@@ -10,14 +10,11 @@ enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTION };
 class Node{
 protected:
     NodeType nodeType;
-    std::vector<Tok> toks;
+    std::vector<Tok> tokens;
     std::vector<Node*> children;
     Node* parent;
-    
+public:
     Node(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
-    ~Node();
-    
-    std::string toString();
 };
 
 

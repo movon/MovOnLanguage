@@ -14,7 +14,6 @@ void Lexer::printTokens() {
         {
                 std::cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
         }
-        //std::cout << std::endl;
         for (int i = 0; i < tokens.size(); ++i)
         {
                 if (i != 0)
@@ -114,19 +113,16 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         }
 }
  
-void Lexer::addToStreamerTokens(Tok tok) {
+void Lexer::addToParserTokens(Tok tok) {
         if (!trim(tok.content).empty()) {
-                if(streamer != nullptr) {
-                    streamer->addToken(tok);
-            }
+            tokens.push_back(tok);
         }
 }
- 
- 
-bool Lexer::isInt(const std::string& s) {
-    auto it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
-    return !s.empty() && it == s.end();
+
+bool Lexer::isInt(std::string& s)
+{
+    return !s.empty() && std::find_if(s.begin(),
+                                      s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
  
 bool Lexer::isFloat(const std::string& s) {
@@ -164,9 +160,9 @@ void Lexer::runLexer() {
         std::string line;
         std::string data;
         std::ifstream myfile("src/code.mo");
-        if(myfile.fail()){
+        if(myfile.fail()) {
             std::cout << "The file is not at this location or does not exist" << std::endl;
-                exit(1);
+            exit(1);
         }
         while (getline(myfile, line)) {
                         data += line;
@@ -182,7 +178,7 @@ void Lexer::runLexer() {
                                 if (chr == '"') {
                                         //if std::string quotes ended - send it to parser
                                         tok.type = tokType::STRING;
-                                        addToStreamerTokens(tok);
+                                        addToParserTokens(tok);
                                         isInString = false;
                                         tok.content = "";
                                 }
@@ -202,18 +198,18 @@ void Lexer::runLexer() {
                                 {
                                         if (tok.content == "function") {
                                             tok.type = tokType::FUNCTIONDEF;
-                                            addToStreamerTokens(tok);
+                                            addToParserTokens(tok);
                                             tok.content = "";
                                         }
                                         else {
                                             tok.type = tokType::KEYWORD;
-                                            addToStreamerTokens(tok);
+                                            addToParserTokens(tok);
                                             tok.content = "";
                                         }
                                 }
                                 else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
                                         Primitive primitive = checkIfPrimitive(tok.content);
-                                        addToStreamerTokens(Tok(tok.content, primitive.type));
+                                        addToParserTokens(Tok(tok.content, primitive.type));
                                         tok.content = "";
                                 }
                                 else if (chr == '(') {        
@@ -223,13 +219,13 @@ void Lexer::runLexer() {
                                     else {
                                         tok.type = tokType::FUNCTIONNAME;
                                     }
-                                        addToStreamerTokens(tok);
+                                        addToParserTokens(tok);
                                         tok.content = "";
-                                        addToStreamerTokens(Tok("(", tokType::OPENPARAN));
+                                        addToParserTokens(Tok("(", tokType::OPENPARAN));
                                 }
                                 else if (isFlowOperator(tok.content)) {
                                     tok.type = tokType::FLOWOPERATOR;
-                                    addToStreamerTokens(tok);
+                                    addToParserTokens(tok);
                                     tok.content = "";
                                 }
                                 //It is another delimiter, send token to parser
@@ -237,7 +233,7 @@ void Lexer::runLexer() {
                                 else
                                 {
                                         tok.type = tokType::IDENTIFIER;
-                                        addToStreamerTokens(tok);
+                                        addToParserTokens(tok);
                                         tok.content = "";
  
                                 }
@@ -247,31 +243,31 @@ void Lexer::runLexer() {
                                         char nextChr = streamer->peekNextChar();
                                         if (isOperator(std::string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                addToStreamerTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
+                                                addToParserTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
                                         }
                                         else {
                                             if (chr == '=') {
-                                                addToStreamerTokens(Tok(std::string(1, chr), tokType::ASSIGNMENT));
+                                                addToParserTokens(Tok(std::string(1, chr), tokType::ASSIGNMENT));
                                             }
                                             else {
-                                                addToStreamerTokens(Tok(std::string(1, chr), tokType::OPERATOR));
+                                                addToParserTokens(Tok(std::string(1, chr), tokType::OPERATOR));
                                             }
                                         }
                                 }
                                 else if (chr == ';') {
-                                        addToStreamerTokens(Tok(std::string(1, chr), tokType::DELIMITER));
+                                        addToParserTokens(Tok(std::string(1, chr), tokType::DELIMITER));
                                 }
                                 else if (chr == ')') {
-                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::CLOSINGPARAN));
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGPARAN));
                                 }
                                 else if (chr == '{') {
-                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::OPENCURLY));
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::OPENCURLY));
                                 }
                                 else if (chr =='}') {
-                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));  
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));  
                                 }
                                 else if (chr == ',') {
-                                    addToStreamerTokens(Tok(std::string(1, chr), tokType::COMMA));
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::COMMA));
                                 }
  
                         }

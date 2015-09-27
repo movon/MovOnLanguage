@@ -1,6 +1,6 @@
 #include "TokStreamer.h"
  
-Streamer::Streamer(std::std::vector<Tok> t, int pos) {
+Streamer::Streamer(std::vector<Tok> t, int pos) {
         toks = t;
         i = pos;
         len = (signed) t.size();

@@ -12,7 +12,7 @@ private:
         std::vector<Tok> toks;
        
 public:
-        Streamer(std::std::vector<Tok> toks, int i);
+        Streamer(std::vector<Tok> toks, int i);
         void advancePosition();
 
         Tok getNextToken();

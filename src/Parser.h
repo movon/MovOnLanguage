@@ -5,6 +5,7 @@
 #include <string>
 #include "Node.h"
 #include "Tok.h"
+#include "ParentNode.h"
 
 class Parser{
 public:
@@ -15,8 +16,12 @@ private:
     ParentNode* prevParent = nullptr;
     Node* prevNode = nullptr;
     std::vector<Tok> toks;
-    std::vecor<Tok> currentStatement;
+    std::vector<Tok> currentStatement;
     std::vector<Tok> prevStatement;
+
+    bool expect(Tok &tok, tokType &t);
+
+    bool accept(Tok &tok, tokType &t);
 };
 
 
