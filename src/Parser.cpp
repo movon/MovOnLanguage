@@ -65,19 +65,28 @@ void Parser::Print(Tok currentTok, TokStreamer* streamer) {
         streamer->advancePosition();
     }
     else if (accept(next, tokType::IDENTIFIER)) {
-        
+        currNodeToks.push_back(next)
+        createNode(currParent, NodeType::IDENTIFIER, currNodeToks);
+        currNodeToks.clear();
         streamer->advancePosition();
     }
     else if (accept(next, tokType::INT)) {
-
+        currNodeToks.push_back(next)
+        createNode(currParent, NodeType::INT, currNodeToks);
+        currNodeToks.clear();
         streamer->advancePosition();
     }
     else if (accept(next, tokType::FLOAT)) {
-
+        currNodeToks.push_back(next)
+        createNode(currParent, NodeType::FLOAT, currNodeToks);
+        currNodeToks.clear();
         streamer->advancePosition();
     }
+    else {
+        //error() or something along those lines
+    }
     //else if expr
-
+    next = streamer->getNextToken();
     expect(next, tokType::DELIMITER);
 }
 
