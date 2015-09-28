@@ -12,3 +12,7 @@ Node::Node() {}
 void Node::addChild(Node* node) {
 	 children.push_back(node);
 }
+
+void Node::changeToks(std::vector<Tok> toks){
+	tokens = toks;
+}
