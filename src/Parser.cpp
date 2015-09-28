@@ -64,31 +64,47 @@ void Parser::Print(Tok currentTok, TokStreamer* streamer) {
         createNode(currParent, NodeType::STRING, currNodeToks);
         currNodeToks.clear();
         streamer->advancePosition();
+		
+		Print(next, streamer);
     }
     else if (accept(next, tokType::IDENTIFIER)) {
         currNodeToks.push_back(next)
         createNode(currParent, NodeType::IDENTIFIER, currNodeToks);
         currNodeToks.clear();
         streamer->advancePosition();
+		
+		Print(next, streamer);
     }
     else if (accept(next, tokType::INT)) {
         currNodeToks.push_back(next)
         createNode(currParent, NodeType::INT, currNodeToks);
         currNodeToks.clear();
         streamer->advancePosition();
-    }
+    
+		Print(next, streamer);
+	}
     else if (accept(next, tokType::FLOAT)) {
         currNodeToks.push_back(next)
         createNode(currParent, NodeType::FLOAT, currNodeToks);
         currNodeToks.clear();
         streamer->advancePosition();
+		
+		Print(next, streamer);
     }
+	else if(accpet(next, tokType::OPERATOR)){
+		currNodeToks.push_back(next);
+		currParent.changeToks(currNodeToks);
+		
+		streamer->advancePosition();
+		
+		Print(next, streamer);
+	}
     else {
         //error() or something along those lines
+		next = streamer->getNextToken();
+		expect(next, tokType::DELIMITER);
     }
-    //else if expr
-    next = streamer->getNextToken();
-    expect(next, tokType::DELIMITER);
+    
 }
 
 void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
