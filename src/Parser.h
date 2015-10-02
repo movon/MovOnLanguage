@@ -8,7 +8,11 @@
 #include "ParentNode.h"
 #include "TokStreamer.h"
 #include "Lexer.h"
-
+//Grammar for Expressions:
+// E --> T {( "+" | "-" ) T} //we need a disownAllChildren() and getChild(i) funcs for a node because of this
+// T --> F {( "*" | "/" ) F} //and this
+// F --> P ["^" F]
+// P --> v | "(" E ")" | "-" T //V is constants and identifiers
 class Parser{
 public:
     static void run(std::vector<Tok> toks);
@@ -25,6 +29,57 @@ private:
     static void Print(TokStreamer* streamer);
 
     static void handleTypes(Tok& currentTok, TokStreamer* streamer);
+
+	static bool termByType(tokType t, TokStreamer* st);
+
+	static bool termByValue(std::string s, TokStreamer* st);
+
+    //Grammar Functions
+
+    static bool termByType(tokType t, TokStreamer* st);
+
+    static bool termByValue(std::string s, TokStreamer* st);
+
+    static bool LOne(TokStreamer* st);
+
+    static bool LOne1(TokStreamer* st);
+
+    static bool LOne2(TokStreamer* st);
+
+    static bool LTwo(TokStreamer* st);
+
+    static bool LTwo1(TokStreamer* st);
+
+    static bool LTwo2(TokStreamer* st);
+
+    static bool E(TokStreamer* st);
+
+    static bool E1(TokStreamer* st);
+
+    static bool T(TokStreamer* st);
+
+    static bool T1(TokStreamer* st);
+
+    static bool F(TokStreamer* st);
+
+    static bool F1(TokStreamer* st);
+
+    static bool P(TokStreamer* st);
+
+    static bool P1(TokStreamer* st);
+
+    static bool P2(TokStreamer* st);
+
+    static bool P3(TokStreamer* st);
+
+    static bool V(TokStreamer* st);
+    
+    static bool V1(TokStreamer* st);
+    
+    static bool V2(TokStreamer* st);
+    
+    static bool V3(TokStreamer* st);
+
 };
 
 

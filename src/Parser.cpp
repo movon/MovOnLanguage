@@ -124,5 +124,293 @@ void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
 Node* Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
     Node* node = new Node(parent, nodeType, tokens);
     parent->addChild(node);
-   
+    return node;   
+}
+
+
+//Grammar for Expressions:
+// E --> T {LOne T} //we need a disownAllChildren() and getChild(i) funcs for a node because of this
+// T --> F {LTwo F} //and this
+// F --> P ["^" F]
+// P --> v | "(" E ")" | "-" T //V is constants and identifiers
+// LOne -> "+" | "-"
+// LTwo -> "*" | "/"
+
+bool Parser::termByType(tokType t, TokStreamer* st) {
+    if (st->getNextToken().type == t) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::termByValue(std::string s, TokStreamer* st) {
+    if (st->getNextToken().content == s) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::LOne(TokStreamer* st) {
+    int save = st->getIndex();
+    if (LOne1(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    if (Lone2(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::LOne1(TokStreamer* st) {
+    if (termByValue("+", st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::LOne2(TokStreamer* st) {
+    if (termByValue("-", st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::LTwo(TokStreamer* st) {
+    int save = st->getIndex();
+    if (LTwo1(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    if (LTwo2(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::LTwo1(TokStreamer* st) {
+    if (termByValue("*", st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::LTwo2(TokStreamer* st) {
+    if (termByValue("/", st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;  
+}
+
+bool Parser::E(TokStreamer* st) {
+    if (E1(st)) {
+        //maybe createNode
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::E1(TokStreamer* st) {
+    if (T(st)) {
+        //maybe createNode
+        while (LOne(st)) {
+            if (T(st)) {
+                //maybe createNode
+            }
+            else {
+                error("Expected another term after operator \"+\" or \"-\"");
+            }
+        }
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::T(TokStreamer* st) {
+    if (T1(st)) {
+        //maybe createNode
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::T1(TokStreamer* st) {
+    if (F(st)) {
+        //maybe createNode
+        while (LTwo(st)) {
+            if (F(st)) {
+                //maybe createNode
+            }
+            else {
+                error("Expected another term after operator \"*\" or \"/\"");
+            }
+        }
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::F(TokStreamer* st) {
+    if (F1(st)) {
+        //maybe createNode
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::F1(TokStreamer* st) {
+    if (P(st)) {
+        //maybe createNode
+        if (termByValue("^", st)) {
+            if (F(st)) {
+                //maybe createNode
+            }
+            else {
+                error("Expected another term after operator \"^\"");
+            }
+        }
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::P(TokStreamer* st) {
+    int save = st->getIndex();
+    if (P1(st)) {
+        //maybe createNode
+        return true;
+    }
+    
+    st->setIndex(save);
+    if (P2(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    if (P3(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::P1(TokStreamer* st) {
+    if (V(st)) {
+        //maybe createNode
+        return true;
+    }
+    
+    return false;
+}
+
+bool Parser::P2(TokStreamer* st) {
+    if (termByType(tokType::OPENPARAN, st)) {
+        if (E(st)) {
+            //maybe createNode //probably not in here though
+            if (termByType(tokType::CLOSINGPARAN, st)) {
+                return true;
+            }
+            else {
+                error("Expected closing paran after expression");
+            }
+        }
+        else {
+            error("Expected expression after opening paran");
+        }
+    }
+    
+    return false;
+}
+
+bool Parser::P3(TokStreamer* st) {
+    if (termByValue("-", st)) {
+        if (T(st)) {
+            //maybe createNode
+            return true;
+        }
+        else {
+            error("Expected a term after unirary minus sign");
+        }
+    }
+    
+    return false;
+}
+
+bool Parser::V(TokStreamer* st) {
+    int save = st->getIndex();
+    if (V1(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    if (V2(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    if (V3(st)) {
+        //maybe createNode
+        return true;
+    }
+
+    //...
+
+    return false;
+}
+
+bool Parser::V1(TokStreamer* st) {
+    if (termByType(tokType::INT, st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::V2(TokStreamer* st) {
+    if (termByType(tokType::FLOAT, st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
+}
+
+bool Parser::V3(TokStreamer* st) {
+    if (termByType(tokType::IDENTIFIER, st)) {
+        //maybe createNode
+        return true;
+    }
+
+    return false;
 }
