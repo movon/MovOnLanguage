@@ -1,9 +1,8 @@
+#include "Lexer.h"
 #include <iostream>
-#include "lexer.cpp"
-
-using namespace std;
-
 int main() {
-    runLexer();
+	std::cout << "------------------ Program Started ------------------" << std::endl;
+    Lexer::runLexer();
+
     return 0;
 }
