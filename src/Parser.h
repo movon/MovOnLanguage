@@ -9,10 +9,10 @@
 #include "TokStreamer.h"
 #include "Lexer.h"
 //Grammar for Expressions:
-// E --> T {( "+" | "-" ) T} //we need a disownAllChildren() and getChild(i) funcs for a node because of this
+// E --> T {( "+" | "-" ) T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-" //ID is for identifiers
 // T --> F {( "*" | "/" ) F} //and this
 // F --> P ["^" F]
-// P --> v | "(" E ")" | "-" T //V is constants and identifiers
+// P --> v | "(" E ")" | "-" T | "+" T //V is constants and identifiers
 class Parser{
 public:
     static void run(std::vector<Tok> toks);

@@ -30,4 +30,3 @@ Node* Node::getChild(int i) {
 void Node::disownAllChildren() {
 	children.clear();
 }
-
