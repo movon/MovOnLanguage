@@ -4,7 +4,7 @@ ParentNode* currParent = nullptr;
 Node* prevNode = nullptr;
 std::vector<Tok> currentStatement;
 std::vector<Tok> prevStatement;
-
+std::vector<Node*> nodes;
 
 void error(std::string errormsg, Tok& t) {
     //needs implementing
@@ -121,18 +121,17 @@ void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
     }
 }
 
-Node* Parser::createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens){
-    Node* node = new Node(parent, nodeType, tokens);
+Node* Parser::createNode(Node* parent, NodeType nodeType){
+    Node* node = new Node(parent, nodeType);
     parent->addChild(node);
     return node;   
 }
 
-
 //Grammar for Expressions:
-// E --> T {LOne T} //we need a disownAllChildren() and getChild(i) funcs for a node because of this
+// E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-" //ID is for identifiers
 // T --> F {LTwo F} //and this
 // F --> P ["^" F]
-// P --> v | "(" E ")" | "-" T //V is constants and identifiers
+// P --> v | "(" E ")" | "-" T | "+" T //V is constants and identifiers
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
 
@@ -219,12 +218,11 @@ bool Parser::LTwo2(TokStreamer* st) {
         return true;
     }
 
-    return false;  
+    return false; 
 }
 
 bool Parser::E(TokStreamer* st) {
     if (E1(st)) {
-        //maybe createNode
         return true;
     }
     
@@ -232,16 +230,51 @@ bool Parser::E(TokStreamer* st) {
 }
 
 bool Parser::E1(TokStreamer* st) {
+    Node* E;
     if (T(st)) {
         //maybe createNode
+        Node* result;
+        result = nodes.back();
+        nodes.pop_back();
+        E = createNode(nullptr, NodeType::E);
+        E->addChild(result);
         while (LOne(st)) {
-            if (T(st)) {
-                //maybe createNode
+            //maybe createNode
+            if (E->numChildren() == 1) {
+                result = nodes.back();
+                nodes.pop_back();
+                E->addChild(result);
+                if (T(st)) {
+                    result = nodes.back();
+                    nodes.pop_back();
+                    E->addChild(result);
+                }
+                else {
+                    error("Expected another term after operator \"+\" or \"-\"");
+                }
             }
             else {
-                error("Expected another term after operator \"+\" or \"-\"");
+                //Unite the children into an E
+                Node* newE = createNode(nullptr, nodeType::E);
+                E->changeParent(newE);
+                Node* temp = newE;
+                newE = E;
+                E = temp;
+                delete temp;
+                result = nodes.back();//LOne
+                nodes.pop_back();
+                E->addChild(result);
+                if (T(st)) {
+                    result = nodes.back();
+                    nodes.pop_back();//T
+                    E->addChild(result);
+                }
+                else {
+                    error("Expected another term after operator \"+\" or \"-\"");
+                }
             }
         }
+        nodes.push_back(E);
         return true;
     }
     

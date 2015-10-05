@@ -1,10 +1,9 @@
 #include "Node.h"
 
 
-Node::Node(Node* Parent, NodeType Nodetype, std::vector<Tok> Tokens){
+Node::Node(Node* Parent, NodeType Nodetype){
     parent = Parent;
     nodeType = Nodetype;
-    tokens = Tokens;
 }
 
 Node::Node() {}
@@ -17,6 +16,7 @@ Node::~Node() {
 
 void Node::addChild(Node* node) {
 	 children.push_back(node);
+	 node->changeParent(this);
 }
 
 void Node::changeToks(std::vector<Tok> toks){
@@ -29,4 +29,12 @@ Node* Node::getChild(int i) {
 
 void Node::disownAllChildren() {
 	children.clear();
+}
+
+int Node::numChildren() {
+	return children.length();
+}
+
+void Node::changeParent(Node* Parent) {
+	parent = Parent;
 }

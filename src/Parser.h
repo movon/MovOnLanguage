@@ -9,10 +9,10 @@
 #include "TokStreamer.h"
 #include "Lexer.h"
 //Grammar for Expressions:
-// E --> T {( "+" | "-" ) T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-" //ID is for identifiers
+// E --> T {( "+" | "-" ) T} //These products need to be made | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-" //ID is for identifiers
 // T --> F {( "*" | "/" ) F} //and this
 // F --> P ["^" F]
-// P --> v | "(" E ")" | "-" T | "+" T //V is constants and identifiers
+// P --> v | "(" E ")" | "-" T //These product needs to be made | "+" T //V is constants and identifiers
 class Parser{
 public:
     static void run(std::vector<Tok> toks);

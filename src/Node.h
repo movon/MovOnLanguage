@@ -5,12 +5,11 @@
 #include "Tok.h"
 #include <vector>
 
-enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT, CREATION, ASSIGNMENT};
+enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT, CREATION, ASSIGNMENT, E};
 
 class Node{
 protected:
     NodeType nodeType;
-    std::vector<Tok> tokens;
     std::vector<Node*> children;
     Node* parent;
 public:
@@ -22,6 +21,7 @@ public:
 
     Node* getChild(int i);
     void disownAllChildren();
+    int numChildren();
 };
 
 
