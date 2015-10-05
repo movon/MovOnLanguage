@@ -27,3 +27,11 @@ Tok TokStreamer::peekNextTok(){
     	return Tok("", tokType::ENDOFINPUT);
     }
 }
+
+int getIndex() {
+    return i;
+}
+
+void setIndex(int j) {
+    i = j;
+}

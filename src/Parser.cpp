@@ -128,13 +128,12 @@ Node* Parser::createNode(Node* parent, NodeType nodeType){
 }
 
 //Grammar for Expressions:
-// E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-" //ID is for identifiers
-// T --> F {LTwo F} //and this
+// E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
+// T --> F {LTwo F}
 // F --> P ["^" F]
-// P --> v | "(" E ")" | "-" T | "+" T //V is constants and identifiers
+// P --> V | "(" E ")" | "-" T | "+" T //V is constants and identifiers
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
-
 bool Parser::termByType(tokType t, TokStreamer* st) {
     if (st->getNextToken().type == t) {
         //maybe createNode
@@ -166,6 +165,7 @@ bool Parser::LOne(TokStreamer* st) {
         return true;
     }
 
+    //maybe st->setIndex(save);
     return false;
 }
 
@@ -200,6 +200,7 @@ bool Parser::LTwo(TokStreamer* st) {
         return true;
     }
 
+    //maybe st->setIndex(save);
     return false;
 }
 
@@ -222,10 +223,32 @@ bool Parser::LTwo2(TokStreamer* st) {
 }
 
 bool Parser::E(TokStreamer* st) {
+    int save = st->getIndex();
     if (E1(st)) {
         return true;
     }
     
+    st->setIndex(save);
+    if (E2(st)) {
+        return true;
+    }
+
+    st->setIndex(save);
+    if (E3(st)) {
+        return true;
+    }
+
+    st->setIndex(save);
+    if (E4(st)) {
+        return true;
+    }
+
+    st->setIndex(save);
+    if (E5(st)) {
+        return true;
+    }
+
+    //maybe st->setIndex(save);
     return false;
 }
 
@@ -281,12 +304,63 @@ bool Parser::E1(TokStreamer* st) {
     return false;
 }
 
+bool Parser::E2(TokStreamer* st) {
+    if (termByValue("+", st) && termByValue("+", st)) {
+        if (termByValue(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+            //maybe createNode
+            return true;
+        }
+        else {
+            error("Expected an identifier after \"++\" operation");
+        }
+    }
+
+    return false;
+}
+
+bool Parser::E3(TokStreamer* st) {
+    if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+        if (termByValue("+", st) && termByValue("+")) {
+            //maybe createNode
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Parser::E4(TokStreamer* st) {
+    if (termByValue("-", st) && termByValue("-", st)) {
+        if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+            //maybe createNode
+            return true;
+        }
+        else {
+            error("Expected an identifier after \"--\" operation")
+        }
+    }
+
+    return false;
+}
+
+bool Parser::E5(TokStreamer* st) {
+    if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+        if (termByValue("-", st) && termByValue("-", st)) {
+            //maybe createNode
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool Parser::T(TokStreamer* st) {
     if (T1(st)) {
         //maybe createNode
         return true;
     }
     
+    //maybe st->setIndex(save);
     return false;
 }
 
@@ -313,6 +387,7 @@ bool Parser::F(TokStreamer* st) {
         return true;
     }
     
+    //maybe st->setIndex(save);
     return false;
 }
 
@@ -352,6 +427,7 @@ bool Parser::P(TokStreamer* st) {
         return true;
     }
 
+    //maybe st->setIndex(save);
     return false;
 }
 
@@ -397,6 +473,20 @@ bool Parser::P3(TokStreamer* st) {
     return false;
 }
 
+bool Parser::P4(TokStreamer* st) {
+    if (termByValue("+", st)) {
+        if (T(st)) {
+            //maybe createNode
+            return true;
+        }
+        else {
+            error ("Expected a term after unirary plus sign");
+        }
+    }
+
+    return false;
+}
+
 bool Parser::V(TokStreamer* st) {
     int save = st->getIndex();
     if (V1(st)) {
@@ -418,6 +508,7 @@ bool Parser::V(TokStreamer* st) {
 
     //...
 
+    //maybe st->setIndex(save);
     return false;
 }
 

@@ -9,10 +9,12 @@
 #include "TokStreamer.h"
 #include "Lexer.h"
 //Grammar for Expressions:
-// E --> T {( "+" | "-" ) T} //These products need to be made | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-" //ID is for identifiers
-// T --> F {( "*" | "/" ) F} //and this
+// E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
+// T --> F {LTwo F}
 // F --> P ["^" F]
-// P --> v | "(" E ")" | "-" T //These product needs to be made | "+" T //V is constants and identifiers
+// P --> V | "(" E ")" | "-" T | "+" T //V is constants and identifiers
+// LOne -> "+" | "-"
+// LTwo -> "*" | "/"
 class Parser{
 public:
     static void run(std::vector<Tok> toks);
@@ -56,6 +58,14 @@ private:
 
     static bool E1(TokStreamer* st);
 
+    static bool E2(TokStreamer* st);
+
+    static bool E3(TokStreamer* st);
+
+    static bool E4(TokStreamer* st);
+
+    static bool E5(TokStreamer* st);
+
     static bool T(TokStreamer* st);
 
     static bool T1(TokStreamer* st);
@@ -71,6 +81,8 @@ private:
     static bool P2(TokStreamer* st);
 
     static bool P3(TokStreamer* st);
+
+    static bool P4(TokStreamer* st);
 
     static bool V(TokStreamer* st);
     

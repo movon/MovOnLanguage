@@ -22,6 +22,7 @@ public:
     Node* getChild(int i);
     void disownAllChildren();
     int numChildren();
+    void changeParent(Node* Parent);
 };
 
 

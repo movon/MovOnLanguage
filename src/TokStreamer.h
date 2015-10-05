@@ -17,6 +17,9 @@ public:
 
         Tok getNextToken();
         Tok peekNextTok();
+
+        int getIndex();
+        void setIndex(int j);
 };
  
 #endif
