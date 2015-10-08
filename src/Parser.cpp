@@ -123,9 +123,13 @@ void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
 
 Node* Parser::createNode(Node* parent, NodeType nodeType){
     Node* node = new Node(parent, nodeType);
-    parent->addChild(node);
+    if(parent != nullptr){
+       parent->addChild(node);
+    }
     return node;   
 }
+
+
 
 //Grammar for Expressions:
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
@@ -276,14 +280,13 @@ bool Parser::E1(TokStreamer* st) {
                     error("Expected another term after operator \"+\" or \"-\"");
                 }
             }
-            else {
+            else {  
                 //Unite the children into an E
                 Node* newE = createNode(nullptr, nodeType::E);
                 E->changeParent(newE);
                 Node* temp = newE;
                 newE = E;
                 E = temp;
-                delete temp;
                 result = nodes.back();//LOne
                 nodes.pop_back();
                 E->addChild(result);
@@ -300,14 +303,17 @@ bool Parser::E1(TokStreamer* st) {
         nodes.push_back(E);
         return true;
     }
-    
     return false;
 }
 
 bool Parser::E2(TokStreamer* st) {
     if (termByValue("+", st) && termByValue("+", st)) {
-        if (termByValue(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
-            //maybe createNode
+        if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+            std::string name = st->getLastToken(1);
+            Node* C = createNode(nullptr, NodeType::CREMENTER);
+            C->addChild(createNode(C, NodeType::ADD));
+            C->addChild(createNode(C, NodeType::ID));
+            nodes.push_back(C);
             return true;
         }
         else {
@@ -321,7 +327,7 @@ bool Parser::E2(TokStreamer* st) {
 bool Parser::E3(TokStreamer* st) {
     if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
         if (termByValue("+", st) && termByValue("+")) {
-            //maybe createNode
+            std::string name = 
             return true;
         }
     }
@@ -356,20 +362,22 @@ bool Parser::E5(TokStreamer* st) {
 
 bool Parser::T(TokStreamer* st) {
     if (T1(st)) {
-        //maybe createNode
         return true;
     }
-    
-    //maybe st->setIndex(save);
     return false;
 }
 
 bool Parser::T1(TokStreamer* st) {
+    Node* T;
     if (F(st)) {
-        //maybe createNode
+        Node* node;
+        node = nodes.back();
+        nodes.pop_back();
+        T = createNode(nullptr, tokType::E);
+        T->addChild(node);
         while (LTwo(st)) {
             if (F(st)) {
-                //maybe createNode
+                
             }
             else {
                 error("Expected another term after operator \"*\" or \"/\"");
@@ -383,7 +391,6 @@ bool Parser::T1(TokStreamer* st) {
 
 bool Parser::F(TokStreamer* st) {
     if (F1(st)) {
-        //maybe createNode
         return true;
     }
     
@@ -392,8 +399,9 @@ bool Parser::F(TokStreamer* st) {
 }
 
 bool Parser::F1(TokStreamer* st) {
+
     if (P(st)) {
-        //maybe createNode
+        
         if (termByValue("^", st)) {
             if (F(st)) {
                 //maybe createNode

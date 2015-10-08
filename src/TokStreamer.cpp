@@ -28,10 +28,14 @@ Tok TokStreamer::peekNextTok(){
     }
 }
 
-int getIndex() {
+int TokStreamer::getIndex() {
     return i;
 }
 
-void setIndex(int j) {
+void TokStreamer::setIndex(int j) {
     i = j;
+}
+
+Tok TokStreamer::getLastToken(int j){
+    return Toks[i-j];
 }

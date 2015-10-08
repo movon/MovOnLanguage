@@ -20,6 +20,7 @@ public:
 
         int getIndex();
         void setIndex(int j);
+        Tok getLastToken(int j);
 };
  
 #endif
