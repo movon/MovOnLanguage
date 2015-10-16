@@ -1,5 +1,5 @@
 #include "Lexer.h"
-#include "Parser.h" 
+//#include "Parser.h" 
 
 #include <fstream>
 #include <algorithm>
@@ -8,7 +8,7 @@ static std::set<std::string> keywords;
 static std::set<std::string> types;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
-static std::set<std::string> compareOperators
+static std::set<std::string> compareOperators;
 static std::vector<Tok> tokens;
 static Streamer* streamer;
 
@@ -127,7 +127,9 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         case tokType::ASSIGNMENT:
             return "ASSIGNMENT";
         case tokType::TYPE:
-            return "TYPE"; 
+            return "TYPE";
+        case tokType::COMPAREOPERATOR:
+            return "COMPAREOPERATOR";
         }
 }
  
@@ -275,6 +277,9 @@ void Lexer::runLexer() {
                                         else {
                                             if (chr == '=') {
                                                 addToParserTokens(Tok(std::string(1, chr), tokType::ASSIGNMENT));
+                                            }
+                                            else if (isCompareOperator(std::string(1, chr))) {
+                                                addToParserTokens(Tok(std::string(1, chr), tokType::COMPAREOPERATOR));
                                             }
                                             else {
                                                 addToParserTokens(Tok(std::string(1, chr), tokType::OPERATOR));

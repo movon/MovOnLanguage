@@ -13,6 +13,7 @@ public:
     std::string content;
     tokType type;
     Tok(std::string con, tokType ty);
+    Tok();
 
 
 };

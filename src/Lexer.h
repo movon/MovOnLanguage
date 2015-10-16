@@ -37,6 +37,8 @@ class Lexer {
                 static bool isType(std::string content);
  
                 static bool isOperator(std::string s);
+
+                static bool isCompareOperator(std::string s);
  
                 static std::string tokTypeToString(tokType& tokType);
  
