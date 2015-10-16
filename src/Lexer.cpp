@@ -53,7 +53,8 @@ void Lexer::initSets() {
     flowOperators.insert("else");
     flowOperators.insert("elsif");
 }
- 
+
+/* 
 // trim from start
 static std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
@@ -70,6 +71,7 @@ static std::string &rtrim(std::string &s) {
 static std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
+*/
  
 bool Lexer::isKeyword(std::string content) {
     return keywords.find(content) != keywords.end();
@@ -134,9 +136,7 @@ std::string Lexer::tokTypeToString(tokType& tt) {
 }
  
 void Lexer::addToParserTokens(Tok tok) {
-        if (!trim(tok.content).empty()) {
-            tokens.push_back(tok);
-        }
+        tokens.push_back(tok);
 }
 
 bool Lexer::isInt(std::string& s)
@@ -253,7 +253,7 @@ void Lexer::runLexer() {
                                 }
                                 //It is another delimiter, send token to parser
                                 //TODO: check what token
-                                else
+                                else if (tok.content != "")
                                 {
                                         tok.type = tokType::IDENTIFIER;
                                         addToParserTokens(tok);
