@@ -5,7 +5,7 @@
 #include "Tok.h"
 #include <vector>
 
-enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT, CREATION, ASSIGNMENT, E, CREMENTER, ADD, SUB, MUL, DIV, EXPO};
+enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT, CREATION, ASSIGNMENT, E, CREMENTER, ADD, SUB, MUL, DIV, EXPO, PARENT};
 
 class Node{
 protected:
@@ -13,9 +13,11 @@ protected:
     std::vector<Node*> children;
     Node* parent;
     Tok t;
+    std::string name;
 public:
     Node(Node* Parent, NodeType Nodetype);
     Node(Node* Parent, NodeType Nodetype, Tok T);
+    Node(NodeType Nodetype, std::string Name);
     Node();
     ~Node();
     void addChild(Node* node);

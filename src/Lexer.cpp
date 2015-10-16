@@ -1,5 +1,5 @@
 #include "Lexer.h"
-//#include "Parser.h" 
+#include "Parser.h" 
 
 #include <fstream>
 #include <algorithm>

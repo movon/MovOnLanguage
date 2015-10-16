@@ -12,6 +12,11 @@ Node::Node(Node* Parent, NodeType Nodetype, Tok T) {
 	t = T;
 }
 
+Node::Node(NodeType Nodetype, std::string Name) {
+	nodeType = Nodetype;
+	name = Name;
+}
+
 Node::Node() {}
 
 Node::~Node() {

@@ -5,7 +5,6 @@
 #include <string>
 #include "Node.h"
 #include "Tok.h"
-#include "ParentNode.h"
 #include "TokStreamer.h"
 #include "Lexer.h"
 //Grammar for Expressions:
@@ -41,10 +40,6 @@ private:
     static void Print(TokStreamer* streamer);
 
     static void handleTypes(Tok& currentTok, TokStreamer* streamer);
-
-	static bool termByType(tokType t, TokStreamer* st);
-
-	static bool termByValue(std::string s, TokStreamer* st);
 
     //Grammar Functions
 
