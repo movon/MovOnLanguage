@@ -6,6 +6,12 @@ Node::Node(Node* Parent, NodeType Nodetype){
     nodeType = Nodetype;
 }
 
+Node::Node(Node* Parent, NodeType Nodetype, Tok T) {
+	parent = Parent;
+	nodeType = Nodetype;
+	t = T;
+}
+
 Node::Node() {}
 
 Node::~Node() {

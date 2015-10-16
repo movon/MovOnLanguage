@@ -126,7 +126,17 @@ Node* Parser::createNode(Node* parent, NodeType nodeType){
     if(parent != nullptr){
        parent->addChild(node);
     }
+
     return node;   
+}
+
+Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
+    Node* node = new Node(parent, nodeType, t);
+    if (parent != nullptr) {
+        parent->addChild(node);
+    }
+
+    return node;
 }
 
 
@@ -309,10 +319,10 @@ bool Parser::E1(TokStreamer* st) {
 bool Parser::E2(TokStreamer* st) {
     if (termByValue("+", st) && termByValue("+", st)) {
         if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
-            std::string name = st->getLastToken(1);
+            Tok id = st->getLastToken(1);
             Node* C = createNode(nullptr, NodeType::CREMENTER);
             C->addChild(createNode(C, NodeType::ADD));
-            C->addChild(createNode(C, NodeType::ID));
+            C->addChild(createNode(C, NodeType::ID, id));
             nodes.push_back(C);
             return true;
         }

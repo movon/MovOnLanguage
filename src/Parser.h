@@ -19,7 +19,9 @@ class Parser{
 public:
     static void run(std::vector<Tok> toks);
 
-    static void createNode(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
+    static void createNode(Node* parent, NodeType nodeType);
+
+    static void createNode(Node* parent, NodeType nodeType, Tok t);
 private:
 
     static bool expect(Tok& tok, tokType t);

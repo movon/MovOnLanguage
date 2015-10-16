@@ -12,8 +12,10 @@ protected:
     NodeType nodeType;
     std::vector<Node*> children;
     Node* parent;
+    Tok t;
 public:
-    Node(Node* parent, NodeType nodeType, std::vector<Tok> tokens);
+    Node(Node* Parent, NodeType NodeType);
+    Node(Node* Parent, NodeType Nodetype, Tok T)
     Node();
     ~Node();
     void addChild(Node* node);
