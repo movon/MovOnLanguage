@@ -8,6 +8,7 @@ static std::set<std::string> keywords;
 static std::set<std::string> types;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
+static std::set<std::string> compareOperators
 static std::vector<Tok> tokens;
 static Streamer* streamer;
 
@@ -30,14 +31,19 @@ void Lexer::initSets() {
     
     types.insert("int");
     types.insert("float");
- 
+    
+    compareOperators.insert("<=");
+    compareOperators.insert("<");
+    compareOperators.insert(">=");
+    compareOperators.insert(">");
+    compareOperators.insert("<=");
+    compareOperators.insert("!=");
+    compareOperators.insert("!");
+    compareOperators.insert("==");
     operators.insert("=");
     operators.insert("<");
-    operators.insert("<=");
     operators.insert(">");
-    operators.insert(">=");
-    operators.insert("!=");
-    operators.insert("==");
+    operators.insert("!");
     operators.insert("-");
     operators.insert("+");
     operators.insert("*");
@@ -77,7 +83,11 @@ bool Lexer::isType(std::string content) {
 bool Lexer::isOperator(std::string s) {
         return (operators.find(s) != operators.end());
 }
- 
+
+bool Lexer::isCompareOperator(std::string s) {
+    return (compareOperators.find(s) != compareOperators.end());
+}
+
 std::string Lexer::tokTypeToString(tokType& tt) {
         switch (tt) {
         case tokType::NONE:
@@ -254,7 +264,13 @@ void Lexer::runLexer() {
                                         char nextChr = streamer->peekNextChar();
                                         if (isOperator(std::string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                addToParserTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
+                                                std::string op = std::string(1, chr) + std::string(1, nextChr);
+                                                if (isCompareOperator(op)) {
+                                                    addToParserTokens(Tok(op, tokType::COMPAREOPERATOR));
+                                                }
+                                                else {
+                                                    addToParserTokens(Tok(op, tokType::OPERATOR));
+                                                }
                                         }
                                         else {
                                             if (chr == '=') {

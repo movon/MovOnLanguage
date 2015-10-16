@@ -14,12 +14,12 @@ protected:
     Node* parent;
     Tok t;
 public:
-    Node(Node* Parent, NodeType NodeType);
-    Node(Node* Parent, NodeType Nodetype, Tok T)
+    Node(Node* Parent, NodeType Nodetype);
+    Node(Node* Parent, NodeType Nodetype, Tok T);
     Node();
     ~Node();
     void addChild(Node* node);
-    void changeToks(std::vector<Tok>toks);
+    void changeTok(Tok T);
 
     Node* getChild(int i);
     void disownAllChildren();

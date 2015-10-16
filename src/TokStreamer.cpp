@@ -37,5 +37,5 @@ void TokStreamer::setIndex(int j) {
 }
 
 Tok TokStreamer::getLastToken(int j){
-    return Toks[i-j];
+    return toks[i-j];
 }

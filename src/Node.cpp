@@ -25,8 +25,8 @@ void Node::addChild(Node* node) {
 	 node->changeParent(this);
 }
 
-void Node::changeToks(std::vector<Tok> toks){
-	tokens = toks;
+void Node::changeTok(Tok T){
+	t = T;
 }
 
 Node* Node::getChild(int i) {
@@ -38,7 +38,7 @@ void Node::disownAllChildren() {
 }
 
 int Node::numChildren() {
-	return children.length();
+	return children.size();
 }
 
 void Node::changeParent(Node* Parent) {
