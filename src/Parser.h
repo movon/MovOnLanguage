@@ -15,6 +15,14 @@
 // P --> V | "(" E ")" | "-" T | "+" T //V is constants and identifiers
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
+
+//Grammer for BEXP:
+// BEXP -> lvl1bexp {OR lvl1bexp}
+// lvl1bexp -> lvl2bexp {(AND|XOR) lvl2bexp}
+//lvl2bexp -> NOT lvl3bexp | lvl3bexp
+//lvl3bexp -> TRUE | FALSE | E COMPARISON_OPERATOR E
+
+
 class Parser{
 public:
     static void run(std::vector<Tok> toks);
