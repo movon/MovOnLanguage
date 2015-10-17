@@ -3,7 +3,7 @@
 
 class Errors{
 
-}
+};
 
 
 #endif

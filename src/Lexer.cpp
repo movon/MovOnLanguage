@@ -1,64 +1,95 @@
 #include "Lexer.h"
+#include "Parser.h" 
 
-#include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <functional>
 
 static std::set<std::string> keywords;
+static std::set<std::string> types;
 static std::set<std::string> flowOperators;
 static std::set<std::string> operators;
+static std::set<std::string> compareOperators;
 static std::vector<Tok> tokens;
+static Streamer* streamer;
 
+void Lexer::printTokens() {
+        for (int i = 0; i < tokens.size(); ++i)
+        {
+                std::cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
+        }
+        for (int i = 0; i < tokens.size(); ++i)
+        {
+                if (i != 0)
+                        std::cout << ",";
+                std::cout << '"' << tokens[i].content << '"';
+        }
+        std::cout << std::endl;
+}
+ 
 void Lexer::initSets() {
     keywords.insert("print");
-    keywords.insert("int");
-    keywords.insert("float");
-    keywords.insert("function");
-
+    
+    types.insert("int");
+    types.insert("float");
+    
+    compareOperators.insert("<=");
+    compareOperators.insert("<");
+    compareOperators.insert(">=");
+    compareOperators.insert(">");
+    compareOperators.insert("<=");
+    compareOperators.insert("!=");
+    compareOperators.insert("!");
+    compareOperators.insert("==");
     operators.insert("=");
     operators.insert("<");
-    operators.insert("<=");
     operators.insert(">");
-    operators.insert(">=");
-    operators.insert("!=");
-    operators.insert("==");
+    operators.insert("!");
     operators.insert("-");
     operators.insert("+");
     operators.insert("*");
     operators.insert("/");
-
+ 
     flowOperators.insert("if");
     flowOperators.insert("else");
     flowOperators.insert("elsif");
 }
 
+/* 
 // trim from start
 static std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
 }
-
+ 
 // trim from end
 static std::string &rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
-
+ 
 // trim from both ends
 static std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
+*/
  
 bool Lexer::isKeyword(std::string content) {
-        return keywords.find(content) != keywords.end();
+    return keywords.find(content) != keywords.end();
+}
+
+bool Lexer::isType(std::string content) {
+    return types.find(content) != types.end();
 }
  
  
 bool Lexer::isOperator(std::string s) {
         return (operators.find(s) != operators.end());
 }
- 
+
+bool Lexer::isCompareOperator(std::string s) {
+    return (compareOperators.find(s) != compareOperators.end());
+}
+
 std::string Lexer::tokTypeToString(tokType& tt) {
         switch (tt) {
         case tokType::NONE:
@@ -97,34 +128,21 @@ std::string Lexer::tokTypeToString(tokType& tt) {
             return "COMMA";
         case tokType::ASSIGNMENT:
             return "ASSIGNMENT";
+        case tokType::TYPE:
+            return "TYPE";
+        case tokType::COMPAREOPERATOR:
+            return "COMPAREOPERATOR";
         }
 }
  
 void Lexer::addToParserTokens(Tok tok) {
-        if (!trim(tok.content).empty()) {
-                tokens.push_back(tok);
-        }
+	tokens.push_back(tok);
 }
- 
-void Lexer::printTokens() {
-        for (size_t i = 0; i < tokens.size(); ++i)
-        {
-                std::cout << "\"" << tokens[i].content << "\"" << ": " << tokTypeToString(tokens[i].type) << std::endl;
-        }
-        //std::cout << std::endl;
-        for (size_t i = 0; i < tokens.size(); ++i)
-        {
-                if (i != 0)
-                        std::cout << ",";
-                std::cout << '"' << tokens[i].content << '"';
-        }
-        std::cout << std::endl;
-}
- 
-bool Lexer::isInt(const std::string& s) {
-    auto it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
-    return !s.empty() && it == s.end();
+
+bool Lexer::isInt(std::string& s)
+{
+    return !s.empty() && std::find_if(s.begin(),
+                                      s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
  
 bool Lexer::isFloat(const std::string& s) {
@@ -150,26 +168,26 @@ Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
  
         return result;
 }
-
+ 
 bool Lexer::isFlowOperator(std::string& content) {
     return flowOperators.find(content) != flowOperators.end();
 }
-
+ 
 std::vector<Tok> Lexer::getTokens(){ return tokens; }
-
-void Lexer::runLexer() {
+ 
+void Lexer::runLexer(char** filename) {
         initSets();
         std::string line;
         std::string data;
-        std::ifstream myfile("src/code.mo");
-        if(myfile.fail()){
+        std::ifstream myfile(filename[1]);
+        if(myfile.fail()) {
             std::cout << "The file is not at this location or does not exist" << std::endl;
-                exit(1);
+            exit(1);
         }
         while (getline(myfile, line)) {
                         data += line;
-        }    
-        Streamer* streamer = new Streamer(data, -1);
+        }
+        streamer = new Streamer(data, -1);
         Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
         char chr = streamer->getNextChar();
@@ -198,16 +216,19 @@ void Lexer::runLexer() {
                                 //If I found a keyword - send it to parser.
                                 else if (isKeyword(tok.content))
                                 {
-                                        if (tok.content == "function") {
-                                            tok.type = tokType::FUNCTIONDEF;
-                                            addToParserTokens(tok);
-                                            tok.content = "";
-                                        }
-                                        else {
-                                            tok.type = tokType::KEYWORD;
-                                            addToParserTokens(tok);
-                                            tok.content = "";
-                                        }
+                                    tok.type = tokType::KEYWORD;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
+                                }
+                                else if (tok.content == "function") {
+                                    tok.type = tokType::FUNCTIONDEF;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
+                                }
+                                else if (isType(tok.content)) {
+                                    tok.type = tokType::TYPE;
+                                    addToParserTokens(tok);
+                                    tok.content = "";
                                 }
                                 else if (checkIfPrimitive(tok.content).isPrimitive) {//We need to make this a function so that I won't have to calculate if it's a Primitive twice
                                         Primitive primitive = checkIfPrimitive(tok.content);
@@ -232,7 +253,7 @@ void Lexer::runLexer() {
                                 }
                                 //It is another delimiter, send token to parser
                                 //TODO: check what token
-                                else
+                                else if (tok.content != "")
                                 {
                                         tok.type = tokType::IDENTIFIER;
                                         addToParserTokens(tok);
@@ -245,11 +266,20 @@ void Lexer::runLexer() {
                                         char nextChr = streamer->peekNextChar();
                                         if (isOperator(std::string(1, nextChr))) {
                                                 streamer->advancePosition();
-                                                addToParserTokens(Tok(std::string(1, chr) + std::string(1, nextChr), tokType::OPERATOR));
+                                                std::string op = std::string(1, chr) + std::string(1, nextChr);
+                                                if (isCompareOperator(op)) {
+                                                    addToParserTokens(Tok(op, tokType::COMPAREOPERATOR));
+                                                }
+                                                else {
+                                                    addToParserTokens(Tok(op, tokType::OPERATOR));
+                                                }
                                         }
                                         else {
                                             if (chr == '=') {
                                                 addToParserTokens(Tok(std::string(1, chr), tokType::ASSIGNMENT));
+                                            }
+                                            else if (isCompareOperator(std::string(1, chr))) {
+                                                addToParserTokens(Tok(std::string(1, chr), tokType::COMPAREOPERATOR));
                                             }
                                             else {
                                                 addToParserTokens(Tok(std::string(1, chr), tokType::OPERATOR));
@@ -266,12 +296,12 @@ void Lexer::runLexer() {
                                     addToParserTokens(Tok(std::string(1, chr), tokType::OPENCURLY));
                                 }
                                 else if (chr =='}') {
-                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));   
+                                    addToParserTokens(Tok(std::string(1, chr), tokType::CLOSINGCURLY));  
                                 }
                                 else if (chr == ',') {
                                     addToParserTokens(Tok(std::string(1, chr), tokType::COMMA));
                                 }
-
+ 
                         }
                 }
                 //It is a normal chr, add to tok
@@ -281,4 +311,5 @@ void Lexer::runLexer() {
                 chr = streamer->getNextChar();
         }
         printTokens();
+        delete streamer;
 }
