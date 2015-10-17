@@ -136,7 +136,7 @@ std::string Lexer::tokTypeToString(tokType& tt) {
 }
  
 void Lexer::addToParserTokens(Tok tok) {
-        tokens.push_back(tok);
+	tokens.push_back(tok);
 }
 
 bool Lexer::isInt(std::string& s)
@@ -179,7 +179,7 @@ void Lexer::runLexer() {
         initSets();
         std::string line;
         std::string data;
-        std::ifstream myfile("src/code.mo");
+        std::ifstream myfile("code.mo");
         if(myfile.fail()) {
             std::cout << "The file is not at this location or does not exist" << std::endl;
             exit(1);

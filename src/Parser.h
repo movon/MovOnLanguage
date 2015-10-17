@@ -26,9 +26,11 @@ class Parser{
 public:
     static void run(std::vector<Tok> toks);
 
-    static void createNode(Node* parent, NodeType nodeType);
+	static void error(std::string errormsg);
 
-    static void createNode(Node* parent, NodeType nodeType, Tok t);
+    static Node* createNode(Node* parent, NodeType nodeType);
+
+    static Node* createNode(Node* parent, NodeType nodeType, Tok t);
 private:
 
     static bool expect(Tok& tok, tokType t);
@@ -37,9 +39,9 @@ private:
 
     static void handleKeywords(Tok currentTok, TokStreamer* streamer);
 
-    static void Print(TokStreamer* streamer);
+    //static void Print(TokStreamer* streamer);
 
-    static void handleTypes(Tok& currentTok, TokStreamer* streamer);
+    //static void handleTypes(Tok& currentTok, TokStreamer* streamer);
 
     //Grammar Functions
 
