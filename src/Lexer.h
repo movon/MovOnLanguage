@@ -52,7 +52,7 @@ class Lexer {
                
                 static bool isFlowOperator(std::string& content);
  
-                static void runLexer();
+                static void runLexer(char** filename);
        
                 static std::vector<Tok> getTokens();
 

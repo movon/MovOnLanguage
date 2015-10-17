@@ -1,9 +1,9 @@
 #include "Lexer.h"
 #include <iostream>
 
-int main() {
+int main(int argc, char** argv) {
 	std::cout << "------------------ Program Started ------------------" << std::endl;
-    Lexer::runLexer();
+    Lexer::runLexer(argv);
 
 	int a;
 	std::cin >> a;

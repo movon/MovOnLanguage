@@ -175,18 +175,18 @@ bool Lexer::isFlowOperator(std::string& content) {
  
 std::vector<Tok> Lexer::getTokens(){ return tokens; }
  
-void Lexer::runLexer() {
+void Lexer::runLexer(char** filename) {
         initSets();
         std::string line;
         std::string data;
-        std::ifstream myfile("code.mo");
+        std::ifstream myfile(filename[1]);
         if(myfile.fail()) {
             std::cout << "The file is not at this location or does not exist" << std::endl;
             exit(1);
         }
         while (getline(myfile, line)) {
                         data += line;
-        }    
+        }
         streamer = new Streamer(data, -1);
         Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
@@ -310,7 +310,6 @@ void Lexer::runLexer() {
                 }
                 chr = streamer->getNextChar();
         }
- 
         printTokens();
         delete streamer;
 }
