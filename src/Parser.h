@@ -45,6 +45,12 @@ private:
 
     //Grammar Functions
 
+	static bool Program(TokStreamer* st);
+
+	static bool Program1(TokStreamer* st);
+
+	static bool FunctionDef(TokStreamer* st);
+
     static bool termByType(tokType t, TokStreamer* st);
 
     static bool termByValue(std::string s, TokStreamer* st);

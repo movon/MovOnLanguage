@@ -28,6 +28,7 @@ void Lexer::printTokens() {
  
 void Lexer::initSets() {
     keywords.insert("print");
+	
     
     types.insert("int");
     types.insert("float");
@@ -52,6 +53,9 @@ void Lexer::initSets() {
     flowOperators.insert("if");
     flowOperators.insert("else");
     flowOperators.insert("elsif");
+	flowOperators.insert("for");
+	flowOperators.insert("foreach");
+	flowOperators.insert("while");
 }
 
 /* 
@@ -312,4 +316,5 @@ void Lexer::runLexer(char** filename) {
         }
         printTokens();
         delete streamer;
+		//Parser::run(tokens);
 }

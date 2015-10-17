@@ -14,7 +14,7 @@ void Parser::error(std::string errormsg) {
 bool Parser::accept(Tok& tok, tokType t) {
     return tok.type == t;
 }
- 
+
 bool Parser::expect(Tok& tok, tokType t) {
     if (accept(tok, t)) {
         return true;
@@ -22,105 +22,12 @@ bool Parser::expect(Tok& tok, tokType t) {
     error("Unexpected symbol");
     return false;
 }
- 
-//I don't think that defining the vars in the header works because it didn't work for the lexer
-void Parser::run(std::vector<Tok> toks) {// need to edit this
-       /* TokStreamer* streamer = new TokStreamer(toks, -1);
-        currParent = new Node(NodeType::PARENT,"Program");
-        Node* tempCurrParent;
-        Tok currentTok = streamer->getNextToken();
-        while (currentTok.type != tokType::ENDOFINPUT) {
-            tempCurrParent = currParent;
-            switch(currentTok.type) {
-                case tokType::KEYWORD:
-                    handleKeywords(currentTok, streamer);
-                case tokType::TYPE:
-                    handleTypes(currentTok, streamer);
-            }
-            currParent = tempCurrParent;
-            currentTok = streamer->getNextToken();
-        }*/
- 
-}
 
-void Parser::handleKeywords(Tok currentTok, TokStreamer* streamer) {
-        std::string con = currentTok.content;
-        if (con == "print") {
-           // Print(currentTok, streamer);
-        }
-        //else if ...
+void Parser::run(std::vector<Tok> toks) {
+	TokStreamer* st = new TokStreamer(toks, -1);
+	Program(st);
 
 }
-/*
-void Parser::Print(Tok currentTok, TokStreamer* streamer) {
-    Tok next = streamer->peekNextTok();
-    std::vector<Tok> currNodeToks;
-    currNodeToks.push_back(currentTok);//for debugging
-    currParent = createNode(currParent, NodeType::FUNCTIONCALL, currNodeToks);
-    currNodeToks.clear();
-
-    if (accept(next, tokType::STRING)) {
-        currNodeToks.push_back(next);
-        createNode(currParent, NodeType::STRING, currNodeToks);
-        currNodeToks.clear();
-        streamer->advancePosition();
-    }
-    else if (accept(next, tokType::IDENTIFIER)) {
-        currNodeToks.push_back(next)
-        createNode(currParent, NodeType::IDENTIFIER, currNodeToks);
-        currNodeToks.clear();
-        streamer->advancePosition();
-    }
-    else if (accept(next, tokType::INT)) {
-        currNodeToks.push_back(next)
-        createNode(currParent, NodeType::INT, currNodeToks);
-        currNodeToks.clear();
-        streamer->advancePosition();
-    }
-    else if (accept(next, tokType::FLOAT)) {
-        currNodeToks.push_back(next)
-        createNode(currParent, NodeType::FLOAT, currNodeToks);
-        currNodeToks.clear();
-        streamer->advancePosition();
-    }
-    else {
-        //error() or something along those lines
-    }
-    //else if expr
-    next = streamer->getNextToken();
-    expect(next, tokType::DELIMITER);
-}
-
-void Parser::handleTypes(Tok& currentTok, TokStreamer* streamer) {
-    //Lexer::tokTypeToString
-    std::vector<Tok> currNodeToks;
-    currNodeToks.push_back(currentTok);
-    Tok next = streamer->peekNextTok();
-    expect(next, tokType::IDENTIFIER);
-    streamer->advancePosition();
-    currNodeToks.push_back(next);
-    next = streamer->peekNextTok();
-    if (accept(next, tokType::DELIMITER)) {
-        createNode(currParent, NodeType::CREATION, currNodeToks);
-        currNodeToks.clear();
-    }
-    else {
-        expect(next, tokType::ASSIGNMENT);
-        //need to add expr support in the next part
-        streamer->advancePosition();
-        next = streamer->peekNextTok();
-        if (Lexer::tokTypeToString(next.type) == currentTok.content) {
-            currParent = createNode(currParent, NodeType::CREATION, currNodeToks);
-            currNodeToks.clear();
-            createNode(currParent, )    
-        }
-        else {
-            //error() or something along those lines
-        }
-        
-    }
-}
-*/
 
 Node* Parser::createNode(Node* parent, NodeType nodeType){
     Node* node = new Node(parent, nodeType);
@@ -140,8 +47,18 @@ Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
     return node;
 }
 
-
-
+//Grammar for Program:
+// Program --> {FunctionDef}
+// FunctionDef --> FUNCDEF FUNCNAME "(" [ID {"," ID}] ")" "{" BODY "}"
+// BODY --> {STMT}
+// STMT --> FLOW | ASSIGNMENT | FUNCALL | "print" [ V { "," V } ] // why? because; // int i = ?; string s = (string) ?.size(k|?);
+// FUNCALL --> FUNCNAME "(" [V {"," V} ] ")" ";"
+// ASSIGNMENT --> CREATION | TYPE ID ";"
+// CREATION --> TYPE ID "=" V ";" | ID "=" V ";"
+// FLOW --> LOOP | "if" "(" BEXP ")" "{" BODY "}" { "elsif" "(" BEXP ")" "{" BODY "}" } [ "else" "{" BODY "}" ]
+// LOOP --> FOR | WHILE
+// FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [E] ")" "{" BODY "}"
+// WHILE --> "while" "(" BEXP ")" "{" BODY "}"
 //Grammar for Expressions:
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
@@ -149,13 +66,38 @@ Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
 // P --> V | "(" E ")" | "-" T | "+" T //V is constants and identifiers
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
+// V --> INT | FLOAT | STRING ... | ID | FUNCNAME "(" [ ID { "," ID } ] ")" // TODO: IMPLEMENT LAST ONE!!!!
 
-//Grammer for BEXP:
+//Grammar for BEXP:
 // BEXP -> lvl1bexp {OR lvl1bexp}
 // lvl1bexp -> lvl2bexp {(AND|XOR) lvl2bexp}
 // lvl2bexp -> NOT lvl3bexp | lvl3bexp
 // lvl3bexp -> TRUE | FALSE | E COMPARISON_OPERATOR E
 
+bool Parser::Program(TokStreamer* st) {
+	int save = st->getIndex();
+	if (Program1(st)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool Parser::Program1(TokStreamer* st) {
+	bool atLeastOneFuncDef = false;
+
+	while (FunctionDef(st)) {
+		atLeastOneFuncDef = true;
+		//maybe createNode
+		//maybe add the node in nodes.back() to different endpoints of the tree
+	}
+
+	return atLeastOneFuncDef;
+}
+
+bool Parser::FunctionDef(TokStreamer* st) {
+	return false;
+}
 
 bool Parser::termByType(tokType t, TokStreamer* st) {
     if (st->getNextToken().type == t) {
@@ -194,7 +136,7 @@ bool Parser::LOne(TokStreamer* st) {
 
 bool Parser::LOne1(TokStreamer* st) {
     if (termByValue("+", st)) {
-        //maybe createNode
+		nodes.push_back(createNode(nullptr, NodeType::ADD));
         return true;
     }
 
@@ -203,7 +145,7 @@ bool Parser::LOne1(TokStreamer* st) {
 
 bool Parser::LOne2(TokStreamer* st) {
     if (termByValue("-", st)) {
-        //maybe createNode
+		nodes.push_back(createNode(nullptr, NodeType::SUB));
         return true;
     }
 
@@ -213,23 +155,20 @@ bool Parser::LOne2(TokStreamer* st) {
 bool Parser::LTwo(TokStreamer* st) {
     int save = st->getIndex();
     if (LTwo1(st)) {
-        //maybe createNode
         return true;
     }
 
     st->setIndex(save);
-    if (LTwo2(st)) {
-        //maybe createNode
+    if (LTwo2(st))  {
         return true;
     }
 
-    //maybe st->setIndex(save);
     return false;
 }
 
 bool Parser::LTwo1(TokStreamer* st) {
     if (termByValue("*", st)) {
-        //maybe createNode
+		nodes.push_back(createNode(nullptr, NodeType::MUL));
         return true;
     }
 
@@ -238,7 +177,7 @@ bool Parser::LTwo1(TokStreamer* st) {
 
 bool Parser::LTwo2(TokStreamer* st) {
     if (termByValue("/", st)) {
-        //maybe createNode
+		nodes.push_back(createNode(nullptr, NodeType::DIV));
         return true;
     }
 
@@ -364,11 +303,15 @@ bool Parser::E3(TokStreamer* st) {
 bool Parser::E4(TokStreamer* st) {
     if (termByValue("-", st) && termByValue("-", st)) {
         if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
-            //maybe createNode
+            Tok id = st->getLastToken(1);
+            Node* C = createNode(nullptr, NodeType::CREMENTER);
+            C->addChild(createNode(C, NodeType::SUB));
+            C->addChild(createNode(C, NodeType::ID, id));
+            nodes.push_back(C);
             return true;
         }
         else {
-			error("Expected an identifier after \"--\" operation");
+            error("Expected an identifier after \"++\" operation");
         }
     }
 
@@ -377,9 +320,16 @@ bool Parser::E4(TokStreamer* st) {
 
 bool Parser::E5(TokStreamer* st) {
     if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
-        if (termByValue("-", st) && termByValue("-", st)) {
-            //maybe createNode
+        if (termByValue("-", st) && termByValue("-",st)) {
+            Tok name = st->getLastToken(3);
+            Node* C = createNode(nullptr, NodeType::CREMENTER);
+            C->addChild(createNode(C, NodeType::ID,name));
+            C->addChild(createNode(C, NodeType::SUB));
+            nodes.push_back(C);
             return true;
+        }
+        else{
+            error("Expected an identifier before \"--\" operation");
         }
     }
 
@@ -411,7 +361,7 @@ bool Parser::T1(TokStreamer* st) {
 					nodes.pop_back();
 				}
 				else{
-					error("excpected a term after \"*\" or \"/\" ");
+					error("expected a term after \"*\" or \"/\" ");
 				}
 			}
 			else{
@@ -429,7 +379,7 @@ bool Parser::T1(TokStreamer* st) {
 					T->addChild(result);
 				}
 				else{
-					error("excpected a term after \"*\" or \"/\" ");
+					error("expected a term after \"*\" or \"/\" ");
 				}
 			}
         }
@@ -493,19 +443,17 @@ bool Parser::P(TokStreamer* st) {
     return false;
 }
 
-bool Parser::P1(TokStreamer* st) {
-    if (V(st)) {
-        //maybe createNode
+bool Parser::P1(TokStreamer* st)  {//this function is complete, i mean it
+	if (V(st)) {
         return true;
     }
     
     return false;
 }
 
-bool Parser::P2(TokStreamer* st) {
+bool Parser::P2(TokStreamer* st) {//this function is complete, i mean it
     if (termByType(tokType::OPENPARAN, st)) {
         if (E(st)) {
-            //maybe createNode //probably not in here though
             if (termByType(tokType::CLOSINGPARAN, st)) {
                 return true;
             }
@@ -522,9 +470,13 @@ bool Parser::P2(TokStreamer* st) {
 }
 
 bool Parser::P3(TokStreamer* st) {
+	Node* P = createNode(nullptr, NodeType::E);
     if (termByValue("-", st)) {
         if (T(st)) {
-            //maybe createNode
+			P->addChild(createNode(P, NodeType::SUB));
+			P->addChild(nodes.back());
+			nodes.pop_back();
+			nodes.push_back(P);
             return true;
         }
         else {
@@ -536,17 +488,21 @@ bool Parser::P3(TokStreamer* st) {
 }
 
 bool Parser::P4(TokStreamer* st) {
-    if (termByValue("+", st)) {
-        if (T(st)) {
-            //maybe createNode
-            return true;
-        }
-        else {
-            error ("Expected a term after unirary plus sign");
-        }
-    }
+	Node* P = createNode(nullptr, NodeType::E);
+	if (termByValue("+", st)) {
+		if (T(st)) {
+			P->addChild(createNode(P, NodeType::ADD));
+			P->addChild(nodes.back());
+			nodes.pop_back();
+			nodes.push_back(P);
+			return true;
+		}
+		else {
+			error("Expected a term after unirary plus sign");
+		}
+	}
 
-    return false;
+	return false;
 }
 
 bool Parser::V(TokStreamer* st) {
@@ -558,25 +514,21 @@ bool Parser::V(TokStreamer* st) {
 
     st->setIndex(save);
     if (V2(st)) {
-        //maybe createNode
         return true;
     }
 
     st->setIndex(save);
     if (V3(st)) {
-        //maybe createNode
         return true;
     }
 
-    //...
-
-    //maybe st->setIndex(save);
     return false;
 }
 
 bool Parser::V1(TokStreamer* st) {
     if (termByType(tokType::INT, st)) {
-        //maybe createNode
+		Node* V = createNode(nullptr, NodeType::INT,st->getLastToken(1));
+		nodes.push_back(V);
         return true;
     }
 
@@ -585,7 +537,8 @@ bool Parser::V1(TokStreamer* st) {
 
 bool Parser::V2(TokStreamer* st) {
     if (termByType(tokType::FLOAT, st)) {
-        //maybe createNode
+		Node* V = createNode(nullptr, NodeType::FLOAT,st->getLastToken(1));
+		nodes.push_back(V);
         return true;
     }
 
@@ -594,7 +547,8 @@ bool Parser::V2(TokStreamer* st) {
 
 bool Parser::V3(TokStreamer* st) {
     if (termByType(tokType::IDENTIFIER, st)) {
-        //maybe createNode
+		Node* V = createNode(nullptr, NodeType::ID, st->getLastToken(1));
+		nodes.push_back(V);
         return true;
     }
 
