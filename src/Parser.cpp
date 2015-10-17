@@ -25,7 +25,8 @@ bool Parser::expect(Tok& tok, tokType t) {
 
 void Parser::run(std::vector<Tok> toks) {
 	TokStreamer* st = new TokStreamer(toks, -1);
-	Program(st);
+	//Program(st);
+	E(st);
 
 }
 
@@ -59,6 +60,8 @@ Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
 // LOOP --> FOR | WHILE
 // FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [E] ")" "{" BODY "}"
 // WHILE --> "while" "(" BEXP ")" "{" BODY "}"
+
+
 //Grammar for Expressions:
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
@@ -130,7 +133,7 @@ bool Parser::LOne(TokStreamer* st) {
         return true;
     }
 
-    //maybe st->setIndex(save);
+	st->setIndex(save);
     return false;
 }
 
@@ -163,6 +166,7 @@ bool Parser::LTwo(TokStreamer* st) {
         return true;
     }
 
+	st->setIndex(save);
     return false;
 }
 
@@ -210,54 +214,62 @@ bool Parser::E(TokStreamer* st) {
         return true;
     }
 
-    //maybe st->setIndex(save);
+	st->setIndex(save);
     return false;
 }
 
 bool Parser::E1(TokStreamer* st) {
     Node* E;
-    if (T(st)) {
-        //maybe createNode
-        Node* result;
-        result = nodes.back();
-        nodes.pop_back();
-        E = createNode(nullptr, NodeType::E);
-        E->addChild(result);
-        while (LOne(st)) {
-            //maybe createNode
-            if (E->numChildren() == 1) {
-                result = nodes.back();
-                nodes.pop_back();
-                E->addChild(result);
-                if (T(st)) {
-                    result = nodes.back();
-                    nodes.pop_back();
-                    E->addChild(result);
-                }
-                else {
-                    error("Expected another term after operator \"+\" or \"-\"");
-                }
-            }
-            else {  
-                //Unite the children into an E
-                Node* newE = createNode(nullptr, NodeType::E);
-                E->changeParent(newE);
-                Node* temp = newE;
-                newE = E;
-                E = temp;
-                result = nodes.back();//LOne
-                nodes.pop_back();
-                E->addChild(result);
-                if (T(st)) {
-                    result = nodes.back();
-                    nodes.pop_back();//T
-                    E->addChild(result);
-                }
-                else {
-                    error("Expected another term after operator \"+\" or \"-\"");
-                }
-            }
-        }
+	int save;
+	if (T(st)) {
+		//maybe createNode
+		Node* result;
+		result = nodes.back();
+		nodes.pop_back();
+		E = createNode(nullptr, NodeType::E);
+		E->addChild(result);
+		while (true) {
+			save = st->getIndex();
+			if (LOne(st)) {
+					//maybe createNode
+					if (E->numChildren() == 1) {
+						result = nodes.back();
+						nodes.pop_back();
+						E->addChild(result);
+						if (T(st)) {
+							result = nodes.back();
+							nodes.pop_back();
+							E->addChild(result);
+						}
+						else {
+							error("Expected another term after operator \"+\" or \"-\"");
+						}
+					}
+					else {
+						//Unite the children into an E
+						Node* newE = createNode(nullptr, NodeType::E);
+						E->changeParent(newE);
+						Node* temp = newE;
+						newE = E;
+						E = temp;
+						result = nodes.back();//LOne
+						nodes.pop_back();
+						E->addChild(result);
+						if (T(st)) {
+							result = nodes.back();
+							nodes.pop_back();//T
+							E->addChild(result);
+						}
+						else {
+							error("Expected another term after operator \"+\" or \"-\"");
+						}
+					}
+			}
+			else {
+				st->setIndex(save);
+				break;
+			}
+		}
         nodes.push_back(E);
         return true;
     }
@@ -337,52 +349,63 @@ bool Parser::E5(TokStreamer* st) {
 }
 
 bool Parser::T(TokStreamer* st) {
-    if (T1(st)) {
+	int save = st->getIndex();
+	if (T1(st)) {
         return true;
     }
+
+	st->setIndex(save);
     return false;
 }
 
 bool Parser::T1(TokStreamer* st) {
     Node* T;
 	Node* result;
-    if (F(st)) {
-        Node* node;
-        node = nodes.back();
-        nodes.pop_back();
-        T = createNode(nullptr, NodeType::E);
-        T->addChild(node);
-        while (LTwo(st)) {
-			if (T->numChildren() == 1){
-				T->addChild(nodes.back());
-				nodes.pop_back();
-				if (F(st)){
+	int save;
+	if (F(st)) {
+		Node* node;
+		node = nodes.back();
+		nodes.pop_back();
+		T = createNode(nullptr, NodeType::E);
+		T->addChild(node);
+		while (true) {
+			save = st->getIndex();
+			if (LTwo(st)) {
+				if (T->numChildren() == 1){
 					T->addChild(nodes.back());
 					nodes.pop_back();
+					if (F(st)){
+						T->addChild(nodes.back());
+						nodes.pop_back();
+					}
+					else{
+						error("expected a term after \"*\" or \"/\" ");
+					}
 				}
 				else{
-					error("expected a term after \"*\" or \"/\" ");
-				}
-			}
-			else{
-				Node* newE = createNode(nullptr, NodeType::E);
-				T->changeParent(newE);
-				Node* temp = newE;
-				newE = T;
-				T = temp;
-				result = nodes.back();//LOne
-				nodes.pop_back();
-				T->addChild(result);
-				if (F(st)) {
-					result = nodes.back();
-					nodes.pop_back();//T
+					Node* newE = createNode(nullptr, NodeType::E);
+					T->changeParent(newE);
+					Node* temp = newE;
+					newE = T;
+					T = temp;
+					result = nodes.back();//LOne
+					nodes.pop_back();
 					T->addChild(result);
-				}
-				else{
-					error("expected a term after \"*\" or \"/\" ");
+					if (F(st)) {
+						result = nodes.back();
+						nodes.pop_back();//T
+						T->addChild(result);
+					}
+					else{
+						error("expected a term after \"*\" or \"/\" ");
+					}
 				}
 			}
-        }
+			else {
+				st->setIndex(save);
+				break;
+			}
+		}
 		nodes.push_back(T);
         return true;
     }
@@ -391,9 +414,12 @@ bool Parser::T1(TokStreamer* st) {
 }
 
 bool Parser::F(TokStreamer* st) {
-    if (F1(st)) {
+	int save = st->getIndex();
+	if (F1(st)) {
         return true;
     }
+
+	st->setIndex(save);
     return false;
 }
 
@@ -403,6 +429,7 @@ bool Parser::F1(TokStreamer* st) {
 		f = createNode(nullptr, NodeType::E);
 		f->addChild(nodes.back());
 		nodes.pop_back();
+		int save = st->getIndex();
         if (termByValue("^", st)) {
             if (F(st)) {
 				f->addChild(createNode(f, NodeType::EXPO));
@@ -413,6 +440,9 @@ bool Parser::F1(TokStreamer* st) {
                 error("Expected another term after operator \"^\"");
             }
         }
+		else {
+			st->setIndex(save);
+		}
 		nodes.push_back(f);
         return true;
     }
@@ -439,7 +469,7 @@ bool Parser::P(TokStreamer* st) {
         return true;
     }
 
-    //maybe st->setIndex(save);
+	st->setIndex(save);
     return false;
 }
 
@@ -521,7 +551,8 @@ bool Parser::V(TokStreamer* st) {
     if (V3(st)) {
         return true;
     }
-
+	
+	st->setIndex(save);
     return false;
 }
 

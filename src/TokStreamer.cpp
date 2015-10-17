@@ -37,5 +37,9 @@ void TokStreamer::setIndex(int j) {
 }
 
 Tok TokStreamer::getLastToken(int j){
-    return toks[i-j];
+	if (i - j + 1 >= 0 && i - j + 1 < len) {
+		return toks[i - j + 1];
+	}
+	
+	return Tok("", tokType::ENDOFINPUT);
 }
