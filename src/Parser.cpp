@@ -5,10 +5,18 @@ static Node* prevNode = nullptr;
 static std::vector<Tok> currentStatement;
 static std::vector<Tok> prevStatement;
 static std::vector<Node*> nodes;
+static int E_index = 0;
+static int INT_index = 0;
+static int ADD_index = 0;
+static int SUB_index = 0;
+static int MUL_index = 0;
+static int DIV_index = 0;
+static int EXPO_index = 0;
 
 void Parser::error(std::string errormsg) {
     //needs implementing
     //in the error class most likely
+	std::cout << errormsg << std::endl;
 }
  
 bool Parser::accept(Tok& tok, tokType t) {
@@ -27,7 +35,99 @@ void Parser::run(std::vector<Tok> toks) {
 	TokStreamer* st = new TokStreamer(toks, -1);
 	//Program(st);
 	E(st);
+	drawNodes();
 
+}
+
+
+std::string Parser::nodeToRealString(Node* n) {
+	switch (n->nodeType)
+	{
+	case NodeType::E:
+		if (n->drawName == ""){
+			++E_index;
+			n->drawName = "E" + std::to_string(E_index);
+		}
+
+		return n->drawName;
+		
+	case NodeType::INT:
+		if (n->drawName == ""){
+			++INT_index;
+			n->drawName = "INT" + std::to_string(INT_index) + std::string("_") + n->t.content + std::string("_");
+		}
+		return n->drawName;
+	case NodeType::ADD:
+		if (n->drawName == ""){
+			++ADD_index;
+			n->drawName = "ADD" + std::to_string(ADD_index);
+		}
+		return n->drawName;
+	case NodeType::SUB:
+		if (n->drawName == ""){
+			++SUB_index;
+			n->drawName = "SUB" + std::to_string(SUB_index);
+		}
+		return n->drawName;
+	case NodeType::DIV:
+		if (n->drawName == ""){
+			++DIV_index;
+			n->drawName = "DIV" + std::to_string(DIV_index);
+		}
+		return n->drawName;
+	case NodeType::MUL:
+		if (n->drawName == ""){
+			++MUL_index;
+			n->drawName = "MUL" + std::to_string(MUL_index);
+		}
+		return n->drawName;
+	case NodeType::EXPO:
+		if (n->drawName == ""){
+			++EXPO_index;
+			n->drawName = "EXPO" + std::to_string(EXPO_index);
+		}
+		return n->drawName;
+	default:
+		return "";
+	}
+}
+
+std::vector<std::string> Parser::handle_node(Node* node) {
+	
+	std::vector<std::string> results;
+	std::vector<Node*> children = node->getChildren();
+	for (int i = 0; i < children.size(); i++) {
+		std::vector<std::string> chains = handle_node(children.at(i));
+		for (int j = 0; j < chains.size(); j++) {
+			std::string chain = chains.at(j);
+			results.push_back(nodeToRealString(node) + " -> " + chain);
+		}
+	}
+
+	if (results.size() == 0)
+		results.push_back(nodeToRealString(node));
+	return results;
+	
+}
+
+void Parser::drawNodes() {
+	std::ofstream file;
+	file.open("graph.gv");
+	if (file.fail()) {
+		error("Can't draw");
+	}
+	std::string digraph = "digraph N {";
+	Node* main = createNode(nullptr, NodeType::E);
+	for (int i = nodes.size()-1; i >= 0; i--) {
+		main->addChild(nodes.at(i));
+	}
+	//digraph += handle_node(main) + "}";
+	std::vector<std::string> result = handle_node(main);
+	for (int i = 0; i < result.size(); i++) {
+		std::cout << result.at(i) << std::endl;
+	}
+	//std::cout << digraph;
+	file <<digraph;
 }
 
 Node* Parser::createNode(Node* parent, NodeType nodeType){
@@ -50,9 +150,9 @@ Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
 
 //Grammar for Program:
 // Program --> {FunctionDef}
-// FunctionDef --> FUNCDEF FUNCNAME "(" [ID {"," ID}] ")" "{" BODY "}"
+// FunctionDef --> "function" ID "(" [TYPE ID {"," TYPE ID}] ")" "{" BODY "}"
 // BODY --> {STMT}
-// STMT --> FLOW | ASSIGNMENT | FUNCALL | "print" [ V { "," V } ] // why? because; // int i = ?; string s = (string) ?.size(k|?);
+// STMT --> FLOW | ASSIGNMENT | FUNCALL | KEYWORDS // int i = ?; string s = (string) ?.size(k|?);
 // FUNCALL --> FUNCNAME "(" [V {"," V} ] ")" ";"
 // ASSIGNMENT --> CREATION | TYPE ID ";"
 // CREATION --> TYPE ID "=" V ";" | ID "=" V ";"
@@ -66,7 +166,7 @@ Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
 // F --> P ["^" F]
-// P --> V | "(" E ")" | "-" T | "+" T //V is constants and identifiers
+// P --> "(" E ")" | V | "-" T | "+" T //V is constants and identifiers
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
 // V --> INT | FLOAT | STRING ... | ID | FUNCNAME "(" [ ID { "," ID } ] ")" // TODO: IMPLEMENT LAST ONE!!!!
@@ -220,7 +320,6 @@ bool Parser::E(TokStreamer* st) {
 
 bool Parser::E1(TokStreamer* st) {
     Node* E;
-	int save;
 	if (T(st)) {
 		//maybe createNode
 		Node* result;
@@ -228,46 +327,39 @@ bool Parser::E1(TokStreamer* st) {
 		nodes.pop_back();
 		E = createNode(nullptr, NodeType::E);
 		E->addChild(result);
-		while (true) {
-			save = st->getIndex();
-			if (LOne(st)) {
-					//maybe createNode
-					if (E->numChildren() == 1) {
-						result = nodes.back();
-						nodes.pop_back();
-						E->addChild(result);
-						if (T(st)) {
-							result = nodes.back();
-							nodes.pop_back();
-							E->addChild(result);
-						}
-						else {
-							error("Expected another term after operator \"+\" or \"-\"");
-						}
-					}
-					else {
-						//Unite the children into an E
-						Node* newE = createNode(nullptr, NodeType::E);
-						E->changeParent(newE);
-						Node* temp = newE;
-						newE = E;
-						E = temp;
-						result = nodes.back();//LOne
-						nodes.pop_back();
-						E->addChild(result);
-						if (T(st)) {
-							result = nodes.back();
-							nodes.pop_back();//T
-							E->addChild(result);
-						}
-						else {
-							error("Expected another term after operator \"+\" or \"-\"");
-						}
-					}
+		while (LOne(st)) {
+			//maybe createNode
+			if (E->numChildren() == 1) {
+				result = nodes.back();
+				nodes.pop_back();
+				E->addChild(result);
+				if (T(st)) {
+					result = nodes.back();
+					nodes.pop_back();
+					E->addChild(result);
+				}
+				else {
+					error("Expected another term after operator \"+\" or \"-\"");
+				}
 			}
 			else {
-				st->setIndex(save);
-				break;
+				//Unite the children into an E
+				Node* newE = createNode(nullptr, NodeType::E);
+				E->changeParent(newE);
+				Node* temp = newE;
+				newE = E;
+				E = temp;
+				result = nodes.back();//LOne
+				nodes.pop_back();
+				E->addChild(result);
+				if (T(st)) {
+					result = nodes.back();
+					nodes.pop_back();//T
+					E->addChild(result);
+				}
+				else {
+					error("Expected another term after operator \"+\" or \"-\"");
+				}
 			}
 		}
         nodes.push_back(E);
@@ -361,49 +453,41 @@ bool Parser::T(TokStreamer* st) {
 bool Parser::T1(TokStreamer* st) {
     Node* T;
 	Node* result;
-	int save;
 	if (F(st)) {
 		Node* node;
 		node = nodes.back();
 		nodes.pop_back();
 		T = createNode(nullptr, NodeType::E);
 		T->addChild(node);
-		while (true) {
-			save = st->getIndex();
-			if (LTwo(st)) {
-				if (T->numChildren() == 1){
+		while (LTwo(st)) {
+			if (T->numChildren() == 1){
+				T->addChild(nodes.back());
+				nodes.pop_back();
+				if (F(st)){
 					T->addChild(nodes.back());
 					nodes.pop_back();
-					if (F(st)){
-						T->addChild(nodes.back());
-						nodes.pop_back();
-					}
-					else{
-						error("expected a term after \"*\" or \"/\" ");
-					}
 				}
 				else{
-					Node* newE = createNode(nullptr, NodeType::E);
-					T->changeParent(newE);
-					Node* temp = newE;
-					newE = T;
-					T = temp;
-					result = nodes.back();//LOne
-					nodes.pop_back();
-					T->addChild(result);
-					if (F(st)) {
-						result = nodes.back();
-						nodes.pop_back();//T
-						T->addChild(result);
-					}
-					else{
-						error("expected a term after \"*\" or \"/\" ");
-					}
+					error("expected a term after \"*\" or \"/\" ");
 				}
 			}
-			else {
-				st->setIndex(save);
-				break;
+			else{
+				Node* newE = createNode(nullptr, NodeType::E);
+				T->changeParent(newE);
+				Node* temp = newE;
+				newE = T;
+				T = temp;
+				result = nodes.back();//LOne
+				nodes.pop_back();
+				T->addChild(result);
+				if (F(st)) {
+					result = nodes.back();
+					nodes.pop_back();//T
+					T->addChild(result);
+				}
+				else{
+					error("expected a term after \"*\" or \"/\" ");
+				}
 			}
 		}
 		nodes.push_back(T);
@@ -473,13 +557,15 @@ bool Parser::P(TokStreamer* st) {
     return false;
 }
 
+
 bool Parser::P1(TokStreamer* st)  {//this function is complete, i mean it
 	if (V(st)) {
-        return true;
-    }
-    
-    return false;
+		return true;
+	}
+
+	return false;
 }
+
 
 bool Parser::P2(TokStreamer* st) {//this function is complete, i mean it
     if (termByType(tokType::OPENPARAN, st)) {

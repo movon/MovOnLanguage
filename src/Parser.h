@@ -7,6 +7,7 @@
 #include "Tok.h"
 #include "TokStreamer.h"
 #include "Lexer.h"
+#include <fstream>
 //Grammar for Expressions:
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
@@ -25,6 +26,12 @@
 class Parser{
 public:
     static void run(std::vector<Tok> toks);
+	
+	static std::vector<std::string> handle_node(Node* node);
+
+	static std::string nodeToRealString(Node* n);
+
+	static void drawNodes();
 
 	static void error(std::string errormsg);
 

@@ -49,6 +49,7 @@ void Lexer::initSets() {
     operators.insert("+");
     operators.insert("*");
     operators.insert("/");
+	operators.insert("^");
  
     flowOperators.insert("if");
     flowOperators.insert("else");
@@ -140,7 +141,9 @@ std::string Lexer::tokTypeToString(tokType& tt) {
 }
  
 void Lexer::addToParserTokens(Tok tok) {
-	tokens.push_back(tok);
+	if (tok.content != "") {
+		tokens.push_back(tok);
+	}
 }
 
 bool Lexer::isInt(std::string& s)
@@ -225,12 +228,15 @@ void Lexer::handleChar(char chr, bool& isInString, Tok& tok) {
 		else if (chr == '(') {
 			if (isFlowOperator(tok.content)) {
 				tok.type = tokType::FLOWOPERATOR;
+				addToParserTokens(tok);
+				tok.content = "";
 			}
 			else {
 				tok.type = tokType::FUNCTIONNAME;
+				addToParserTokens(tok);
+				tok.content = "";
 			}
-			addToParserTokens(tok);
-			tok.content = "";
+
 			addToParserTokens(Tok("(", tokType::OPENPARAN));
 		}
 		else if (isFlowOperator(tok.content)) {

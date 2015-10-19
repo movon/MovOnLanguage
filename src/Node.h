@@ -9,12 +9,13 @@ enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT, C
 
 class Node{
 protected:
-    NodeType nodeType;
     std::vector<Node*> children;
     Node* parent;
-    Tok t;
     std::string name;
 public:
+	NodeType nodeType;
+	Tok t;
+	std::string drawName = "";
     Node(Node* Parent, NodeType Nodetype);
     Node(Node* Parent, NodeType Nodetype, Tok T);
     Node(NodeType Nodetype, std::string Name);
@@ -27,6 +28,7 @@ public:
     void disownAllChildren();
     int numChildren();
     void changeParent(Node* Parent);
+	std::vector<Node*> getChildren();
 };
 
 

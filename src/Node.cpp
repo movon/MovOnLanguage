@@ -49,3 +49,8 @@ int Node::numChildren() {
 void Node::changeParent(Node* Parent) {
 	parent = Parent;
 }
+
+std::vector<Node*> Node::getChildren()
+{
+	return children;
+}
