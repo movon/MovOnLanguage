@@ -53,38 +53,32 @@ std::string Parser::nodeToRealString(Node* n) {
 		
 	case NodeType::INT:
 		if (n->drawName == ""){
-			++INT_index;
-			n->drawName = "INT" + std::to_string(INT_index) + std::string("_") + n->t.content + std::string("_");
+			n->drawName = "INT" + std::to_string(INT_index++) + std::string("_") + n->t.content + std::string("_");
 		}
 		return n->drawName;
 	case NodeType::ADD:
 		if (n->drawName == ""){
-			++ADD_index;
-			n->drawName = "ADD" + std::to_string(ADD_index);
+			n->drawName = "ADD" + std::to_string(ADD_index++);
 		}
 		return n->drawName;
 	case NodeType::SUB:
 		if (n->drawName == ""){
-			++SUB_index;
-			n->drawName = "SUB" + std::to_string(SUB_index);
+			n->drawName = "SUB" + std::to_string(SUB_index++);
 		}
 		return n->drawName;
 	case NodeType::DIV:
-		if (n->drawName == ""){
-			++DIV_index;
-			n->drawName = "DIV" + std::to_string(DIV_index);
+		if (n->drawName == "") {
+			n->drawName = "DIV" + std::to_string(DIV_index++);
 		}
 		return n->drawName;
 	case NodeType::MUL:
 		if (n->drawName == ""){
-			++MUL_index;
-			n->drawName = "MUL" + std::to_string(MUL_index);
+			n->drawName = "MUL" + std::to_string(MUL_index++);
 		}
 		return n->drawName;
 	case NodeType::EXPO:
 		if (n->drawName == ""){
-			++EXPO_index;
-			n->drawName = "EXPO" + std::to_string(EXPO_index);
+			n->drawName = "EXPO" + std::to_string(EXPO_index++);
 		}
 		return n->drawName;
 	default:
@@ -92,20 +86,16 @@ std::string Parser::nodeToRealString(Node* n) {
 	}
 }
 
-std::vector<std::string> Parser::handle_node(Node* node) {
+std::set<std::string> Parser::handle_node(Node* node) {
 	
-	std::vector<std::string> results;
+	std::set<std::string> results;
+	std::set<std::string> s1;
 	std::vector<Node*> children = node->getChildren();
 	for (int i = 0; i < children.size(); i++) {
-		std::vector<std::string> chains = handle_node(children.at(i));
-		for (int j = 0; j < chains.size(); j++) {
-			std::string chain = chains.at(j);
-			results.push_back(nodeToRealString(node) + " -> " + chain);
-		}
+		results.insert(nodeToRealString(node) + " -> " + nodeToRealString(children.at(i)));
+		s1 = handle_node(children.at(i));
+		results.insert(s1.begin(), s1.end());
 	}
-
-	if (results.size() == 0)
-		results.push_back(nodeToRealString(node));
 	return results;
 	
 }
@@ -116,17 +106,18 @@ void Parser::drawNodes() {
 	if (file.fail()) {
 		error("Can't draw");
 	}
-	std::string digraph = "digraph N {";
 	Node* main = createNode(nullptr, NodeType::E);
 	for (int i = nodes.size()-1; i >= 0; i--) {
 		main->addChild(nodes.at(i));
 	}
 	//digraph += handle_node(main) + "}";
-	std::vector<std::string> result = handle_node(main);
-	for (int i = 0; i < result.size(); i++) {
-		std::cout << result.at(i) << std::endl;
+	std::set<std::string> result = handle_node(main);
+	std::string digraph = "digraph Nodes {\n";
+	for (auto it : result) {
+		digraph += it + "\n";
 	}
-	//std::cout << digraph;
+	digraph += "}";
+	std::cout << digraph;
 	file <<digraph;
 }
 

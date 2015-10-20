@@ -27,7 +27,7 @@ class Parser{
 public:
     static void run(std::vector<Tok> toks);
 	
-	static std::vector<std::string> handle_node(Node* node);
+	static std::set<std::string> handle_node(Node* node);
 
 	static std::string nodeToRealString(Node* n);
 
