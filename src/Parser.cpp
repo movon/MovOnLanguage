@@ -39,7 +39,6 @@ void Parser::run(std::vector<Tok> toks) {
 
 }
 
-
 std::string Parser::nodeToRealString(Node* n) {
 	switch (n->nodeType)
 	{
@@ -86,15 +85,15 @@ std::string Parser::nodeToRealString(Node* n) {
 	}
 }
 
-std::set<std::string> Parser::handle_node(Node* node) {
+std::vector<std::string> Parser::handle_node(Node* node) {
 	
-	std::set<std::string> results;
-	std::set<std::string> s1;
+	std::vector<std::string> results;
+	std::vector<std::string> v1;
 	std::vector<Node*> children = node->getChildren();
 	for (int i = 0; i < children.size(); i++) {
-		results.insert(nodeToRealString(node) + " -> " + nodeToRealString(children.at(i)));
-		s1 = handle_node(children.at(i));
-		results.insert(s1.begin(), s1.end());
+		v1 = handle_node(children.at(i));
+		v1.push_back(nodeToRealString(node) + " -> " + nodeToRealString(children.at(i)));
+		results.insert(results.end(), v1.begin(), v1.end());
 	}
 	return results;
 	
@@ -111,10 +110,15 @@ void Parser::drawNodes() {
 		main->addChild(nodes.at(i));
 	}
 	//digraph += handle_node(main) + "}";
-	std::set<std::string> result = handle_node(main);
+	std::vector<std::string> result = handle_node(main);
 	std::string digraph = "digraph Nodes {\n";
-	for (auto it : result) {
-		digraph += it + "\n";
+	std::set<std::string> s;
+	for (int i = 0; i < result.size();i++) {
+		if (s.find(result.at(i)) == s.end()) {
+			digraph += result.at(i) + "\n";
+			s.insert(result.at(i));
+		}
+		
 	}
 	digraph += "}";
 	std::cout << digraph;
