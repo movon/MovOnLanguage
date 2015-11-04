@@ -36,53 +36,53 @@ void Parser::run(std::vector<Tok> toks) {
 	//Program(st);
 	E(st);
 	drawNodes();
-
+	delete st;
 }
 
 std::string Parser::nodeToRealString(Node* n) {
 	switch (n->nodeType)
 	{
-	case NodeType::E:
-		if (n->drawName == ""){
-			++E_index;
-			n->drawName = "E" + std::to_string(E_index);
-		}
+		case NodeType::E:
+			if (n->drawName == ""){
+				++E_index;
+				n->drawName = "E" + std::to_string(E_index);
+			}
 
-		return n->drawName;
-		
-	case NodeType::INT:
-		if (n->drawName == ""){
-			n->drawName = "INT" + std::to_string(INT_index++) + std::string("_") + n->t.content + std::string("_");
+			return n->drawName;
+			
+		case NodeType::INT:
+			if (n->drawName == ""){
+				n->drawName = "INT" + std::to_string(INT_index++) + std::string("_") + n->t.content + std::string("_");
+			}
+			return n->drawName;
+		case NodeType::ADD:
+			if (n->drawName == ""){
+				n->drawName = "ADD" + std::to_string(ADD_index++);
+			}
+			return n->drawName;
+		case NodeType::SUB:
+			if (n->drawName == ""){
+				n->drawName = "SUB" + std::to_string(SUB_index++);
+			}
+			return n->drawName;
+		case NodeType::DIV:
+			if (n->drawName == "") {
+				n->drawName = "DIV" + std::to_string(DIV_index++);
+			}
+			return n->drawName;
+		case NodeType::MUL:
+			if (n->drawName == ""){
+				n->drawName = "MUL" + std::to_string(MUL_index++);
+			}
+			return n->drawName;
+		case NodeType::EXPO:
+			if (n->drawName == ""){
+				n->drawName = "EXPO" + std::to_string(EXPO_index++);
+			}
+			return n->drawName;
+		default:
+			return "";
 		}
-		return n->drawName;
-	case NodeType::ADD:
-		if (n->drawName == ""){
-			n->drawName = "ADD" + std::to_string(ADD_index++);
-		}
-		return n->drawName;
-	case NodeType::SUB:
-		if (n->drawName == ""){
-			n->drawName = "SUB" + std::to_string(SUB_index++);
-		}
-		return n->drawName;
-	case NodeType::DIV:
-		if (n->drawName == "") {
-			n->drawName = "DIV" + std::to_string(DIV_index++);
-		}
-		return n->drawName;
-	case NodeType::MUL:
-		if (n->drawName == ""){
-			n->drawName = "MUL" + std::to_string(MUL_index++);
-		}
-		return n->drawName;
-	case NodeType::EXPO:
-		if (n->drawName == ""){
-			n->drawName = "EXPO" + std::to_string(EXPO_index++);
-		}
-		return n->drawName;
-	default:
-		return "";
-	}
 }
 
 std::vector<std::string> Parser::handle_node(Node* node) {
@@ -122,12 +122,12 @@ void Parser::drawNodes() {
 	}
 	digraph += "}";
 	std::cout << digraph;
-	file <<digraph;
+	file << digraph;
 }
 
 Node* Parser::createNode(Node* parent, NodeType nodeType){
     Node* node = new Node(parent, nodeType);
-    if(parent != nullptr){
+    if(parent != nullptr) {
        parent->addChild(node);
     }
 

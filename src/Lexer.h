@@ -16,7 +16,7 @@
  
 class Lexer {
         public:
-                struct Operation
+              struct Operation
                 {
                 std::set<std::string> before;
                 std::string op;
@@ -52,7 +52,7 @@ class Lexer {
                
                 static bool isFlowOperator(std::string& content);
 
-				static void handleChar(char chr, bool& isInString, Tok& tok);
+		static void handleChar(char chr, bool& isInString, Tok& tok);
  
                 static void runLexer(char** filename);
        

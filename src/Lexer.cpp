@@ -96,7 +96,7 @@ bool Lexer::isCompareOperator(std::string s) {
 }
 
 std::string Lexer::tokTypeToString(tokType& tt) {
-        switch (tt) {
+    switch (tt) {
         case tokType::NONE:
                 return "NONE";
         case tokType::IDENTIFIER:
@@ -138,7 +138,7 @@ std::string Lexer::tokTypeToString(tokType& tt) {
         case tokType::COMPAREOPERATOR:
             return "COMPAREOPERATOR";
         }
-}
+    }
  
 void Lexer::addToParserTokens(Tok tok) {
 	if (tok.content != "") {
@@ -169,8 +169,8 @@ Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
             result = {true, tokType::FLOAT};
         }
         else {
-                Lexer::Primitive not_primitive = {false, tokType::NONE};
-                return not_primitive;
+            Lexer::Primitive not_primitive = {false, tokType::NONE};
+            return not_primitive;
         }
  
         return result;
@@ -178,9 +178,9 @@ Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
  
 bool Lexer::isFlowOperator(std::string& content) {
     return flowOperators.find(content) != flowOperators.end();
-}
+    }
  
-std::vector<Tok> Lexer::getTokens(){ return tokens; }
+std::vector<Tok> Lexer::getTokens() { return tokens; }
 
 void Lexer::handleChar(char chr, bool& isInString, Tok& tok) {
 	if (isInString)
@@ -308,21 +308,23 @@ void Lexer::runLexer(char** filename) {
             exit(1);
         }
         while (getline(myfile, line)) {
-                        data += line;
+            data += line;
         }
         streamer = new Streamer(data, -1);
         Tok tok = Tok("", tokType::NONE);
         bool isInString = false;
         char chr = streamer->getNextChar();
         while (chr != 0) {
-                if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' || chr == ')' || chr == '{' || chr == '}' || chr == ',' || chr == '\n' || chr == '\t' || isOperator(std::string(1, chr))) {
-					handleChar(chr, isInString, tok);
-                }
-                //It is a normal chr, add to tok
-                else {
-                    tok.content += chr;
-                }
-                chr = streamer->getNextChar();
+            if (chr == ' ' || chr == ';' || chr == '"' || chr == '(' 
+                || chr == ')' || chr == '{' || chr == '}' || chr == ','
+                || chr == '\n' || chr == '\t' || isOperator(std::string(1, chr))) {
+    			handleChar(chr, isInString, tok);
+            }
+            //It is a normal chr, add to tok
+            else {
+                tok.content += chr;
+            }
+            chr = streamer->getNextChar();
         }
 		handleChar(chr, isInString, tok);
 
