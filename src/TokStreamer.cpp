@@ -1,13 +1,13 @@
 #include "TokStreamer.h"
 
 TokStreamer::TokStreamer(std::vector<Tok> t, int pos) {
-        toks = t;
-        i = pos;
-        len = (signed) t.size();
+    toks = t;
+    i = pos;
+    len = (signed) t.size();
 }
  
 void TokStreamer::advancePosition() {
-        i++;
+    i++;
 }
  
 Tok TokStreamer::getNextToken(){

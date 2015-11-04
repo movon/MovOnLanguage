@@ -340,7 +340,7 @@ bool Parser::E1(TokStreamer* st) {
 			else {
 				//Unite the children into an E
 				Node* newE = createNode(nullptr, NodeType::E);
-				E->changeParent(newE);
+				newE->addChild(E);
 				Node* temp = newE;
 				newE = E;
 				E = temp;
@@ -468,7 +468,7 @@ bool Parser::T1(TokStreamer* st) {
 			}
 			else{
 				Node* newE = createNode(nullptr, NodeType::E);
-				T->changeParent(newE);
+				newE->addChild(T);
 				Node* temp = newE;
 				newE = T;
 				T = temp;
