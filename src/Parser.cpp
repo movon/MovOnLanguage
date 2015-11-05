@@ -198,20 +198,24 @@ bool Parser::FunctionDef(TokStreamer* st) {
 }
 
 bool Parser::termByType(tokType t, TokStreamer* st) {
-    if (st->getNextToken().type == t) {
+	int save = st->getIndex();
+	if (st->getNextToken().type == t) {
         //maybe createNode
         return true;
     }
 
+	st->setIndex(save);
     return false;
 }
 
 bool Parser::termByValue(std::string s, TokStreamer* st) {
-    if (st->getNextToken().content == s) {
+	int save = st->getIndex();
+	if (st->getNextToken().content == s) {
         //maybe createNode
         return true;
     }
 
+	st->setIndex(save);
     return false;
 }
 
