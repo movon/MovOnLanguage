@@ -1,8 +1,8 @@
 //
 // Created by talbor49 on 8/11/15.
 //
-#ifndef MOVONLANGUAGE_LEXER_H
-#define MOVONLANGUAGE_LEXER_H
+#ifndef LEXER_H
+#define LEXER_H
  
 #include <string>
 #include <set>
@@ -60,4 +60,4 @@ class Lexer {
 };
  
  
-#endif //MOVONLANGUAGE_LEXER_H
+#endif

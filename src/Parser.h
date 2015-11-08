@@ -32,6 +32,19 @@ public:
 
     static Node* createNode(Node* parent, NodeType nodeType, Tok t);
 private:
+    static bool program(TokStreamer* st);
+
+    static bool program1(TokStreamer* st);
+
+    static bool functionDef(TokStreamer* st);
+
+    static bool functionDef1(TokStreamer* st);
+
+    static void funcLoop(TokStreamer* st);
+
+    static bool body(TokStreamer* st);
+
+    static bool stmt(TokStreamer* st);    
 
     static bool expect(Tok& tok, tokType t);
 

@@ -172,7 +172,7 @@ Node* Parser::createNode(Node* parent, NodeType nodeType, Tok t) {
 // lvl2bexp -> NOT lvl3bexp | lvl3bexp
 // lvl3bexp -> TRUE | FALSE | E COMPARISON_OPERATOR E
 
-bool Parser::Program(TokStreamer* st) {
+bool Parser::program(TokStreamer* st) {
     int save = st->getIndex();
     if (Program1(st)) {
         return true;
@@ -181,7 +181,7 @@ bool Parser::Program(TokStreamer* st) {
     return false;
 }
 
-bool Parser::Program1(TokStreamer* st) {
+bool Parser::program1(TokStreamer* st) {
     bool atLeastOneFuncDef = false;
 
     while (FunctionDef(st)) {
@@ -193,7 +193,7 @@ bool Parser::Program1(TokStreamer* st) {
     return atLeastOneFuncDef;
 }
 
-bool Parser::FunctionDef(TokStreamer* st) {
+bool Parser::functionDef(TokStreamer* st) {
     int save = st->getIndex();
     if(FunctionDef1(st)){
         return true;
@@ -206,7 +206,7 @@ bool Parser::FunctionDef(TokStreamer* st) {
     return false;
 }
 
-bool Parser::FunctionDef1(TokStreamer* st){
+bool Parser::functionDef1(TokStreamer* st){
     if(termByValue("function",st)){
         if(termByType(tokType::ID, st)){
             if(termByValue("(", st)){
@@ -217,7 +217,7 @@ bool Parser::FunctionDef1(TokStreamer* st){
     }
 }
 
-void Parser::FuncLoop(TokStreamer* st){
+void Parser::funcLoop(TokStreamer* st){
     Node* parent = nodes.back();
     while(termByValue(")", st)){
         if(termByType(tokType::TYPE, st)){
@@ -242,14 +242,14 @@ void Parser::FuncLoop(TokStreamer* st){
     }
 }
 
-bool Paser::body(TokStreamer* st){
+bool Parser::body(TokStreamer* st){
     if(stmt){
 
     }
 }
 
 bool Parser::stmt(TokStreamer* st){
-    
+                        
 }
 
 bool Parser::termByType(tokType t, TokStreamer* st) {
