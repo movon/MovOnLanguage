@@ -110,7 +110,7 @@ void Parser::drawNodes() {
 		
 	}
 	digraph += "}";
-	std::cout << digraph;
+	std::cout << digraph << std::endl;
 	file << digraph;
 }
 
