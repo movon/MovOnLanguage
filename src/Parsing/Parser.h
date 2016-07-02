@@ -26,17 +26,16 @@
 class Parser{
 public:
     void run(std::vector<Tok> toks);
+    
+private:
 
-	std::vector<std::string> handle_node(Node* node);
+    std::vector<std::string> handle_node(Node* node);
 
 	std::string nodeToRealString(Node* n);
 
 	void drawNodes();
 
 	static void error(std::string errormsg);
-
-    
-private:
 
     Node* currParent = nullptr;
     

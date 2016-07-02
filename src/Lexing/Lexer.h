@@ -27,8 +27,7 @@ class Lexer {
     std::set<std::string> compareOperators;
     std::vector<Tok> tokens;
     Streamer* streamer;
-        
-  public:
+    
     struct Operation
       {
         std::set<std::string> before;
@@ -42,8 +41,6 @@ class Lexer {
         bool isPrimitive;
         tokType type;
       };
-  
-      Lexer();
       
       void initSets();
   
@@ -69,11 +66,16 @@ class Lexer {
   
       void handleChar(char chr, bool& isInString, Tok& tok);
   
-      std::vector<Tok> runLexer(char* filename);
-  
       std::vector<Tok> getTokens();
   
       void addToParserTokens(Tok tok);
+        
+  public:
+      
+      Lexer();
+      
+      std::vector<Tok> runLexer(char* filename);
+    
 };
  
  
