@@ -4,7 +4,6 @@
 #ifndef MOVONLANGUAGE_LEXER_H
 #define MOVONLANGUAGE_LEXER_H
 
-#include "../Parsing/Parser.h" 
 #include "../Base/Tok.h"
 #include "Streamer.h"
 #include <string>

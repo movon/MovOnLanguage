@@ -1,4 +1,5 @@
 #include "Lexing/Lexer.h"
+#include "Parsing/Parser.h"
 #include <iostream>
 
 int main(int argc, char** argv) {

@@ -6,7 +6,7 @@
 #include "../Base/Node.h"
 #include "../Base/Tok.h"
 #include "TokStreamer.h"
-#include "../Lexing/Lexer.h"
+#include <set>
 #include <fstream>
 //Grammar for Expressions:
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
