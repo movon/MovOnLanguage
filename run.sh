@@ -1,2 +1,3 @@
 ./MovOnLanguage $1
-./open_generated_graph.sh
+dot -Tpng -O graph.gv
+xdg-open graph.gv.png

@@ -4,4 +4,20 @@ project(MovOnLanguage)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES src/main.cpp)
-add_executable(MovOnLanguage ${SOURCE_FILES} src/Lexer.h src/Streamer.cpp src/Tok.h src/Errors.cpp src/main.cpp src/Streamer.h src/TokStreamer.cpp src/Errors.h src/Node.cpp src/Tok.cpp src/TokStreamer.h src/Lexer.cpp src/Node.h src/Parser.h src/Parser.cpp)
+
+add_executable(MovOnLanguage ${SOURCE_FILES}
+src/Lexing/Lexer.h
+src/Lexing/Streamer.cpp
+src/Base/Tok.h
+src/Base/Errors.cpp
+src/main.cpp
+src/Lexing/Streamer.h
+src/Parsing/TokStreamer.cpp
+src/Base/Errors.h
+src/Base/Node.cpp
+src/Base/Tok.cpp
+src/Parsing/TokStreamer.h
+src/Lexing/Lexer.cpp
+src/Base/Node.h
+src/Parsing/Parser.h
+src/Parsing/Parser.cpp)

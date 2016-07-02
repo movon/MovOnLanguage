@@ -1,4 +1,4 @@
-#include "Lexer.h"
+#include "Lexing/Lexer.h"
 #include <iostream>
 
 int main(int argc, char** argv) {
