@@ -3,62 +3,77 @@
 //
 #ifndef MOVONLANGUAGE_LEXER_H
 #define MOVONLANGUAGE_LEXER_H
- 
+
+#include "Parser.h" 
+#include "Tok.h"
+#include "Streamer.h"
 #include <string>
 #include <set>
 #include <cctype>
 #include <locale>
 #include <vector>
 #include <sstream>
-#include "Tok.h"
-#include "Streamer.h"
 #include <sstream>
- 
+#include <fstream>
+#include <algorithm>
+
 class Lexer {
-        public:
-              struct Operation
-                {
-                std::set<std::string> before;
-                std::string op;
-                std::set<std::string> after;
-                };
-                 
-                 
-                struct Primitive
-                {
-                bool isPrimitive;
-                tokType type;
-                };
+        
+  private:
+    std::set<std::string> keywords;
+    std::set<std::string> types;
+    std::set<std::string> flowOperators;
+    std::set<std::string> operators;
+    std::set<std::string> compareOperators;
+    std::vector<Tok> tokens;
+    Streamer* streamer;
+        
+  public:
+    struct Operation
+      {
+        std::set<std::string> before;
+        std::string op;
+        std::set<std::string> after;
+      };
        
-                static void initSets();
- 
-                static bool isKeyword(std::string content);
-
-                static bool isType(std::string content);
- 
-                static bool isOperator(std::string s);
-
-                static bool isCompareOperator(std::string s);
- 
-                static std::string tokTypeToString(tokType& tokType);
- 
-                static void printTokens();
- 
-                static bool isInt(std::string& s);
- 
-                static Primitive checkIfPrimitive(std::string s);
- 
-                static bool isFloat(const std::string& s);
-               
-                static bool isFlowOperator(std::string& content);
-
-		static void handleChar(char chr, bool& isInString, Tok& tok);
- 
-                static void runLexer(char** filename);
        
-                static std::vector<Tok> getTokens();
-
-                static void addToParserTokens(Tok tok);
+      struct Primitive
+      {
+        bool isPrimitive;
+        tokType type;
+      };
+  
+      Lexer();
+      
+      void initSets();
+  
+      bool isKeyword(std::string content);
+  
+      bool isType(std::string content);
+  
+      bool isOperator(std::string s);
+  
+      bool isCompareOperator(std::string s);
+  
+      std::string tokTypeToString(tokType& tokType);
+  
+      void printTokens();
+  
+      bool isInt(std::string& s);
+  
+      Primitive checkIfPrimitive(std::string s);
+  
+      bool isFloat(const std::string& s);
+     
+      bool isFlowOperator(std::string& content);
+  
+      void handleChar(char chr, bool& isInString, Tok& tok);
+  
+      std::vector<Tok> runLexer(char* filename);
+  
+      std::vector<Tok> getTokens();
+  
+      void addToParserTokens(Tok tok);
 };
  
  

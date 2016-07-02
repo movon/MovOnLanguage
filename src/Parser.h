@@ -25,20 +25,36 @@
 
 class Parser{
 public:
-    static void run(std::vector<Tok> toks);
+    void run(std::vector<Tok> toks);
 
-	static std::vector<std::string> handle_node(Node* node);
+	std::vector<std::string> handle_node(Node* node);
 
-	static std::string nodeToRealString(Node* n);
+	std::string nodeToRealString(Node* n);
 
-	static void drawNodes();
+	void drawNodes();
 
 	static void error(std::string errormsg);
 
-    static Node* createNode(Node* parent, NodeType nodeType);
-
-    static Node* createNode(Node* parent, NodeType nodeType, Tok t);
+    
 private:
+
+    Node* currParent = nullptr;
+    
+    Node* prevNode = nullptr;
+    
+    std::vector<Tok> currentStatement;
+    
+    std::vector<Tok> prevStatement;
+    
+    std::vector<Node*> nodes;
+    
+    int E_index = 0;
+    int INT_index = 0;
+    int ADD_index = 0;
+    int SUB_index = 0;
+    int MUL_index = 0;
+    int DIV_index = 0;
+    int EXPO_index = 0;
 
     static bool expect(Tok& tok, tokType t);
 
@@ -52,65 +68,65 @@ private:
 
     //Grammar Functions
 
-	static bool Program(TokStreamer* st);
-
-	static bool Program1(TokStreamer* st);
-
-	static bool FunctionDef(TokStreamer* st);
-
-    static bool termByType(tokType t, TokStreamer* st);
-
-    static bool termByValue(std::string s, TokStreamer* st);
-
-    static bool LOne(TokStreamer* st);
-
-    static bool LOne1(TokStreamer* st);
-
-    static bool LOne2(TokStreamer* st);
-
-    static bool LTwo(TokStreamer* st);
-
-    static bool LTwo1(TokStreamer* st);
-
-    static bool LTwo2(TokStreamer* st);
-
-    static bool E(TokStreamer* st);
-
-    static bool E1(TokStreamer* st);
-
-    static bool E2(TokStreamer* st);
-
-    static bool E3(TokStreamer* st);
-
-    static bool E4(TokStreamer* st);
-
-    static bool E5(TokStreamer* st);
-
-    static bool T(TokStreamer* st);
-
-    static bool T1(TokStreamer* st);
-
-    static bool F(TokStreamer* st);
-
-    static bool F1(TokStreamer* st);
-
-    static bool P(TokStreamer* st);
-
-    static bool P1(TokStreamer* st);
-
-    static bool P2(TokStreamer* st);
-
-    static bool P3(TokStreamer* st);
-
-    static bool P4(TokStreamer* st);
-
-    static bool V(TokStreamer* st);
+     bool Program(TokStreamer* st);
     
-    static bool V1(TokStreamer* st);
+     bool Program1(TokStreamer* st);
     
-    static bool V2(TokStreamer* st);
+     bool FunctionDef(TokStreamer* st);
     
-    static bool V3(TokStreamer* st);
+     bool termByType(tokType t, TokStreamer* st);
+    
+     bool termByValue(std::string s, TokStreamer* st);
+    
+     bool LOne(TokStreamer* st);
+    
+     bool LOne1(TokStreamer* st);
+    
+     bool LOne2(TokStreamer* st);
+    
+     bool LTwo(TokStreamer* st);
+    
+     bool LTwo1(TokStreamer* st);
+    
+     bool LTwo2(TokStreamer* st);
+    
+     bool E(TokStreamer* st);
+    
+     bool E1(TokStreamer* st);
+    
+     bool E2(TokStreamer* st);
+    
+     bool E3(TokStreamer* st);
+    
+     bool E4(TokStreamer* st);
+    
+     bool E5(TokStreamer* st);
+    
+     bool T(TokStreamer* st);
+    
+     bool T1(TokStreamer* st);
+    
+     bool F(TokStreamer* st);
+    
+     bool F1(TokStreamer* st);
+    
+     bool P(TokStreamer* st);
+    
+     bool P1(TokStreamer* st);
+    
+     bool P2(TokStreamer* st);
+    
+     bool P3(TokStreamer* st);
+    
+     bool P4(TokStreamer* st);
+    
+     bool V(TokStreamer* st);
+    
+     bool V1(TokStreamer* st);
+    
+     bool V2(TokStreamer* st);
+    
+     bool V3(TokStreamer* st);
 
 };
 

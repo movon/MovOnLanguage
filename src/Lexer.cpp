@@ -1,16 +1,9 @@
 #include "Lexer.h"
-#include "Parser.h" 
 
-#include <fstream>
-#include <algorithm>
+Lexer::Lexer() {
+    initSets();
+}
 
-static std::set<std::string> keywords;
-static std::set<std::string> types;
-static std::set<std::string> flowOperators;
-static std::set<std::string> operators;
-static std::set<std::string> compareOperators;
-static std::vector<Tok> tokens;
-static Streamer* streamer;
 
 void Lexer::printTokens() {
         for (int i = 0; i < tokens.size(); ++i)
@@ -61,19 +54,19 @@ void Lexer::initSets() {
 
 /* 
 // trim from start
-static std::string &ltrim(std::string &s) {
+std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
 }
  
 // trim from end
-static std::string &rtrim(std::string &s) {
+std::string &rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
 }
  
 // trim from both ends
-static std::string &trim(std::string &s) {
+std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
 }
 */
@@ -98,25 +91,25 @@ bool Lexer::isCompareOperator(std::string s) {
 std::string Lexer::tokTypeToString(tokType& tt) {
     switch (tt) {
         case tokType::NONE:
-                return "NONE";
+            return "NONE";
         case tokType::IDENTIFIER:
-                return "IDENTIFIER";
+            return "IDENTIFIER";
         case tokType::KEYWORD:
-                return "KEYWORD";
+            return "KEYWORD";
         case tokType::FUNCTIONNAME:
-                return "FUNCTIONNAME";
+            return "FUNCTIONNAME";
         case tokType::FUNCTIONDEF:
             return "FUNCTIONDEF";
         case tokType::PARAM:
-                return "PARAM";
+            return "PARAM";
         case tokType::STRING:
-                return "STRING";
+            return "STRING";
         case tokType::DELIMITER:
-                return "DELIMITER";
+            return "DELIMITER";
         case tokType::OPERATOR:
-                return "OPERATOR";
+            return "OPERATOR";
         case tokType::INT:
-                return "INT";
+            return "INT";
         case tokType::FLOAT:
             return "FLOAT";
         case tokType::FLOWOPERATOR:
@@ -146,8 +139,7 @@ void Lexer::addToParserTokens(Tok tok) {
 	}
 }
 
-bool Lexer::isInt(std::string& s)
-{
+bool Lexer::isInt(std::string& s) {
     return !s.empty() && std::find_if(s.begin(),
                                       s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
@@ -298,11 +290,11 @@ void Lexer::handleChar(char chr, bool& isInString, Tok& tok) {
 	}
 }
 
-void Lexer::runLexer(char** filename) {
+std::vector<Tok> Lexer::runLexer(char* filename) {
         initSets();
         std::string line;
         std::string data;
-        std::ifstream myfile(filename[1]);
+        std::ifstream myfile(filename);
         if(myfile.fail()) {
             std::cout << "The file is not at this location or does not exist" << std::endl;
             exit(1);
@@ -330,5 +322,5 @@ void Lexer::runLexer(char** filename) {
 
         printTokens();
         delete streamer;
-		Parser::run(tokens);
+		return tokens;
 }

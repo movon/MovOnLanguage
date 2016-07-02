@@ -25,6 +25,24 @@ Node::~Node() {
 	}
 }
 
+Node* Node::createNode(Node* parent, NodeType nodeType){
+    Node* node = new Node(parent, nodeType);
+    if(parent != nullptr) {
+       parent->addChild(node);
+    }
+
+    return node;
+}
+
+Node* Node::createNode(Node* parent, NodeType nodeType, Tok t) {
+    Node* node = new Node(parent, nodeType, t);
+    if (parent != nullptr) {
+        parent->addChild(node);
+    }
+
+    return node;
+}
+
 void Node::addChild(Node* node) {
 	 children.push_back(node);
 	 node->changeParent(this);
