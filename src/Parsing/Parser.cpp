@@ -21,9 +21,9 @@ bool Parser::expect(Tok& tok, tokType t) {
 }
 
 void Parser::run(std::vector<Tok> toks) {
-	TokStreamer* st = new TokStreamer(toks, -1);
-	//Program(st);
-	E(st);
+	st = new TokStreamer(toks, -1);
+	//Program();
+	E();
 	drawNodes();
 	delete st;
 }
@@ -143,19 +143,19 @@ void Parser::drawNodes() {
 // lvl2bexp -> NOT lvl3bexp | lvl3bexp
 // lvl3bexp -> TRUE | FALSE | E COMPARISON_OPERATOR E
 
-bool Parser::Program(TokStreamer* st) {
+bool Parser::Program() {
 	int save = st->getIndex();
-	if (Program1(st)) {
+	if (Program1()) {
 		return true;
 	}
 
 	return false;
 }
 
-bool Parser::Program1(TokStreamer* st) {
+bool Parser::Program1() {
 	bool atLeastOneFuncDef = false;
 
-	while (FunctionDef(st)) {
+	while (FunctionDef()) {
 		atLeastOneFuncDef = true;
 		//maybe Node::createNode
 		//maybe add the node in nodes.back() to different endpoints of the tree
@@ -164,11 +164,11 @@ bool Parser::Program1(TokStreamer* st) {
 	return atLeastOneFuncDef;
 }
 
-bool Parser::FunctionDef(TokStreamer* st) {
+bool Parser::FunctionDef() {
 	return false;
 }
 
-bool Parser::termByType(tokType t, TokStreamer* st) {
+bool Parser::termByType(tokType t) {
 	int save = st->getIndex();
 	if (st->getNextToken().type == t) {
         //maybe Node::createNode
@@ -179,7 +179,7 @@ bool Parser::termByType(tokType t, TokStreamer* st) {
     return false;
 }
 
-bool Parser::termByValue(std::string s, TokStreamer* st) {
+bool Parser::termByValue(std::string s) {
 	int save = st->getIndex();
 	if (st->getNextToken().content == s) {
         //maybe Node::createNode
@@ -190,15 +190,15 @@ bool Parser::termByValue(std::string s, TokStreamer* st) {
     return false;
 }
 
-bool Parser::LOne(TokStreamer* st) {
+bool Parser::LOne() {
     int save = st->getIndex();
-    if (LOne1(st)) {
+    if (LOne1()) {
         //maybe Node::createNode
         return true;
     }
 
     st->setIndex(save);
-    if (LOne2(st)) {
+    if (LOne2()) {
         //maybe Node::createNode
         return true;
     }
@@ -207,8 +207,8 @@ bool Parser::LOne(TokStreamer* st) {
     return false;
 }
 
-bool Parser::LOne1(TokStreamer* st) {
-    if (termByValue("+", st)) {
+bool Parser::LOne1() {
+    if (termByValue("+")) {
 		nodes.push_back(Node::createNode(nullptr, NodeType::ADD));
         return true;
     }
@@ -216,8 +216,8 @@ bool Parser::LOne1(TokStreamer* st) {
     return false;
 }
 
-bool Parser::LOne2(TokStreamer* st) {
-    if (termByValue("-", st)) {
+bool Parser::LOne2() {
+    if (termByValue("-")) {
 		nodes.push_back(Node::createNode(nullptr, NodeType::SUB));
         return true;
     }
@@ -225,14 +225,14 @@ bool Parser::LOne2(TokStreamer* st) {
     return false;
 }
 
-bool Parser::LTwo(TokStreamer* st) {
+bool Parser::LTwo() {
     int save = st->getIndex();
-    if (LTwo1(st)) {
+    if (LTwo1()) {
         return true;
     }
 
     st->setIndex(save);
-    if (LTwo2(st))  {
+    if (LTwo2())  {
         return true;
     }
 
@@ -240,8 +240,8 @@ bool Parser::LTwo(TokStreamer* st) {
     return false;
 }
 
-bool Parser::LTwo1(TokStreamer* st) {
-    if (termByValue("*", st)) {
+bool Parser::LTwo1() {
+    if (termByValue("*")) {
 		nodes.push_back(Node::createNode(nullptr, NodeType::MUL));
         return true;
     }
@@ -249,8 +249,8 @@ bool Parser::LTwo1(TokStreamer* st) {
     return false;
 }
 
-bool Parser::LTwo2(TokStreamer* st) {
-    if (termByValue("/", st)) {
+bool Parser::LTwo2() {
+    if (termByValue("/")) {
 		nodes.push_back(Node::createNode(nullptr, NodeType::DIV));
         return true;
     }
@@ -258,29 +258,29 @@ bool Parser::LTwo2(TokStreamer* st) {
     return false; 
 }
 
-bool Parser::E(TokStreamer* st) {
+bool Parser::E() {
     int save = st->getIndex();
-    if (E1(st)) {
+    if (E1()) {
         return true;
     }
     
     st->setIndex(save);
-    if (E2(st)) {
+    if (E2()) {
         return true;
     }
 
     st->setIndex(save);
-    if (E3(st)) {
+    if (E3()) {
         return true;
     }
 
     st->setIndex(save);
-    if (E4(st)) {
+    if (E4()) {
         return true;
     }
 
     st->setIndex(save);
-    if (E5(st)) {
+    if (E5()) {
         return true;
     }
 
@@ -288,22 +288,22 @@ bool Parser::E(TokStreamer* st) {
     return false;
 }
 
-bool Parser::E1(TokStreamer* st) {
+bool Parser::E1() {
     Node* E;
-	if (T(st)) {
+	if (T()) {
 		//maybe Node::createNode
 		Node* result;
 		result = nodes.back();
 		nodes.pop_back();
 		E = Node::createNode(nullptr, NodeType::E);
 		E->addChild(result);
-		while (LOne(st)) {
+		while (LOne()) {
 			//maybe Node::createNode
 			if (E->numChildren() == 1) {
 				result = nodes.back();
 				nodes.pop_back();
 				E->addChild(result);
-				if (T(st)) {
+				if (T()) {
 					result = nodes.back();
 					nodes.pop_back();
 					E->addChild(result);
@@ -322,7 +322,7 @@ bool Parser::E1(TokStreamer* st) {
 				result = nodes.back();//LOne
 				nodes.pop_back();
 				E->addChild(result);
-				if (T(st)) {
+				if (T()) {
 					result = nodes.back();
 					nodes.pop_back();//T
 					E->addChild(result);
@@ -338,9 +338,9 @@ bool Parser::E1(TokStreamer* st) {
     return false;
 }
 
-bool Parser::E2(TokStreamer* st) {
-    if (termByValue("+", st) && termByValue("+", st)) {
-        if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+bool Parser::E2() {
+    if (termByValue("+") && termByValue("+")) {
+        if (termByType(tokType::IDENTIFIER)) {//we need to see how we get this identifiers name
             Tok id = st->getLastToken(1);
             Node* C = Node::createNode(nullptr, NodeType::CREMENTER);
             C->addChild(Node::createNode(C, NodeType::ADD));
@@ -356,9 +356,9 @@ bool Parser::E2(TokStreamer* st) {
     return false;
 }
 
-bool Parser::E3(TokStreamer* st) {
-    if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
-        if (termByValue("+", st) && termByValue("+",st)) {
+bool Parser::E3() {
+    if (termByType(tokType::IDENTIFIER)) {//we need to see how we get this identifiers name
+        if (termByValue("+") && termByValue("+")) {
 			Tok name = st->getLastToken(3);
 			Node* C = Node::createNode(nullptr, NodeType::CREMENTER);
 			C->addChild(Node::createNode(C, NodeType::ID,name));
@@ -374,9 +374,9 @@ bool Parser::E3(TokStreamer* st) {
     return false;
 }
 
-bool Parser::E4(TokStreamer* st) {
-    if (termByValue("-", st) && termByValue("-", st)) {
-        if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
+bool Parser::E4() {
+    if (termByValue("-") && termByValue("-")) {
+        if (termByType(tokType::IDENTIFIER)) {//we need to see how we get this identifiers name
             Tok id = st->getLastToken(1);
             Node* C = Node::createNode(nullptr, NodeType::CREMENTER);
             C->addChild(Node::createNode(C, NodeType::SUB));
@@ -392,9 +392,9 @@ bool Parser::E4(TokStreamer* st) {
     return false;
 }
 
-bool Parser::E5(TokStreamer* st) {
-    if (termByType(tokType::IDENTIFIER, st)) {//we need to see how we get this identifiers name
-        if (termByValue("-", st) && termByValue("-",st)) {
+bool Parser::E5() {
+    if (termByType(tokType::IDENTIFIER)) {//we need to see how we get this identifiers name
+        if (termByValue("-") && termByValue("-")) {
             Tok name = st->getLastToken(3);
             Node* C = Node::createNode(nullptr, NodeType::CREMENTER);
             C->addChild(Node::createNode(C, NodeType::ID,name));
@@ -410,9 +410,9 @@ bool Parser::E5(TokStreamer* st) {
     return false;
 }
 
-bool Parser::T(TokStreamer* st) {
+bool Parser::T() {
 	int save = st->getIndex();
-	if (T1(st)) {
+	if (T1()) {
         return true;
     }
 
@@ -420,20 +420,20 @@ bool Parser::T(TokStreamer* st) {
     return false;
 }
 
-bool Parser::T1(TokStreamer* st) {
+bool Parser::T1() {
     Node* T;
 	Node* result;
-	if (F(st)) {
+	if (F()) {
 		Node* node;
 		node = nodes.back();
 		nodes.pop_back();
 		T = Node::createNode(nullptr, NodeType::E);
 		T->addChild(node);
-		while (LTwo(st)) {
+		while (LTwo()) {
 			if (T->numChildren() == 1){
 				T->addChild(nodes.back());
 				nodes.pop_back();
-				if (F(st)){
+				if (F()){
 					T->addChild(nodes.back());
 					nodes.pop_back();
 				}
@@ -450,7 +450,7 @@ bool Parser::T1(TokStreamer* st) {
 				result = nodes.back();//LOne
 				nodes.pop_back();
 				T->addChild(result);
-				if (F(st)) {
+				if (F()) {
 					result = nodes.back();
 					nodes.pop_back();//T
 					T->addChild(result);
@@ -467,9 +467,9 @@ bool Parser::T1(TokStreamer* st) {
     return false;
 }
 
-bool Parser::F(TokStreamer* st) {
+bool Parser::F() {
 	int save = st->getIndex();
-	if (F1(st)) {
+	if (F1()) {
         return true;
     }
 
@@ -477,15 +477,15 @@ bool Parser::F(TokStreamer* st) {
     return false;
 }
 
-bool Parser::F1(TokStreamer* st) {
+bool Parser::F1() {
 	Node* f;
-    if (P(st)) {
+    if (P()) {
 		f = Node::createNode(nullptr, NodeType::E);
 		f->addChild(nodes.back());
 		nodes.pop_back();
 		int save = st->getIndex();
-        if (termByValue("^", st)) {
-            if (F(st)) {
+        if (termByValue("^")) {
+            if (F()) {
 				f->addChild(Node::createNode(f, NodeType::EXPO));
 				f->addChild(nodes.back());
 				nodes.pop_back();
@@ -504,21 +504,21 @@ bool Parser::F1(TokStreamer* st) {
     return false;
 }
 
-bool Parser::P(TokStreamer* st) {
+bool Parser::P() {
     int save = st->getIndex();
-    if (P1(st)) {
+    if (P1()) {
         //maybe Node::createNode
         return true;
     }
     
     st->setIndex(save);
-    if (P2(st)) {
+    if (P2()) {
         //maybe Node::createNode
         return true;
     }
 
     st->setIndex(save);
-    if (P3(st)) {
+    if (P3()) {
         //maybe Node::createNode
         return true;
     }
@@ -528,8 +528,8 @@ bool Parser::P(TokStreamer* st) {
 }
 
 
-bool Parser::P1(TokStreamer* st)  {//this function is complete, i mean it
-	if (V(st)) {
+bool Parser::P1()  {//this function is complete, i mean it
+	if (V()) {
 		return true;
 	}
 
@@ -537,10 +537,10 @@ bool Parser::P1(TokStreamer* st)  {//this function is complete, i mean it
 }
 
 
-bool Parser::P2(TokStreamer* st) {//this function is complete, i mean it
-    if (termByType(tokType::OPENPARAN, st)) {
-        if (E(st)) {
-            if (termByType(tokType::CLOSINGPARAN, st)) {
+bool Parser::P2() {//this function is complete, i mean it
+    if (termByType(tokType::OPENPARAN)) {
+        if (E()) {
+            if (termByType(tokType::CLOSINGPARAN)) {
                 return true;
             }
             else {
@@ -555,10 +555,10 @@ bool Parser::P2(TokStreamer* st) {//this function is complete, i mean it
     return false;
 }
 
-bool Parser::P3(TokStreamer* st) {
+bool Parser::P3() {
 	Node* P = Node::createNode(nullptr, NodeType::E);
-    if (termByValue("-", st)) {
-        if (T(st)) {
+    if (termByValue("-")) {
+        if (T()) {
 			P->addChild(Node::createNode(P, NodeType::SUB));
 			P->addChild(nodes.back());
 			nodes.pop_back();
@@ -573,10 +573,10 @@ bool Parser::P3(TokStreamer* st) {
     return false;
 }
 
-bool Parser::P4(TokStreamer* st) {
+bool Parser::P4() {
 	Node* P = Node::createNode(nullptr, NodeType::E);
-	if (termByValue("+", st)) {
-		if (T(st)) {
+	if (termByValue("+")) {
+		if (T()) {
 			P->addChild(Node::createNode(P, NodeType::ADD));
 			P->addChild(nodes.back());
 			nodes.pop_back();
@@ -591,20 +591,20 @@ bool Parser::P4(TokStreamer* st) {
 	return false;
 }
 
-bool Parser::V(TokStreamer* st) {
+bool Parser::V() {
     int save = st->getIndex();
-    if (V1(st)) {
+    if (V1()) {
         //maybe Node::createNode
         return true;
     }
 
     st->setIndex(save);
-    if (V2(st)) {
+    if (V2()) {
         return true;
     }
 
     st->setIndex(save);
-    if (V3(st)) {
+    if (V3()) {
         return true;
     }
 	
@@ -612,9 +612,9 @@ bool Parser::V(TokStreamer* st) {
     return false;
 }
 
-bool Parser::V1(TokStreamer* st) {
-    if (termByType(tokType::INT, st)) {
-		Node* V = Node::createNode(nullptr, NodeType::INT,st->getLastToken(1));
+bool Parser::V1() {
+    if (termByType(tokType::INT)) {
+		Node* V = Node::createNode(nullptr, NodeType::INT, st->getLastToken(1));
 		nodes.push_back(V);
         return true;
     }
@@ -622,9 +622,9 @@ bool Parser::V1(TokStreamer* st) {
     return false;
 }
 
-bool Parser::V2(TokStreamer* st) {
-    if (termByType(tokType::FLOAT, st)) {
-		Node* V = Node::createNode(nullptr, NodeType::FLOAT,st->getLastToken(1));
+bool Parser::V2() {
+    if (termByType(tokType::FLOAT)) {
+		Node* V = Node::createNode(nullptr, NodeType::FLOAT, st->getLastToken(1));
 		nodes.push_back(V);
         return true;
     }
@@ -632,8 +632,8 @@ bool Parser::V2(TokStreamer* st) {
     return false;
 }
 
-bool Parser::V3(TokStreamer* st) {
-    if (termByType(tokType::IDENTIFIER, st)) {
+bool Parser::V3() {
+    if (termByType(tokType::IDENTIFIER)) {
 		Node* V = Node::createNode(nullptr, NodeType::ID, st->getLastToken(1));
 		nodes.push_back(V);
         return true;

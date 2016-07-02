@@ -29,6 +29,8 @@ public:
     
 private:
 
+    TokStreamer* st;
+    
     std::vector<std::string> handle_node(Node* node);
 
 	std::string nodeToRealString(Node* n);
@@ -67,65 +69,65 @@ private:
 
     //Grammar Functions
 
-     bool Program(TokStreamer* st);
+     bool Program();
     
-     bool Program1(TokStreamer* st);
+     bool Program1();
     
-     bool FunctionDef(TokStreamer* st);
+     bool FunctionDef();
     
-     bool termByType(tokType t, TokStreamer* st);
+     bool termByType(tokType t);
     
-     bool termByValue(std::string s, TokStreamer* st);
+     bool termByValue(std::string s);
     
-     bool LOne(TokStreamer* st);
+     bool LOne();
     
-     bool LOne1(TokStreamer* st);
+     bool LOne1();
     
-     bool LOne2(TokStreamer* st);
+     bool LOne2();
     
-     bool LTwo(TokStreamer* st);
+     bool LTwo();
     
-     bool LTwo1(TokStreamer* st);
+     bool LTwo1();
     
-     bool LTwo2(TokStreamer* st);
+     bool LTwo2();
     
-     bool E(TokStreamer* st);
+     bool E();
     
-     bool E1(TokStreamer* st);
+     bool E1();
     
-     bool E2(TokStreamer* st);
+     bool E2();
     
-     bool E3(TokStreamer* st);
+     bool E3();
     
-     bool E4(TokStreamer* st);
+     bool E4();
     
-     bool E5(TokStreamer* st);
+     bool E5();
     
-     bool T(TokStreamer* st);
+     bool T();
     
-     bool T1(TokStreamer* st);
+     bool T1();
     
-     bool F(TokStreamer* st);
+     bool F();
     
-     bool F1(TokStreamer* st);
+     bool F1();
     
-     bool P(TokStreamer* st);
+     bool P();
     
-     bool P1(TokStreamer* st);
+     bool P1();
     
-     bool P2(TokStreamer* st);
+     bool P2();
     
-     bool P3(TokStreamer* st);
+     bool P3();
     
-     bool P4(TokStreamer* st);
+     bool P4();
     
-     bool V(TokStreamer* st);
+     bool V();
     
-     bool V1(TokStreamer* st);
+     bool V1();
     
-     bool V2(TokStreamer* st);
+     bool V2();
     
-     bool V3(TokStreamer* st);
+     bool V3();
 
 };
 
