@@ -166,7 +166,7 @@ Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
         }
  
         return result;
-}
+    }
  
 bool Lexer::isFlowOperator(std::string& content) {
     return flowOperators.find(content) != flowOperators.end();
@@ -238,12 +238,10 @@ void Lexer::handleChar(char chr, bool& isInString, Tok& tok) {
 		}
 		//It is another delimiter, send token to parser
 		//TODO: check what token
-		else if (tok.content != "")
-		{
+		else if (tok.content != "") {
 			tok.type = tokType::IDENTIFIER;
 			addToParserTokens(tok);
 			tok.content = "";
-
 		}
 
 		//CHECK WHAT DELIMITER:
