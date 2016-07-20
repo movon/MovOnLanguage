@@ -20,4 +20,16 @@ src/Parsing/TokStreamer.h
 src/Lexing/Lexer.cpp
 src/Base/Node.h
 src/Parsing/Parser.h
-src/Parsing/Parser.cpp)
+src/Parsing/Parser.cpp
+src/Grammar/Base/BaseGrammar.h
+src/Grammar/Base/BaseGrammar.cpp
+src/Grammar/Program/Expression/E1.cpp
+src/Grammar/Program/Expression/E1.h
+src/Grammar/Program/Expression/E2.cpp
+src/Grammar/Program/Expression/E2.h
+src/Grammar/Program/Expression/E3.cpp
+src/Grammar/Program/Expression/E3.h
+src/Grammar/Program/Expression/E4.cpp
+src/Grammar/Program/Expression/E4.h
+src/Grammar/Program/Expression/E5.cpp
+src/Grammar/Program/Expression/E5.h)

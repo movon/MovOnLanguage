@@ -151,7 +151,7 @@ bool Lexer::isFloat(const std::string& s) {
     // Check the entire std::string was consumed and if either failbit or badbit is set
     return iss.eof() && !iss.fail();
 }
- 
+
 Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
         Lexer::Primitive result;
         if (isInt(s)) {
@@ -167,7 +167,7 @@ Lexer::Primitive Lexer::checkIfPrimitive(std::string s) {
  
         return result;
     }
- 
+
 bool Lexer::isFlowOperator(std::string& content) {
     return flowOperators.find(content) != flowOperators.end();
     }
