@@ -76,3 +76,13 @@ std::vector<Node*> Node::getChildren()
 {
 	return children;
 }
+
+
+
+
+void Node::print() {
+	std:: cout << "Type: " << nodeType << std::endl;
+	for(Node* child : children) {
+		child->print();
+	}
+}

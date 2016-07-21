@@ -29,6 +29,7 @@ public:
     int numChildren();
     void changeParent(Node* Parent);
 	std::vector<Node*> getChildren();
+	void print();
 	
 	static Node* createNode(Node* parent, NodeType nodeType);
     static Node* createNode(Node* parent, NodeType nodeType, Tok t);
