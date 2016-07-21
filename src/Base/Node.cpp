@@ -30,6 +30,8 @@ Node* Node::createNode(Node* parent, NodeType nodeType){
     if(parent != nullptr) {
        parent->addChild(node);
     }
+	
+	std::cout << "CREATE NODE" << std::endl;
 
     return node;
 }
@@ -40,12 +42,15 @@ Node* Node::createNode(Node* parent, NodeType nodeType, Tok t) {
         parent->addChild(node);
     }
 
+	std::cout << "CREATE NODE" << std::endl;
+
     return node;
 }
 
 void Node::addChild(Node* node) {
 	 children.push_back(node);
 	 node->changeParent(this);
+	 std::cout << "ADDED CHILD" << std::endl;
 }
 
 void Node::changeTok(Tok T){

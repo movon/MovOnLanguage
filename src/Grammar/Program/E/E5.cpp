@@ -14,5 +14,5 @@ Node* E5::tryParse(TokStreamer* ts) {
         // }
     }
 
-    return NULL;
+    return nullptr;
 }

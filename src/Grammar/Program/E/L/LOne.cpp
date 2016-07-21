@@ -9,7 +9,8 @@ Node* LOne::tryParse(TokStreamer* ts) {
     }
 
     ts->setIndex(save);
-    if (LOne_Node = LOne2::getInstance().tryParse(ts)) {
+    LOne_Node = LOne2::getInstance().tryParse(ts);
+    if (LOne_Node != nullptr) {
         //maybe Node::createNode
         return LOne_Node;
     }

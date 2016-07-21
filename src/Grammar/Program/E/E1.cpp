@@ -19,6 +19,8 @@ Node* E1::tryParse(TokStreamer* st) {
 				E->addChild(LOne_Node);
 				if (T_Node = t.tryParse(st)) {
 					E->addChild(T_Node);
+					
+
 				}
 				// else {
 				// 	error("Expected another term after operator \"+\" or \"-\"");

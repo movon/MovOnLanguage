@@ -2,8 +2,8 @@
 
 Node* F::tryParse(TokStreamer* st) {
     int save = st->getIndex();
-    Node* F_Node;
-	if (F_Node = F1::getInstance().tryParse(st)) {
+    Node* F_Node = F1::getInstance().tryParse(st);
+	if (F_Node != nullptr) {
         return F_Node;
     }
 
