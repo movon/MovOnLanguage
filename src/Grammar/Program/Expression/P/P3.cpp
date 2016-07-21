@@ -1,7 +1,10 @@
-Node* P3::tryParse(TokStreamer* st) {
+#include "P3.h"
+
+
+Node* P3::tryParse(TokStreamer* ts) {
     Node* P = Node::createNode(nullptr, NodeType::E);
-    if (termByValue("-")) {
-        if (Node* T_Node = T.tryParse(st)) {
+    if (termByValue("-", ts)) {
+        if (Node* T_Node = T::getInstance().tryParse(ts)) {
 			P->addChild(Node::createNode(P, NodeType::SUB));
 			P->addChild(T_Node);
             return P;

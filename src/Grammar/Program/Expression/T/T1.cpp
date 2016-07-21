@@ -1,17 +1,16 @@
 #include "T1.h"
 
 Node* T1::tryParse(TokStreamer* st) {
-    Node* T,
-    result,
-	F_Node,
-	LTwo_Node;
-	if (F_Node = F.tryParse(st)) {
+    Node* T, result;
+    Node* LTwo_Node = nullptr;
+	Node* F_Node = nullptr;
+	if (F_Node = F::getInstance().tryParse(st)) {
 		T = Node::createNode(nullptr, NodeType::E);
 		T->addChild(F_Node);
-		while (LTwo_Node = LTwo.tryParse(st)) {
+		while (LTwo_Node = LTwo::getInstance().tryParse(st)) {
 			if (T->numChildren() == 1){
 				T->addChild(LTwo_Node);
-				if (F_Node = F.tryParse(st)){
+				if (F_Node = F::getInstance().tryParse(st)){
 					T->addChild(F_Node);
 				}
 				else{
@@ -25,7 +24,7 @@ Node* T1::tryParse(TokStreamer* st) {
 				newE = T;
 				T = temp;
 				T->addChild(LTwo_Node);
-				if (F_Node = F.tryParse(st)) {
+				if (F_Node = F::getInstance().tryParse(st)) {
 					T->addChild(F_Node);
 				}
 				else{

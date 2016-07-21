@@ -1,8 +1,10 @@
-Node* P2::tryParse(TokStreamer* st) {
-    if (termByType(tokType::OPENPARAN)) {
+#include "P2.h"
+
+Node* P2::tryParse(TokStreamer* ts) {
+    if (termByType(tokType::OPENPARAN, ts)) {
         Node* E_Node;
-        if (E_Node = E.tryParse(st)) {
-            if (termByType(tokType::CLOSINGPARAN)) {
+        if (E_Node = E::getInstance().tryParse(ts)) {
+            if (termByType(tokType::CLOSINGPARAN, ts)) {
                 return E_Node;
             }
             else {

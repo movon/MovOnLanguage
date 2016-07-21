@@ -6,11 +6,11 @@
 #include "../../Base/Tok.h"
 #include <string>
 
+
 class BaseGrammar {
     public:
-        virtual Node* tryParse(TokStreamer* st) = 0;
-
-    private:
+        virtual Node* tryParse(TokStreamer* st) {};
+        static BaseGrammar& instance;
         bool accept(Tok& tok, tokType t);
         bool expect(Tok& tok, tokType t);
         void error(std::string errormsg);
