@@ -31,8 +31,6 @@ Node* Node::createNode(Node* parent, NodeType nodeType){
        parent->addChild(node);
     }
 	
-	std::cout << "CREATE NODE" << std::endl;
-
     return node;
 }
 
@@ -42,15 +40,12 @@ Node* Node::createNode(Node* parent, NodeType nodeType, Tok t) {
         parent->addChild(node);
     }
 
-	std::cout << "CREATE NODE" << std::endl;
-
     return node;
 }
 
 void Node::addChild(Node* node) {
 	 children.push_back(node);
 	 node->changeParent(this);
-	 std::cout << "ADDED CHILD" << std::endl;
 }
 
 void Node::changeTok(Tok T){
@@ -81,7 +76,6 @@ std::vector<Node*> Node::getChildren()
 
 
 void Node::print() {
-	std:: cout << "Type: " << nodeType << std::endl;
 	for(Node* child : children) {
 		child->print();
 	}

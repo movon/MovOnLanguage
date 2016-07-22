@@ -22,9 +22,22 @@ void BaseGrammar::error(std::string errormsg) {
 }
 
 bool BaseGrammar::termByType(tokType t, TokStreamer* st) {
-	return st->peekNextTok().type == t;
-}
+    int save = st->getIndex();
+    if (st->getNextToken().type == t) {
+        //maybe Node::createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    return false;}
 
 bool BaseGrammar::termByValue(std::string s, TokStreamer* st) {
-	return st->peekNextTok().content == s;
+    int save = st->getIndex();
+    if (st->getNextToken().content == s) {
+        //maybe Node::createNode
+        return true;
+    }
+
+    st->setIndex(save);
+    return false;
 }

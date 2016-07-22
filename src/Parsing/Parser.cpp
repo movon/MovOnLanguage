@@ -5,7 +5,6 @@ void Parser::run(std::vector<Tok> toks) {
 	ts = new TokStreamer(toks, -1);
 	AST = E::getInstance().tryParse(ts);
 	drawNodes();
-	std::cout << "GOT HERE" << std::endl;
 	delete ts;
 }
 
@@ -65,12 +64,8 @@ std::vector<std::string> Parser::handle_node(Node* node) {
 	
 	std::vector<std::string> results;
 	std::vector<std::string> v1;
-	std::cout << std::to_string(node == nullptr) << std::endl;
-	std::cout << "trying to get children, numchildren " << node->numChildren() << std::endl;
 	std::vector<Node*> children = node->getChildren();
-	std::cout << "DEBUGGING" << std::endl;
 	for (int i = 0; i < children.size(); i++) {
-		std::cout << "processing child, children size: " << children.size() << std::endl;
 		v1 = handle_node(children.at(i));
 		v1.push_back(nodeToRealString(node) + " -> " + nodeToRealString(children.at(i)));
 		results.insert(results.end(), v1.begin(), v1.end());
@@ -88,7 +83,6 @@ void Parser::drawNodes() {
 		std::cout << "Succeed opening file" << std::endl;
 	}
 	//digraph += handle_node(main) + "}";
-	std::cout << "It's handle_node" << std::endl;
 	std::vector<std::string> result = handle_node(AST);
 	
 	std::string digraph = "digraph Nodes {\n";
