@@ -2,11 +2,7 @@
 #define PROGRAM_HEADER
 
 #include "../Base/BaseGrammar.h"
-<<<<<<< HEAD
 #include "Expression/Expression.h"
-=======
-#include "E/E.h"
->>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
 
 class Program: public BaseGrammar {
 public:
