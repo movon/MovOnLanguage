@@ -35,10 +35,14 @@ std::string Parser::nodeToRealString(Node* n) {
 			if (n->drawName == ""){
 				++E_index;
 <<<<<<< HEAD
+<<<<<<< HEAD
 				n->drawName = "Expression" + std::to_string(E_index);
 =======
 				n->drawName = "E" + std::to_string(E_index);
 >>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
+=======
+				n->drawName = "Expression" + std::to_string(E_index);
+>>>>>>> 93b5069... Renamed E to Expression
 			}
 
 			return n->drawName;
@@ -129,25 +133,35 @@ void Parser::drawNodes() {
 // FLOW --> LOOP | "if" "(" BEXP ")" "{" BODY "}" { "elsif" "(" BEXP ")" "{" BODY "}" } [ "else" "{" BODY "}" ]
 // LOOP --> FOR | WHILE
 <<<<<<< HEAD
+<<<<<<< HEAD
 // FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [Expression] ")" "{" BODY "}"
 =======
 // FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [E] ")" "{" BODY "}"
 >>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
+=======
+// FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [Expression] ")" "{" BODY "}"
+>>>>>>> 93b5069... Renamed E to Expression
 // WHILE --> "while" "(" BEXP ")" "{" BODY "}"
 
 
 //Grammar for Expressions:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 93b5069... Renamed E to Expression
 // Expression --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
 // F --> P ["^" F]
 // P --> "(" Expression ")" | V | "-" T | "+" T //V is constants and identifiers
+<<<<<<< HEAD
 =======
 // E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
 // F --> P ["^" F]
 // P --> "(" E ")" | V | "-" T | "+" T //V is constants and identifiers
 >>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
+=======
+>>>>>>> 93b5069... Renamed E to Expression
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
 // V --> INT | FLOAT | STRING ... | ID | FUNCNAME "(" [ ID { "," ID } ] ")" // TODO: IMPLEMENT LAST ONE!!!!
@@ -157,10 +171,14 @@ void Parser::drawNodes() {
 // lvl1bexp -> lvl2bexp {(AND|XOR) lvl2bexp}
 // lvl2bexp -> NOT lvl3bexp | lvl3bexp
 <<<<<<< HEAD
+<<<<<<< HEAD
 // lvl3bexp -> TRUE | FALSE | Expression COMPARISON_OPERATOR Expression
 =======
 // lvl3bexp -> TRUE | FALSE | E COMPARISON_OPERATOR E
 >>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
+=======
+// lvl3bexp -> TRUE | FALSE | Expression COMPARISON_OPERATOR Expression
+>>>>>>> 93b5069... Renamed E to Expression
 
 bool Parser::Program() {
 	int save = st->getIndex();
@@ -333,10 +351,14 @@ bool Parser::E1() {
 			}
 			else {
 <<<<<<< HEAD
+<<<<<<< HEAD
 				//Unite the children into an Expression
 =======
 				//Unite the children into an E
 >>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
+=======
+				//Unite the children into an Expression
+>>>>>>> 93b5069... Renamed E to Expression
 				Node* newE = Node::createNode(nullptr, NodeType::E);
 				newE->addChild(E);
 				Node* temp = newE;
