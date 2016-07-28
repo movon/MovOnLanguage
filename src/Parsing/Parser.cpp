@@ -20,7 +20,11 @@ std::string Parser::nodeToRealString(Node* n) {
 		case NodeType::E:
 			if (n->drawName == ""){
 				++E_index;
+<<<<<<< HEAD
 				n->drawName = "Expression" + std::to_string(E_index);
+=======
+				n->drawName = "E" + std::to_string(E_index);
+>>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
 			}
 
 			return n->drawName;
@@ -111,15 +115,26 @@ void Parser::drawNodes() {
 // CREATION --> TYPE ID "=" V ";" | ID "=" V ";"
 // FLOW --> LOOP | "if" "(" BEXP ")" "{" BODY "}" { "elsif" "(" BEXP ")" "{" BODY "}" } [ "else" "{" BODY "}" ]
 // LOOP --> FOR | WHILE
+<<<<<<< HEAD
 // FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [Expression] ")" "{" BODY "}"
+=======
+// FOR --> "foreach" TYPE ID "@" ID "{" BODY "}" | "for" "(" [CREATION] ";" [BEXP] ";" [E] ")" "{" BODY "}"
+>>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
 // WHILE --> "while" "(" BEXP ")" "{" BODY "}"
 
 
 //Grammar for Expressions:
+<<<<<<< HEAD
 // Expression --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
 // F --> P ["^" F]
 // P --> "(" Expression ")" | V | "-" T | "+" T //V is constants and identifiers
+=======
+// E --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
+// T --> F {LTwo F}
+// F --> P ["^" F]
+// P --> "(" E ")" | V | "-" T | "+" T //V is constants and identifiers
+>>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
 // V --> INT | FLOAT | STRING ... | ID | FUNCNAME "(" [ ID { "," ID } ] ")" // TODO: IMPLEMENT LAST ONE!!!!
@@ -128,4 +143,8 @@ void Parser::drawNodes() {
 // BEXP -> lvl1bexp {OR lvl1bexp}
 // lvl1bexp -> lvl2bexp {(AND|XOR) lvl2bexp}
 // lvl2bexp -> NOT lvl3bexp | lvl3bexp
+<<<<<<< HEAD
 // lvl3bexp -> TRUE | FALSE | Expression COMPARISON_OPERATOR Expression
+=======
+// lvl3bexp -> TRUE | FALSE | E COMPARISON_OPERATOR E
+>>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9

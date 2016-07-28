@@ -74,5 +74,9 @@ class BaseGrammar {
     tryparse(B()) != null {
         interpret(returned)
     }
+<<<<<<< HEAD
     tryparse(Expression())*/
+=======
+    tryparse(E())*/
+>>>>>>> af25e5201f487a98dd50ca74b3091d9d21b2ffe9
 #endif
