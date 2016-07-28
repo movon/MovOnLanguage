@@ -3,7 +3,7 @@
 
 void Parser::run(std::vector<Tok> toks) {
 	ts = new TokStreamer(toks, -1);
-	AST = E::getInstance().tryParse(ts);
+	AST = Program::getInstance().tryParse(ts);
 	drawNodes();
 	delete ts;
 }

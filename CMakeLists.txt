@@ -70,4 +70,6 @@ src/Grammar/Program/E/V/V2.cpp
 src/Grammar/Program/E/V/V2.h
 src/Grammar/Program/E/V/V3.cpp
 src/Grammar/Program/E/V/V3.h
+src/Grammar/Program/Program.h
+src/Grammar/Program/Program.cpp
 )

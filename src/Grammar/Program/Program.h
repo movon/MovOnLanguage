@@ -2,23 +2,23 @@
 #define PROGRAM_HEADER
 
 #include "../Base/BaseGrammar.h"
+#include "E/E.h"
 
-
-class BaseGrammar: public BaseGrammar {
+class Program: public BaseGrammar {
 public:
-    Node* tryParse(TokStreamer* st);
-    static BaseGrammar& getInstance() {
-        static BaseGrammar instance; // Guaranteed to be destroyed. // Instantiated on first use.
+    Node* tryParse(TokStreamer* ts);
+    static Program& getInstance() {
+        static Program instance; // Guaranteed to be destroyed. // Instantiated on first use.
         return instance;
     }
     
     
     // Correct way to declare a lazy evaluated with guaranteed deletion singleton
-    BaseGrammar(BaseGrammar const&)               = delete;
-    void operator=(BaseGrammar const&)  = delete;
+    Program(Program const&)               = delete;
+    void operator=(Program const&)  = delete;
 
 
 private:
-    BaseGrammar() {};                   // Constructor? (the {} brackets) are needed here.
+    Program() {};                   // Constructor? (the {} brackets) are needed here.
 };
 #endif

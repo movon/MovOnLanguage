@@ -6,7 +6,7 @@
 #include "../Base/Node.h"
 #include "../Base/Tok.h"
 #include "TokStreamer.h"
-#include "../Grammar/Program/E/E.h" //This will later be replaced by "../Grammar/Program/Program.h"
+#include "../Grammar/Program/Program.h"
 #include <set>
 #include <fstream>
 //Grammar for Expressions:
