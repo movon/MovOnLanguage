@@ -10,7 +10,7 @@ before_install:
     - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
     - git submodule update --init --recursive
 
-install: pushd && git pull --recurse-submodules && cd googletest && git pull origin master && cmake . && make && sudo make install && popd
+install: git pull --recurse-submodules && cd googletest && git pull origin master && cmake . && make && sudo make install && cd ..
 
 
 script: cmake . && make && ./MovOnLanguageTest
