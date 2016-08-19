@@ -32,5 +32,6 @@ CMakeCache.txt
 CMakeFiles/
 Makefile
 MovOnLanguage
+MovOnLanguageTest
 cmake_install.cmake
-graph.gv
+graph.gv*
