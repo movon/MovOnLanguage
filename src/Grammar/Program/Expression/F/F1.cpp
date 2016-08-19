@@ -14,8 +14,9 @@ Node* F1::tryParse(TokStreamer* st) {
         if (termByValue("^", st)) {
             F_Node = fParser.tryParse(st);
             if (F_Node != nullptr) {
-				f->addChild(Node::createNode(f, NodeType::EXPO));
+				Node::createNode(f, NodeType::EXPO, Tok("^", tokType::OPERATOR));
 				f->addChild(F_Node);
+				return f;
             }
             else {
                 error("Expected another term after operator \"^\"");
@@ -24,7 +25,7 @@ Node* F1::tryParse(TokStreamer* st) {
 		else {
 			st->setIndex(save);
 		}
-        return f;
+        return P_Node;
     }
     
     return nullptr;

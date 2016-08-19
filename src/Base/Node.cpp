@@ -1,6 +1,5 @@
 #include "Node.h"
 
-
 Node::Node(Node* Parent, NodeType Nodetype){
     parent = Parent;
     nodeType = Nodetype;
@@ -30,7 +29,7 @@ Node* Node::createNode(Node* parent, NodeType nodeType){
     if(parent != nullptr) {
        parent->addChild(node);
     }
-	
+    
     return node;
 }
 
@@ -67,16 +66,43 @@ int Node::numChildren() {
 void Node::changeParent(Node* Parent) {
 	parent = Parent;
 }
+
+
 std::vector<Node*> Node::getChildren()
 {
 	return children;
 }
 
-
-
-
-void Node::print() {
-	for(Node* child : children) {
-		child->print();
+bool Node::equals(Node* other) {
+	if(other == nullptr) return false;
+	
+	if(this->nodeType != other->nodeType) {
+		std::cout << "nodes are not equal because the types are different."<< std::endl;
+		return false;
 	}
+		
+	if(!this->t.equals(other->t)) {
+		// std::cout << "nodes are not equal because their tokens are different. node1 token: (" << this->t.type << "," << this->t.content << ") .  node2 token: (" << other->t.type << "," << other->t.content << ")" << std::endl;
+		std::cout << "nodes are not equal because their tokens are different. node1 token type: (" << this->t.content << ") .  node2 token type: (" << other->t.content << ")" << std::endl;
+		return false;
+	}
+		
+	if(children.size() != other->getChildren().size()) {
+		std::cout << "nodes are not equal because they have a different ammount of children. this has " << children.size() << " and the other has " << other->getChildren().size() << std::endl;
+		return false;
+	}
+		
+	
+	for(int i = 0; i < children.size(); i++) {
+		if(!children.at(i)->equals(other->getChild(i)))
+			return false;
+	}
+	
+	return true;
+	
 }
+
+
+
+
+
