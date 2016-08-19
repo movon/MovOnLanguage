@@ -1,0 +1,9 @@
+language: cpp
+
+compiler: gcc
+
+
+install: git pull --recurse-submodules && cd googletest && cmake . && make && sudo make install
+
+
+script: cmake . && make && ./MovOnLanguageTest
