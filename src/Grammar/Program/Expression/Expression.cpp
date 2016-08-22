@@ -3,19 +3,12 @@
 
 Node* E::tryParse(TokStreamer* ts) {
     int save = ts->getIndex();
-    
-    std::vector<BaseGrammar *> e_grammars;
+    Node* (*e_grammars[])(TokStreamer*) = {E1::tryParse, E2::tryParse, E3::tryParse, E4::tryParse, E5::tryParse};
 
-    e_grammars.push_back(&E1::getInstance());
-    e_grammars.push_back(&E2::getInstance());
-    e_grammars.push_back(&E3::getInstance());
-    e_grammars.push_back(&E4::getInstance());
-    e_grammars.push_back(&E5::getInstance());
-    
     Node* e = nullptr;
 
     for(auto grammar : e_grammars) {
-        e = grammar->tryParse(ts);
+        e = grammar(ts);
         if (e != nullptr) {
             return e;
         } else {

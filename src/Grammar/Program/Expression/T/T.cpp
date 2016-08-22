@@ -2,7 +2,7 @@
 
 Node* T::tryParse(TokStreamer* st) {
     int save = st->getIndex();
-    Node* T_Node = T1::getInstance().tryParse(st);
+    Node* T_Node = T1::tryParse(st);
 	if (T_Node != nullptr) {
         return T_Node;
     }

@@ -2,17 +2,15 @@
 
 Node* F1::tryParse(TokStreamer* st) {
     Node* f;
-    P& p = P::getInstance();
-    F& fParser = F::getInstance();
     Node* P_Node = nullptr;
     Node* F_Node = nullptr;
-    P_Node = p.tryParse(st);
+    P_Node = P::tryParse(st);
     if (P_Node != nullptr) {
 		f = Node::createNode(nullptr, NodeType::E);
 		f->addChild(P_Node);
 		int save = st->getIndex();
         if (termByValue("^", st)) {
-            F_Node = fParser.tryParse(st);
+            F_Node = F::tryParse(st);
             if (F_Node != nullptr) {
 				Node::createNode(f, NodeType::EXPO, Tok("^", tokType::OPERATOR));
 				f->addChild(F_Node);

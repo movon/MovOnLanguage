@@ -1,8 +1,8 @@
 #include "Program.h"
 
-Node* Program::tryParse(TokStreamer* ts) {
+Node* Program::tryParse(TokStreamer* st) {
     Node* statement = nullptr;
-    if (statement = E::getInstance().tryParse(ts)) {
+    if (statement = E::tryParse(st)) {
         return statement;
     }
     

@@ -6,21 +6,11 @@
 #include "L/LOne.h"
 #include "Expression.h"
 
-class E1: public BaseGrammar {
-public:
+using namespace BaseGrammar;
+
+namespace E1 {
+
     Node* tryParse(TokStreamer* st);
-    static E1& getInstance() {
-        static E1 instance; // Guaranteed to be destroyed. // Instantiated on first use.
-        return instance;
-    }
-    
-    
-    // Correct way to declare a lazy evaluated with guaranteed deletion singleton
-    E1(E1 const&)               = delete;
-    void operator=(E1 const&)  = delete;
-
-
-private:
-    E1() {};                   // Constructor? (the {} brackets) are needed here.
 };
+
 #endif

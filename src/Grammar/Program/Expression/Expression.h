@@ -8,21 +8,9 @@
 #include "Expression4.h"
 #include "Expression5.h"
 
-class E: public BaseGrammar {
-public:
+namespace E {
+
     Node* tryParse(TokStreamer* st);
-    static E& getInstance() {
-        static E instance; // Guaranteed to be destroyed. // Instantiated on first use.
-        return instance;
-    }
-    
-    
-    // Correct way to declare a lazy evaluated with guaranteed deletion singleton
-    E(E const&)               = delete;
-    void operator=(E const&)  = delete;
-
-
-private:
-    E() {};                   // Constructor? (the {} brackets) are needed here.
 };
+
 #endif

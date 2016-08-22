@@ -2,7 +2,7 @@
 
 Node* P1::tryParse(TokStreamer* ts) {
     Node* V_Node;
-    if (V_Node = V::getInstance().tryParse(ts)) {
+    if (V_Node = V::tryParse(ts)) {
 		return V_Node;
 	}
 

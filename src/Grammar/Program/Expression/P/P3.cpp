@@ -4,7 +4,7 @@
 Node* P3::tryParse(TokStreamer* ts) {
     Node* P = Node::createNode(nullptr, NodeType::E);
     if (termByValue("-", ts)) {
-        if (Node* T_Node = T::getInstance().tryParse(ts)) {
+        if (Node* T_Node = T::tryParse(ts)) {
 			P->addChild(Node::createNode(P, NodeType::SUB));
 			P->addChild(T_Node);
             return P;

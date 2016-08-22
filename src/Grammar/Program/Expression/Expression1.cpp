@@ -3,21 +3,19 @@
 
 Node* E1::tryParse(TokStreamer* st) {
     Node* E;
-    T& t = T::getInstance();
-    LOne& lOne = LOne::getInstance();
     Node* T_Node = nullptr;
     Node* LOne_Node = nullptr;
-	if (T_Node = t.tryParse(st)) {
+	if (T_Node = T::tryParse(st)) {
 		//maybe Node::createNode
 		E = Node::createNode(nullptr, NodeType::E);
 		E->addChild(T_Node);
-		LOne_Node = lOne.tryParse(st);
+		LOne_Node = LOne::tryParse(st);
 		while (LOne_Node != nullptr) {
 			
 			//maybe Node::createNode
 			if (E->numChildren() == 1) {
 				E->addChild(LOne_Node);
-				if (T_Node = t.tryParse(st)) {
+				if (T_Node = T::tryParse(st)) {
 					E->addChild(T_Node);
 					
 
@@ -34,14 +32,14 @@ Node* E1::tryParse(TokStreamer* st) {
 				newE = E;
 				E = temp;
 				E->addChild(LOne_Node);
-				if (T_Node = t.tryParse(st)) {
+				if (T_Node = T::tryParse(st)) {
 					E->addChild(T_Node);
 				}
 				// else {
 				// 	error("Expected another term after operator \"+\" or \"-\"");
 				// }
 			}
-			LOne_Node = lOne.tryParse(st);
+			LOne_Node = LOne::tryParse(st);
 		}
 		return E;
     }
