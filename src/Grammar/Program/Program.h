@@ -2,7 +2,8 @@
 #define PROGRAM_HEADER
 
 #include "../Base/BaseGrammar.h"
-#include "Expression/Expression.h"
+//#include "Expression/Expression.h"
+#include "FunctionGrammar/FunctionDef.h"
 
 namespace Program {
 
