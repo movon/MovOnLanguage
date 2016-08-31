@@ -3,9 +3,9 @@
 
 #include "../../../Base/Node.h"
 
-namespace FuncionDef{
+namespace FunctionDef{
 
-	Node* tryParse(TokStreamer* st)
+	Node* tryParse(TokStreamer* st);
 }
 
 
