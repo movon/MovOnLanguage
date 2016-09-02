@@ -2,7 +2,7 @@
 
 Node* Program::tryParse(TokStreamer* st) {
     Node* statement = nullptr;
-    if (statement = FunctionDef::tryParse(st)) {
+    if (statement = Statement::tryParse(st)) {
         return statement;
     }
     

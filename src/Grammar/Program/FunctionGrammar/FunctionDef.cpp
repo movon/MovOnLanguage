@@ -1,10 +1,11 @@
 #include "FunctionDef.h"
 
 Node* FunctionDef::tryParse(TokStreamer* st){
+	Node *mainNode = nullptr;
 	Tok temp = st->peekNextTok();
-	if(BaseGrammar::expect(temp, tokType::FUNCTIONDEF)){
-		Node::createNode(nullptr, NodeType::FUNCTIONDEF, st->getNextToken());
-		return nullptr;
-	}
-	return nullptr;
+	int save = st->getIndex();
+	//check for a function def
+	mainNode = 
+
+	return mainNode;
 }
