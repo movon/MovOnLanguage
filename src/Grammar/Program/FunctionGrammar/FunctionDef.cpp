@@ -5,7 +5,7 @@ Node* FunctionDef::tryParse(TokStreamer* st){
 	Tok temp = st->peekNextTok();
 	int save = st->getIndex();
 	//check for a function def
-	mainNode = 
+
 
 	return mainNode;
 }
