@@ -2,8 +2,8 @@
 #include "../src/Base/Tok.h"
 #include "../src/Grammar/Program/Expression/F/F.h"
 #include "../src/Base/Node.h"
- 
- 
+
+
 #include <iostream>
 #include <vector>
 
@@ -16,9 +16,9 @@ TEST(TestF, ParsesCorrectly) {
     toks.push_back(power);
     toks.push_back(two);
     TokStreamer* st = new TokStreamer(toks, -1);
-    
+
     Node* daddy = F::tryParse(st);
-    
+
 
     // Creating the expected nodes
     Node* expectedDaddy = Node::createNode(nullptr, NodeType::E);
@@ -27,7 +27,7 @@ TEST(TestF, ParsesCorrectly) {
     Node* node3 = Node::createNode(expectedDaddy, NodeType::INT, two);
     
 
-  
+
 
     ASSERT_TRUE(daddy->equals(expectedDaddy));
 }
@@ -37,5 +37,3 @@ int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-
-
