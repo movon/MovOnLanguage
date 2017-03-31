@@ -320,5 +320,6 @@ std::vector<Tok> Lexer::runLexer(char* filename) {
 
         printTokens();
         delete streamer;
+        myfile.close();
 		return tokens;
 }

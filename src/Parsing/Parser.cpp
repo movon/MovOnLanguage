@@ -102,10 +102,10 @@ void Parser::drawNodes() {
 }
 
 //Grammar for Program:
-// Program --> {FunctionDef}
+// Program --> {STMT} 
+// STMT --> FLOW | ASSIGNMENT | FUNCALL | KEYWORDS | FunctionDef// int i = ?; string s = (string) ?.size(k|?);
 // FunctionDef --> "function" ID "(" [TYPE ID {"," TYPE ID}] ")" "{" BODY "}"
 // BODY --> {STMT}
-// STMT --> FLOW | ASSIGNMENT | FUNCALL | KEYWORDS // int i = ?; string s = (string) ?.size(k|?);
 // FUNCALL --> FUNCNAME "(" [V {"," V} ] ")" ";"
 // ASSIGNMENT --> CREATION | TYPE ID ";"
 // CREATION --> TYPE ID "=" V ";" | ID "=" V ";"

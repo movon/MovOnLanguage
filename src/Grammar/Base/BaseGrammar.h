@@ -1,7 +1,7 @@
 #ifndef BaseGrammar_H
 #define BaseGrammar_H
 #include <iostream>
-#include "../../Parsing/TokStreamer.h"
+#include "../../Base/TokStreamer.h"
 #include "../../Base/Node.h"
 #include "../../Base/Tok.h"
 #include <string>
