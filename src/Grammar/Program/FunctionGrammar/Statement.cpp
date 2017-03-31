@@ -5,7 +5,7 @@ Node* Statement::tryParse(TokStreamer* st){
 	Node* mainNode = nullptr;
 	Node* nextNode = nullptr;
 	//check for a functiondef
-	mainNode = functionDef::tryParse(st);
+	mainNode = FunctionDef::tryParse(st);
 	if(mainNode != nullptr){
 		//goto the next statement
 		nextNode = Statement::tryParse(st);
