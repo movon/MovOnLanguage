@@ -1,8 +1,0 @@
-1) Add Expr class
-
-2) Parser handling with accpet and except functions ->
-	1) keywords
-
-3) Add Error classes
-
-4) Add token place in source code in Tok class

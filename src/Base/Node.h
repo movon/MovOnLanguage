@@ -1,20 +1,23 @@
 #ifndef NODE_H
 #define NODE_H
 
+
+#include <iostream>
 #include <string>
 #include "Tok.h"
 #include <vector>
 
-enum class NodeType { CMP, TEST, WHILE, FOR, FUNCTIONCALL, STRING, INT, FLOAT, CREATION, ASSIGNMENT, E, CREMENTER, ADD, SUB, MUL, DIV, EXPO, PARENT};
+enum class NodeType { CMP = 0, TEST = 1, WHILE = 2, FOR = 3, FUNCTIONCALL = 4, STRING = 5, INT = 6, FLOAT = 7, CREATION = 8, ASSIGNMENT = 9, E = 10, CREMENTER = 11, ADD = 12, SUB = 13, MUL = 14, DIV = 15, EXPO = 16, PARENT = 18, ID = 19};
 
 class Node{
 protected:
-    NodeType nodeType;
     std::vector<Node*> children;
     Node* parent;
-    Tok t;
     std::string name;
 public:
+	NodeType nodeType;
+	Tok t;
+	std::string drawName = "";
     Node(Node* Parent, NodeType Nodetype);
     Node(Node* Parent, NodeType Nodetype, Tok T);
     Node(NodeType Nodetype, std::string Name);
@@ -27,6 +30,14 @@ public:
     void disownAllChildren();
     int numChildren();
     void changeParent(Node* Parent);
+	std::vector<Node*> getChildren();
+
+	bool equals(Node* other);
+	
+	
+	
+	static Node* createNode(Node* parent, NodeType nodeType);
+    static Node* createNode(Node* parent, NodeType nodeType, Tok t);
 };
 
 
