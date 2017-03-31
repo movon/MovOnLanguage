@@ -5,7 +5,7 @@
 #include <string>
 #include "../Base/Node.h"
 #include "../Base/Tok.h"
-#include "TokStreamer.h"
+#include "../Base/TokStreamer.h"
 #include "../Grammar/Program/Program.h"
 #include <set>
 #include <fstream>

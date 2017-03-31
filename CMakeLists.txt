@@ -12,7 +12,7 @@ file(GLOB_RECURSE SOURCE_FILES
     "src/*.cpp"
 )
 
-add_executable(MovOnLanguage ${SOURCE_FILES} )
+add_executable(MovOnLanguage ${SOURCE_FILES})
 
 file(GLOB_RECURSE TEST_FILES
     "test/*.cpp"

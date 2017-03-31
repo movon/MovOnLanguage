@@ -3,7 +3,7 @@
 
 #include <vector>
  
-#include "../Base/Tok.h"
+#include "Tok.h"
  
 class TokStreamer {
 private:

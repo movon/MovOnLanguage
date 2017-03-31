@@ -2,7 +2,7 @@
 #define ASSIGNMENT_H
 
 #include "../../Base/BaseGrammar.h"
-#include "../../../Parsing/TokStreamer.h" 
+#include "../../../Base/TokStreamer.h"
 
 namespace Assignment{
 	Node* tryParse(TokStreamer* st);
