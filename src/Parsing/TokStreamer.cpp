@@ -1,8 +1,8 @@
 #include "TokStreamer.h"
 
-TokStreamer::TokStreamer(std::vector<Tok> t, int pos) {
+TokStreamer::TokStreamer(std::vector<Tok> t) {
     toks = t;
-    i = pos;
+    i = -1; // Initial index
     len = (signed) t.size();
 }
  

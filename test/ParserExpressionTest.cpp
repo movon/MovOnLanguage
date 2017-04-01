@@ -15,7 +15,7 @@ TEST(TestF, ParsesCorrectly) {
     toks.push_back(two);
     toks.push_back(power);
     toks.push_back(two);
-    TokStreamer* st = new TokStreamer(toks, -1);
+    TokStreamer* st = new TokStreamer(toks);
 
     Node* daddy = F::tryParse(st);
 
