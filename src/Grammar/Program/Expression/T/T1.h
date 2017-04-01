@@ -11,6 +11,11 @@ using namespace BaseGrammar;
 namespace T1 {
     
     Node* tryParse(TokStreamer* ts);
+
+    Node *addTExecute(TokStreamer *st);
+
+    Node *merge_F_T(Node *F, Node *T);
+
 };
 
 #endif

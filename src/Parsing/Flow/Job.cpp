@@ -21,11 +21,12 @@ void Job::executeTask() {
 
 void Job::fail() {
     this->status = statusTypes::failure;
-//    Return the state to the starting state
-    this->st->setIndex(this->preState);
-    if(failJob) {
-        this->failJob->executeTask();
+    for(unsigned int i = 0; i < failJob.size() && i < failMerge.size(); i++) {
+        failJob.at(i)->executeTask();
+        this->result = (*this->failMerge.at(i))(this->result, failJob.at(i)->getResult());
     }
+    //    Return the state to the starting state
+    this->st->setIndex(this->preState);
 }
 
 bool Job::failed() {
@@ -35,10 +36,11 @@ bool Job::failed() {
 void Job::succeed(Node *result) {
     this->result = result;
     this->status = statusTypes::success;
-    if(successJob) {
-        this->successJob->executeTask();
-        if(this->successJob->suceeded()) {
-            this->result = this->successMerge(this->result, this->successJob->getResult());
+    for(unsigned int i = 0; i < successMerge.size() && i < successJob.size(); i++) {
+
+        successJob.at(i)->executeTask();
+        if(successJob.at(i)->suceeded()) {
+            this->result = (*this->successMerge.at(i))(this->result, this->successJob.at(i)->getResult());
         }
     }
 }
@@ -47,14 +49,15 @@ bool Job::suceeded() {
     return this->status == statusTypes::success;
 }
 
-Job* Job::onFail(Job* nextJob) {
-    this->failJob = nextJob;
+Job* Job::onFail(Job* nextJob, Node* (*mergeResultsFunc)(Node* firstJobResult, Node* secondJobResult)) {
+    this->failJob.push_back(nextJob);
+    this->failMerge.push_back(mergeResultsFunc);
     return this;
 }
 
 Job* Job::onSuccess(Job* nextJob, Node* (*mergeResultsFunc)(Node* firstJobResult, Node* secondJobResult)) {
-    this->successJob = nextJob;
-    this->successMerge = mergeResultsFunc;
+    this->successJob.push_back(nextJob);
+    this->successMerge.push_back(mergeResultsFunc);
     return this;
 }
 
@@ -74,7 +77,7 @@ Job::Job() {
 
 void Job::mergeResults(Job *otherJob, Node *(*mergeResultsFunc)(Node *, Node *)) {
     if(otherJob->suceeded()) {
-        result = mergeResultsFunc(result, otherJob->getResult());
+        result = (*mergeResultsFunc)(result, otherJob->getResult());
     }
 }
 
@@ -82,4 +85,8 @@ void Job::reset() {
     this->status = statusTypes::unExecuted;
     this->successJob = nullptr;
     this->failJob = nullptr;
+}
+
+Node *Job::mergeNothing(Node* firstJobResult, Node* secondJobResult) {
+    return firstJobResult;
 }
