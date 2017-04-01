@@ -12,23 +12,26 @@
 
 class Job {
 private:
-    enum class statusTypes {failure, success, unExecuted};
     Node* (*execute)(TokStreamer*);
-    statusTypes status = statusTypes::unExecuted;
-    Node* result;
-    TokStreamer *st;
+
+    TokStreamer *st = nullptr;
     int preState;
-    std::vector<Job*> failJob;
-    std::vector<Node* (*)(Node *, Node *)> failMerge;
     std::vector<Job*> successJob;
     std::vector<Node* (*)(Node *, Node *)> successMerge;
 
 protected:
-    void fail();
+    virtual void fail();
     void succeed(Node* result = nullptr);
+
+    enum class statusTypes {failure, success, unExecuted};
+    statusTypes status = statusTypes::unExecuted;
+    std::vector<Job*> failJob;
+    std::vector<Node* (*)(Node *, Node *)> failMerge;
+    Node* result = nullptr;
 public:
     Job(Node * (*executeFunc)(TokStreamer*), TokStreamer* st);
     Job();
+    virtual ~Job();
 
     virtual void executeTask();
     bool failed();

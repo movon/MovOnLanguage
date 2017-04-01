@@ -12,7 +12,7 @@ Job::Job(Node * (*executeFunc)(TokStreamer*), TokStreamer* st){
 void Job::executeTask() {
     this->preState = this->st->getIndex();
     Node* tree = (*this->execute)(this->st);
-    if(tree) {
+    if(!tree) {
         this->fail();
     } else {
         this->succeed(tree);
@@ -90,4 +90,8 @@ void Job::reset() {
 
 Node *Job::mergeNothing(Node* firstJobResult, Node* secondJobResult) {
     return firstJobResult;
+}
+
+Job::~Job() {
+
 }

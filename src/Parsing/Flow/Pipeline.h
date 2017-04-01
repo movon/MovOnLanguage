@@ -8,16 +8,18 @@
 
 #include <vector>
 #include "Job.h"
+#include "successJob.h"
 
 class Pipeline : public Job{
 private:
     static Node* mergeResults(Node* firstJobResult, Node* secondJobResult);
-    Job* onSuccessJob;
+    OnSuccessJob* onSuccessJob;
     std::vector<Job> jobs;
 public:
     Pipeline(std::vector<Job> jobs);
     ~Pipeline();
     virtual void executeTask();
+    virtual void fail();
 };
 
 

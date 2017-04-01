@@ -5,7 +5,7 @@
 #include "Pipeline.h"
 
 Pipeline::Pipeline(std::vector<Job> jobs) {
-    onSuccessJob = new Job();
+    onSuccessJob = new OnSuccessJob();
     if(jobs.size() == 0) {
         throw new std::runtime_error("Pipeline Accepts at least 1 job. Accepted 0.");
     }
@@ -40,5 +40,15 @@ Node* Pipeline::mergeResults(Node *firstJobResult, Node *secondJobResult) {
 }
 
 Pipeline::~Pipeline() {
-    delete onSuccessJob;
+    if(onSuccessJob != nullptr) {
+        delete onSuccessJob;
+    }
+}
+
+void Pipeline::fail() {
+    this->status = statusTypes::failure;
+    for(unsigned int i = 0; i < failJob.size() && i < failMerge.size(); i++) {
+        failJob.at(i)->executeTask();
+        this->result = (*this->failMerge.at(i))(this->result, failJob.at(i)->getResult());
+    }
 }
