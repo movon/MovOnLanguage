@@ -1,12 +1,10 @@
 #include "F.h"
 
 Node* F::tryParse(TokStreamer* st) {
-    int save = st->getIndex();
-    Node* F_Node = F1::tryParse(st);
-	if (F_Node != nullptr) {
-        return F_Node;
+    Job F1Parser(F1::tryParse, st);
+    F1Parser.executeTask();
+    if(F1Parser.suceeded()) {
+        return F1Parser.getResult();
     }
-
-	st->setIndex(save);
     return nullptr;
 }

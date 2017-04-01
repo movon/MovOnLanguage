@@ -49,7 +49,7 @@ Node* T1::addF_to_T(TokStreamer* st) {
 }
 
 Node* T1::tryParse(TokStreamer* st) {
-    Job FParser(T1::addF_to_T, st);
+    Job FParser(&T1::addF_to_T, st);
     Job chainF(&T1::chainFExecute, st);
     FParser.onSuccess(&chainF, &T1::merge_extra_term);
     FParser.executeTask();

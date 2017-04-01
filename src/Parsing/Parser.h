@@ -13,7 +13,8 @@
 // Expression --> T {LOne T} | "+" "+" ID | ID "+" "+" | "-" "-" ID | ID "-" "-"
 // T --> F {LTwo F}
 // F --> P ["^" F]
-// P --> V | "(" Expression ")" | "-" T | "+" T //V is constants and identifiers
+// P --> V | "(" Expression ")" | "-" T | "+" T
+// V is constants and identifiers
 // LOne -> "+" | "-"
 // LTwo -> "*" | "/"
 

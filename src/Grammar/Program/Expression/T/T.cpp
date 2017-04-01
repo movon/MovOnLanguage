@@ -3,5 +3,8 @@
 Node* T::tryParse(TokStreamer* st) {
     Job T1Parser(T1::tryParse, st);
     T1Parser.executeTask();
-    return T1Parser.getResult();
+    if(T1Parser.suceeded()) {
+        return T1Parser.getResult();
+    }
+    return nullptr;
 }
