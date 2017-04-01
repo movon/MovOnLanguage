@@ -4,6 +4,9 @@
 #include "V1.h"
 #include "V2.h"
 #include "V3.h"
+#include "../../../../Parsing/Flow/Job.h"
+#include "../../../../Parsing/Flow/Pipeline.h"
+#include <vector>
 
 
 namespace V {

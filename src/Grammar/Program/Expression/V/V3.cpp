@@ -1,9 +1,9 @@
 #include "V3.h"
 
 
-Node* V3::tryParse(TokStreamer* ts) {
-    if (termByType(tokType::FLOAT, ts)) {
-		Node* V = Node::createNode(nullptr, NodeType::FLOAT, ts->getLastToken(1));
+Node* V3::tryParse(TokStreamer* st) {
+    if (termByType(tokType::FLOAT, st)) {
+		Node* V = Node::createNode(nullptr, NodeType::FLOAT, st->getLastToken(1));
         return V;
     }
 
