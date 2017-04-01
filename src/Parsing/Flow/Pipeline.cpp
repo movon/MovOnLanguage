@@ -24,7 +24,7 @@ Pipeline::Pipeline(std::vector<Job> jobs) {
 
 void Pipeline::executeTask() {
     jobs.at(0).executeTask();
-    if(onSuccessJob->suceeded()) {
+    if(onSuccessJob->succeeded()) {
         this->succeed(onSuccessJob->getResult());
     } else {
         fail();

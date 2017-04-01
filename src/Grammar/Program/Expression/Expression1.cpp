@@ -10,7 +10,7 @@ Node* E1::addL1(Job TParser, Node* E, TokStreamer* st) {
         if (E->numChildren() == 1) {
             E->addChild(LOne_Node);
             TParser.executeTask();
-            if (TParser.suceeded()) {
+            if (TParser.succeeded()) {
                 E->addChild(TParser.getResult());
             }
             // else {
@@ -27,7 +27,7 @@ Node* E1::addL1(Job TParser, Node* E, TokStreamer* st) {
             E = temp;
             E->addChild(LOne_Node);
             TParser.executeTask();
-            if (TParser.suceeded()) {
+            if (TParser.succeeded()) {
                 E->addChild(TParser.getResult());
             }
             // else {
@@ -48,7 +48,7 @@ Node* E1::tryParse(TokStreamer* st) {
     Node* E;
 	Job TParser(T::tryParse, st);
 	TParser.executeTask();
-    if(TParser.suceeded()) {
+    if(TParser.succeeded()) {
         E = Node::createNode(nullptr, NodeType::E);
         E->addChild(TParser.getResult());
         E = addL1(TParser, E, st);

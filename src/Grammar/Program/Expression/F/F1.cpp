@@ -3,7 +3,7 @@
 Node* F1::addP_to_F(TokStreamer* st) {
     Job PParser(P::tryParse, st);
     PParser.executeTask();
-    if(PParser.suceeded()) {
+    if(PParser.succeeded()) {
         Node* F_Node = Node::createNode(nullptr, NodeType::E);
         F_Node->addChild(PParser.getResult());
         return F_Node;
@@ -17,7 +17,7 @@ Node* F1::chainPExecute(TokStreamer* st) {
     Job FParser(&F::tryParse, st);
     if (termByValue("^", st)) {
         FParser.executeTask();
-        if(FParser.suceeded()) {
+        if(FParser.succeeded()) {
             Node* f = Node::createNode(nullptr, NodeType::E);
             Node::createNode(f, NodeType::EXPO, Tok("^", tokType::OPERATOR));
             f->addChild(FParser.getResult());
@@ -41,7 +41,7 @@ Node* F1::tryParse(TokStreamer* st) {
     Job chainP(&F1::chainPExecute, st);
     PParser.onSuccess(&chainP, &F1::merge_extra_term);
     PParser.executeTask();
-    if(PParser.suceeded()) {
+    if(PParser.succeeded()) {
         return PParser.getResult();
     }
 

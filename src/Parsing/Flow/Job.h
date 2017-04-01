@@ -32,7 +32,7 @@ public:
 
     virtual void executeTask();
     bool failed();
-    bool suceeded();
+    bool succeeded();
     Job *onFail(Job *nextJob, Node* (*mergeResultsFunc)(Node* firstJobResult, Node* secondJobResult) = &mergeNothing);
     Job *onSuccess(Job *nextJob, Node* (*mergeResultsFunc)(Node* firstJobResult, Node* secondJobResult));
     Node *getResult();

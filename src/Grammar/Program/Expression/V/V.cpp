@@ -9,7 +9,7 @@ Node* V::tryParse(TokStreamer* st) {
     };
     Pipeline pipeline(jobs);
     pipeline.executeTask();
-    if(pipeline.suceeded()) {
+    if(pipeline.succeeded()) {
         return pipeline.getResult();
     }
     return nullptr;

@@ -6,7 +6,7 @@ Node* P3::tryParse(TokStreamer* st) {
     if (termByValue("-", st)) {
         Job TParser(&T::tryParse, st);
         TParser.executeTask();
-        if(TParser.suceeded()) {
+        if(TParser.succeeded()) {
             P->addChild(Node::createNode(P, NodeType::SUB));
             P->addChild(TParser.getResult());
             return P;

@@ -17,9 +17,9 @@ Node* T1::findF(TokStreamer* st) {
     Job LTwoParser(LTwo::tryParse, st);
     Job FParser(F::tryParse, st);
     LTwoParser.executeTask();
-    if(LTwoParser.suceeded()) {
+    if(LTwoParser.succeeded()) {
         FParser.executeTask();
-        if(FParser.suceeded()) {
+        if(FParser.succeeded()) {
             Node* T = Node::createNode(nullptr, NodeType::E);
             T->addChild(LTwoParser.getResult());
             T->addChild(FParser.getResult());
@@ -41,7 +41,7 @@ Node* T1::addF_to_T(TokStreamer* st) {
     Node* T = Node::createNode(nullptr, NodeType::E);
     Job FParser(F::tryParse, st);
     FParser.executeTask();
-    if(FParser.suceeded()) {
+    if(FParser.succeeded()) {
         T->addChild(FParser.getResult());
         return T;
     }
@@ -53,7 +53,7 @@ Node* T1::tryParse(TokStreamer* st) {
     Job chainF(&T1::chainFExecute, st);
     FParser.onSuccess(&chainF, &T1::merge_extra_term);
     FParser.executeTask();
-    if (FParser.suceeded()) {
+    if (FParser.succeeded()) {
 		return FParser.getResult();
     }
     

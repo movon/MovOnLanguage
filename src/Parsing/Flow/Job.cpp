@@ -39,14 +39,14 @@ void Job::succeed(Node *result) {
     for(unsigned int i = 0; i < successMerge.size() && i < successJob.size(); i++) {
 
         successJob.at(i)->executeTask();
-        if(successJob.at(i)->suceeded()) {
+        if(successJob.at(i)->succeeded()) {
             this->result = (*this->successMerge.at(i))(this->result, this->successJob.at(i)->getResult());
         }
 //        TODO: decide if to fail the entire job if it's on success jobs fail
     }
 }
 
-bool Job::suceeded() {
+bool Job::succeeded() {
     return this->status == statusTypes::success;
 }
 
@@ -77,7 +77,7 @@ Job::Job() {
 }
 
 void Job::mergeResults(Job *otherJob, Node *(*mergeResultsFunc)(Node *, Node *)) {
-    if(otherJob->suceeded()) {
+    if(otherJob->succeeded()) {
         result = (*mergeResultsFunc)(result, otherJob->getResult());
     }
 }

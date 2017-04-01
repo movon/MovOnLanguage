@@ -7,7 +7,7 @@ Node* E::tryParse(TokStreamer* ts) {
     Pipeline pipeline = Pipeline(EPipeline);
 
     pipeline.executeTask();
-    if(pipeline.suceeded()) {
+    if(pipeline.succeeded()) {
         return pipeline.getResult();
     }
     return nullptr;

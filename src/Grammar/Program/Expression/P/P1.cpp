@@ -3,7 +3,7 @@
 Node* P1::tryParse(TokStreamer* st) {
 	Job VParser(&V::tryParse, st);
     VParser.executeTask();
-	if(VParser.suceeded()) {
+	if(VParser.succeeded()) {
 		return VParser.getResult();
 	}
 	return nullptr;
