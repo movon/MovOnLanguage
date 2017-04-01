@@ -27,7 +27,7 @@ file(GLOB MAIN "src/main.cpp")
 list(REMOVE_ITEM SOURCE_FILES ${MAIN})
 
 add_executable(MovOnLanguageTest ${TEST_FILES} ${SOURCE_FILES})
-target_link_libraries(MovOnLanguageTest gtest pthread gtest)
+target_link_libraries(MovOnLanguageTest gtest pthread)
 
 
 set(CMAKE_BUILD_TYPE Debug)
