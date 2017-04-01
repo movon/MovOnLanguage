@@ -5,6 +5,8 @@
 #include "P1.h"
 #include "P2.h"
 #include "P3.h"
+#include "../../../../Parsing/Flow/Pipeline.h"
+#include <vector>
 
 namespace P {
     

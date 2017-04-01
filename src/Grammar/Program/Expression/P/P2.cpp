@@ -1,20 +1,19 @@
 #include "P2.h"
 
-Node* P2::tryParse(TokStreamer* ts) {
-    if (termByType(tokType::OPENPARAN, ts)) {
-        Node* E_Node;
-        if (E_Node = E::tryParse(ts)) {
-            if (termByType(tokType::CLOSINGPARAN, ts)) {
-                return E_Node;
+Node* P2::tryParse(TokStreamer* st) {
+    if (termByType(tokType::OPENPARAN, st)) {
+        Job EParser(&E::tryParse, st);
+        EParser.executeTask();
+        if(EParser.suceeded()) {
+            if (termByType(tokType::CLOSINGPARAN, st)) {
+                return EParser.getResult();
             }
             else {
                 error("Expected closing paran after expression");
             }
-        }
-        else {
+        } else {
             error("Expected expression after opening paran");
         }
     }
-    
     return nullptr;
 }

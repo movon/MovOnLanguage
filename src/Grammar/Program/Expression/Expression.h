@@ -8,6 +8,7 @@
 #include "Expression4.h"
 #include "Expression5.h"
 #include "../../../Parsing/Flow/Pipeline.h"
+#include <vector>
 
 namespace E {
 
