@@ -2,19 +2,13 @@
 
 
 Node* E::tryParse(TokStreamer* ts) {
-    int save = ts->getIndex();
-    Node* (*e_grammars[])(TokStreamer*) = {E1::tryParse, E2::tryParse, E3::tryParse, E4::tryParse, E5::tryParse};
 
-    Node* e = nullptr;
+    std::vector<Job> EPipeline = {Job(E1::tryParse, ts), Job(E2::tryParse, ts), Job(E3::tryParse, ts), Job(E4::tryParse, ts), Job(E5::tryParse, ts)};
+    Pipeline pipeline = Pipeline(EPipeline);
 
-    for(auto grammar : e_grammars) {
-        e = grammar(ts);
-        if (e != nullptr) {
-            return e;
-        } else {
-            ts->setIndex(save);
-        }
+    pipeline.executeTask();
+    if(pipeline.suceeded()) {
+        return pipeline.getResult();
     }
-    
     return nullptr;
 }

@@ -5,7 +5,7 @@
 #include <string>
 #include "../Base/Node.h"
 #include "../Base/Tok.h"
-#include "TokStreamer.h"
+#include "../Base/TokStreamer.h"
 #include "../Grammar/Program/Program.h"
 #include <set>
 #include <fstream>
@@ -48,6 +48,5 @@ private:
     int EXPO_index = 0;
     
     void error(std::string errormsg); //Maybe this needs to be seperated to another class called Errors
-
 };
 #endif //PARSER_H

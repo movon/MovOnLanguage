@@ -102,6 +102,10 @@ bool Node::equals(Node* other) {
 	
 }
 
+void Node::setChildren(std::vector<Node *> children) {
+	this->children = children;
+}
+
 
 
 

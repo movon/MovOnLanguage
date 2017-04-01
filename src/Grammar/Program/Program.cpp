@@ -1,10 +1,7 @@
 #include "Program.h"
 
 Node* Program::tryParse(TokStreamer* st) {
-    Node* statement = nullptr;
-    if (statement = E::tryParse(st)) {
-        return statement;
-    }
-    
-    return nullptr;
+    Job EParser(E::tryParse, st);
+    EParser.executeTask();
+    return EParser.getResult();
 }

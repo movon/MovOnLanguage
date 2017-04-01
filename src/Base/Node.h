@@ -7,7 +7,7 @@
 #include "Tok.h"
 #include <vector>
 
-enum class NodeType { CMP = 0, TEST = 1, WHILE = 2, FOR = 3, FUNCTIONCALL = 4, STRING = 5, INT = 6, FLOAT = 7, CREATION = 8, ASSIGNMENT = 9, E = 10, CREMENTER = 11, ADD = 12, SUB = 13, MUL = 14, DIV = 15, EXPO = 16, PARENT = 18, ID = 19};
+enum class NodeType { CMP = 0, TEST = 1, WHILE = 2, FOR = 3, FUNCTIONCALL = 4, STRING = 5, INT = 6, FLOAT = 7, CREATION = 8, ASSIGNMENT = 9, E = 10, CREMENTER = 11, ADD = 12, SUB = 13, MUL = 14, DIV = 15, EXPO = 16, PARENT = 18, ID = 19, PIPELINE = 999};
 
 class Node{
 protected:
@@ -31,6 +31,7 @@ public:
     int numChildren();
     void changeParent(Node* Parent);
 	std::vector<Node*> getChildren();
+    void setChildren(std::vector<Node*> children);
 
 	bool equals(Node* other);
 	
