@@ -12,10 +12,13 @@ namespace T1 {
     
     Node* tryParse(TokStreamer* ts);
 
-    Node *addTExecute(TokStreamer *st);
+    Node *chainFExecute(TokStreamer *st);
 
-    Node *merge_F_T(Node *F, Node *T);
+    Node *addF_to_T(TokStreamer* st);
 
+    Node* merge_extra_term(Node* T_Father, Node* newT);
+
+    Node *findF(TokStreamer *st);
 };
 
 #endif

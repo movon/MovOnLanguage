@@ -42,6 +42,7 @@ void Job::succeed(Node *result) {
         if(successJob.at(i)->suceeded()) {
             this->result = (*this->successMerge.at(i))(this->result, this->successJob.at(i)->getResult());
         }
+//        TODO: decide if to fail the entire job if it's on success jobs fail
     }
 }
 
@@ -83,8 +84,8 @@ void Job::mergeResults(Job *otherJob, Node *(*mergeResultsFunc)(Node *, Node *))
 
 void Job::reset() {
     this->status = statusTypes::unExecuted;
-    this->successJob = nullptr;
-    this->failJob = nullptr;
+    this->successJob.clear();
+    this->failJob.clear();
 }
 
 Node *Job::mergeNothing(Node* firstJobResult, Node* secondJobResult) {

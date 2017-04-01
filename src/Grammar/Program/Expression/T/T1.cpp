@@ -1,54 +1,60 @@
 #include "T1.h"
 
-Node* T1::merge_extra_term(Node* LTwo_Node, Node*)
-
-Node* T1::addTExecute(TokStreamer* st) {
-    Job LTwoParser(LTwo::tryParse, st);
-
-    LTwoParser.onSuccess(&Job(T1::addTExecute, st), &T1::merge_extra_term);
-    while (LTwo_Node = LTwo::tryParse(st)) {
-        if (T->numChildren() == 1){
-            T->addChild(LTwo_Node);
-            if (F_Node = F::tryParse(st)){
-                T->addChild(F_Node);
-            }
-            else{
-                error("expected a term after \"*\" or \"/\" ");
-            }
-        }
-        else{
-            Node* newE = Node::createNode(nullptr, NodeType::E);
-            newE->addChild(T);
-            Node* temp = newE;
-            newE = T;
-            T = temp;
-            T->addChild(LTwo_Node);
-            if (F_Node = F::tryParse(st)) {
-                T->addChild(F_Node);
-            }
-            else{
-                error("expected a term after \"*\" or \"/\" ");
-            }
-        }
+Node* T1::merge_extra_term(Node* T_Father, Node* newT) {
+    if(T_Father->numChildren() == 1) {
+        T_Father->addChild(newT->getChild(0));
+        T_Father->addChild(newT->getChild(1));
+        newT->disownAllChildren();
+        delete newT;
+        return T_Father;
+    } else {
+        newT->addChild(T_Father);
+        return newT;
     }
 }
 
-Node* T1::merge_F_T(Node* F, Node* T) {
-    T->addChild(F);
-    return T;
+Node* T1::findF(TokStreamer* st) {
+    Job LTwoParser(LTwo::tryParse, st);
+    Job FParser(F::tryParse, st);
+    LTwoParser.executeTask();
+    if(LTwoParser.suceeded()) {
+        FParser.executeTask();
+        if(FParser.suceeded()) {
+            Node* T = Node::createNode(nullptr, NodeType::E);
+            T->addChild(LTwoParser.getResult());
+            T->addChild(FParser.getResult());
+            return T;
+        }
+    }
+
+    return nullptr;
+}
+
+Node* T1::chainFExecute(TokStreamer* st) {
+    Job findFParser(T1::findF, st);
+    Node* T = Node::createNode(nullptr, NodeType::E);
+    Job chainF(&T1::chainFExecute, st);
+    findFParser.onSuccess(&chainF, T1::merge_extra_term);
+}
+
+Node* T1::addF_to_T(TokStreamer* st) {
+    Node* T = Node::createNode(nullptr, NodeType::E);
+    Job FParser(F::tryParse, st);
+    FParser.executeTask();
+    if(FParser.suceeded()) {
+        T->addChild(FParser.getResult());
+        return T;
+    }
+    return nullptr;
 }
 
 Node* T1::tryParse(TokStreamer* st) {
-    Job FParser(F::tryParse, st);
-    Job LTwoParser(LTwo::tryParse, st);
-    Job TParser(T::tryParse, st);
-    Job addT(addTExecute, st);
-    FParser.onSuccess(&TParser, &T1::merge_F_T);
-    FParser.onSuccess(&addT, );
-    Node* T, result;
-    if (F_Node) {
-
-		return T;
+    Job FParser(T1::addF_to_T, st);
+    Job chainF(&T1::chainFExecute, st);
+    FParser.onSuccess(&chainF, &T1::merge_extra_term);
+    FParser.executeTask();
+    if (FParser.suceeded()) {
+		return FParser.getResult();
     }
     
     return nullptr;
